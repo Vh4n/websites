@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dog Age Calculator</title>
+
+    <!-- jQuery Latest -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #f4f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 30px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        select,
+        input[type="date"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #2563eb;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .result-container {
+            margin-top: 35px;
+        }
+
+        .progress-wrapper {
+            width: 100%;
+            height: 50px;
+            background: #dbeafe;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow:
+                inset 0 2px 8px rgba(0,0,0,0.15),
+                0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            border-radius: 50px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .human-age {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .dog-age {
+            text-align: center;
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Dog Age Calculator</h1>
+
+    <div class="field">
+        <label>Dog Size</label>
+        <select id="dogSize">
+            <option value="">Select Size</option>
+            <option value="small">Small (20 lbs or less)</option>
+            <option value="medium">Medium (21-50 lbs)</option>
+            <option value="large">Large (51-100 lbs)</option>
+            <option value="giant">Giant (100+ lbs)</option>
+        </select>
+    </div>
+
+    <div class="field">
+        <label>Date of Birth</label>
+        <input type="date" id="dob">
+    </div>
+
+    <button id="calculateBtn">Calculate</button>
+
+    <div class="result-container">
+        <div class="progress-wrapper">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+
+        <div class="human-age" id="humanAge">0 Human Years</div>
+        <div class="dog-age" id="dogAgeText"></div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+
+    // Dog age table from image
+    const dogAgeTable = {
+        small:  [15,24,28,32,36,40,44,48,52,56,60,64,68,72,76,80],
+        medium: [15,24,28,32,36,42,47,51,56,60,65,69,74,78,83,87],
+        large:  [15,24,28,32,36,45,50,55,61,66,72,77,82,88,93,99],
+        giant:  [12,22,31,38,45,49,56,64,71,79,86,93,100,107,114,121]
+    };
+
+    $("#calculateBtn").click(function () {
+
+        const size = $("#dogSize").val();
+        const dob = $("#dob").val();
+
+        if (!size || !dob) {
+            alert("Please complete all fields.");
+            return;
+        }
+
+        const birthDate = new Date(dob);
+        const today = new Date();
+
+        let ageInYears = today.getFullYear() - birthDate.getFullYear();
+
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+            ageInYears--;
+        }
+
+        if (ageInYears < 1) {
+            ageInYears = 1;
+        }
+
+        if (ageInYears > 16) {
+            ageInYears = 16;
+        }
+
+        const humanAge = dogAgeTable[size][ageInYears - 1];
+
+        // Progress based on max human age 121
+        const percentage = (ageInYears / 16) * 100;
+
+        $("#progressBar")
+            .css("width", percentage + "%")
+            .text(Math.round(percentage) + "%");
+
+        $("#humanAge").text(humanAge + " Human Years");
+        $("#dogAgeText").text("Your dog is approximately " + ageInYears + " dog year(s) old.");
+    });
+
+});
+</script>
+
+</body>
+</html>
