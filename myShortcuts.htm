@@ -2,155 +2,198 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Shortcuts</title>
     <style>
       :root {
-        --card: rgba(27, 27, 27, .78);
+        --card: rgba(27, 27, 27, .82);
         --hover: #252525;
         --text: #eee;
         --accent: #4da3ff;
         --border: #333;
-        --drop: #4da3ff
+        --shadow: 0 8px 25px rgba(0, 0, 0, .35);
+        --background-overlay: rgba(0, 0, 0, .10);
+      }
+
+      body.light {
+        --card: rgba(255, 255, 255, .85);
+        --hover: #e9e9e9;
+        --text: #111;
+        --accent: #1677ff;
+        --border: #ccc;
+        --shadow: 0 8px 25px rgba(0, 0, 0, .15);
+        --background-overlay: rgba(255, 255, 255, .10);
       }
 
       * {
         box-sizing: border-box;
-        font-family: Arial, Helvetica, sans-serif
+        font-family: Arial, Helvetica, sans-serif;
       }
 
       body {
         margin: 0;
-        padding: 20px;
         min-height: 100vh;
+        overflow: auto;
         color: var(--text);
         background:
-          linear-gradient(rgba(0, 0, 0, .78), rgba(0, 0, 0, .78)),
+          linear-gradient(var(--background-overlay), var(--background-overlay)),
           var(--background-image, none);
         background-size: cover;
         background-position: center;
-        background-attachment: fixed
+        background-attachment: fixed;
       }
 
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px
-      }
-
-      .title {
+      #pageTitle {
+        position: absolute;
+        left: 25px;
+        top: 20px;
         font-size: 30px;
         font-weight: bold;
         cursor: pointer;
-        word-break: break-word
+        z-index: 5000;
+        color: #ddd;
       }
 
-      .title input {
-        max-width: 100%;
+      body.light #pageTitle {
+        color: #ddd;
+      }
+
+      #pageTitle input {
+        font-size: 28px;
         background: #111;
         color: white;
         border: 1px solid var(--accent);
-        font-size: 26px;
-        padding: 5px;
-        border-radius: 6px
+        border-radius: 6px;
+        padding: 4px 8px;
       }
 
-      .container {
+      .topButtons {
+        position: absolute;
+        right: 25px;
+        top: 20px;
+        display: flex;
+        gap: 8px;
+        z-index: 5000;
+      }
+
+      .desktop {
+        position: relative;
         width: 100%;
-        max-width: 750px;
-        margin: 30px auto
+        min-height: 100vh;
       }
 
       .section {
+        position: absolute;
+        width: 340px;
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 14px 16px;
-        margin-bottom: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, .25);
-        overflow: hidden
+        overflow: hidden;
+        box-shadow: var(--shadow);
       }
 
-      .section.dragging,
-      .link.dragging {
-        opacity: .45
-      }
-
-      .section-title {
+      .section-header {
+        height: 42px;
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        min-width: 0
-      }
-
-      .section-title span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap
+        padding: 0 10px;
       }
 
       .drag-handle {
         cursor: grab;
+        color: #999;
+        font-size: 20px;
+        user-select: none;
+      }
+
+      .drag-handle:active {
+        cursor: grabbing;
+      }
+
+      .sectionName {
+        flex: 1;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .sectionName:hover {
+        text-decoration: underline;
+      }
+
+      .sectionName input {
+        width: 100%;
+        background: #111;
+        color: white;
+        border: 1px solid var(--accent);
+        border-radius: 4px;
+        padding: 2px 5px;
+      }
+
+      body.light .sectionName input {
+        background: white;
+        color: #111;
+      }
+
+      .iconButton {
+        background: none;
+        border: none;
         color: #888;
-        flex: none
+        font-size: 17px;
+        cursor: pointer;
+        padding: 2px 5px;
       }
 
-      .section-toggle {
-        color: #aaa;
-        width: 18px;
-        flex: none
-      }
-
-      .section-actions {
-        margin-left: auto;
-        flex: none
+      .iconButton:hover {
+        color: var(--text);
       }
 
       .links {
+        padding: 10px;
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        margin-top: 12px
+        gap: 5px;
       }
 
       .link {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 8px 10px;
+        padding: 8px;
         border-radius: 8px;
         transition: .15s;
-        min-width: 0
+        cursor: grab;
+      }
+
+      .link.dragging {
+        opacity: .4;
       }
 
       .link:hover {
         background: var(--hover);
-        transform: translateX(4px)
       }
 
       .link a {
         flex: 1;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         color: var(--accent);
-        text-decoration: none
-      }
-
-      .link a:hover {
-        text-decoration: underline
+        text-decoration: none;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       .drop-line {
         height: 3px;
-        background: var(--drop);
+        background: #1677ff;
         border-radius: 5px;
-        margin: 4px 0
+        margin: 3px 0;
+      }
+
+      .addLinkButton {
+        width: calc(100% - 20px);
+        margin: 0 10px 10px;
       }
 
       button {
@@ -160,39 +203,40 @@
         border-radius: 7px;
         padding: 7px 12px;
         cursor: pointer;
-        white-space: nowrap
       }
 
       button:hover {
-        background: #333
+        background: #333;
       }
 
-      .add-btn {
-        display: block;
-        margin: 10px auto;
-        background: #1677ff;
-        border: none
+      body.light button {
+        background: #fff;
+        color: #111;
+        border-color: #bbb;
       }
 
-      .delete {
-        background: none;
-        border: none;
-        color: #777;
-        font-size: 18px;
-        padding: 2px 6px
+      body.light button:hover {
+        background: #e5e5e5;
       }
 
-      .delete:hover {
-        color: #ff5555;
-        background: none
+      .addSection {
+        position: fixed;
+        left: 50%;
+        bottom: 20px;
+        transform: translateX(-50%);
+        background: #1677ff !important;
+        color: white !important;
+        border: none !important;
+        z-index: 6000;
       }
 
-      .export-box {
+      .exportBox {
         position: fixed;
         right: 20px;
         bottom: 20px;
         display: flex;
-        gap: 8px
+        gap: 8px;
+        z-index: 6000;
       }
 
       .modal {
@@ -202,98 +246,80 @@
         background: rgba(0, 0, 0, .7);
         justify-content: center;
         align-items: center;
-        padding: 15px
+        z-index: 7000;
       }
 
-      .modal-content {
-        width: 100%;
-        max-width: 500px;
-        background: #1c1c1c;
+      .modalBox {
+        width: min(500px, 90vw);
+        background: var(--card);
         padding: 20px;
-        border-radius: 12px
+        border-radius: 12px;
+        color: var(--text);
       }
 
       textarea {
         width: 100%;
-        height: 250px;
+        height: 260px;
         resize: none;
         background: #111;
         color: white;
         border: 1px solid #444;
-        padding: 10px
       }
 
-      @media(max-width:600px) {
-        body {
-          padding: 12px
+      body.light textarea {
+        background: #fff;
+        color: #111;
+      }
+
+      @media(max-width:700px) {
+        #pageTitle {
+          left: 15px;
+          top: 15px;
+          font-size: 24px;
         }
 
-        .header {
-          align-items: flex-start
+        .topButtons {
+          top: 15px;
+          right: 15px;
         }
 
-        .title {
-          font-size: 24px
-        }
-
-        .title input {
-          font-size: 22px
-        }
-
-        .container {
-          margin: 20px auto
+        .desktop {
+          padding-top: 70px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 15px;
         }
 
         .section {
-          padding: 12px;
-          border-radius: 10px
+          position: relative !important;
+          left: auto !important;
+          top: auto !important;
+          width: 92vw;
         }
 
-        .section-title {
-          font-size: 16px
-        }
-
-        .link {
-          padding: 8px
-        }
-
-        .export-box {
-          position: fixed;
+        .exportBox {
           right: 10px;
           bottom: 10px;
           flex-direction: column;
-          gap: 5px
-        }
-
-        .export-box button {
-          padding: 6px 10px;
-          font-size: 13px
-        }
-
-        button {
-          padding: 6px 10px;
-          font-size: 14px
-        }
-
-        .background-btn {
-          font-size: 13px
         }
       }
     </style>
   </head>
   <body>
-    <div class="header">
-      <div id="title" class="title"></div>
+    <div id="pageTitle"></div>
+    <div class="topButtons">
       <button onclick="changeBackground()">Background</button>
+      <button onclick="toggleTheme()" id="themeButton">☀</button>
     </div>
-    <div id="content" class="container"></div>
-    <button class="add-btn" onclick="addSection()">+ Add Section</button>
-    <div class="export-box">
+    <div id="desktop" class="desktop"></div>
+    <button class="addSection" onclick="addSection()"> + Section </button>
+    <div class="exportBox">
       <button onclick="exportJSON()">Export</button>
       <button onclick="importJSON()">Import</button>
     </div>
     <div class="modal" id="jsonModal">
-      <div class="modal-content">
+      <div class="modalBox">
         <h3>Import JSON</h3>
         <textarea id="jsonInput"></textarea>
         <br>
@@ -306,44 +332,85 @@
       let data = JSON.parse(localStorage.getItem("favorites")) || {
         title: "Shortcuts",
         background: "",
+        theme: "dark",
+        nextZ: 1,
         sections: []
       };
 
+      function normalize() {
+        if (!data.nextZ) data.nextZ = 1;
+        if (!data.theme) data.theme = "dark";
+        data.sections.forEach((s, i) => {
+          if (s.x == null) s.x = 60 + i * 30;
+          if (s.y == null) s.y = 80 + i * 30;
+          if (s.z == null) s.z = i + 1;
+          if (s.collapsed == null) s.collapsed = false;
+          if (!s.links) s.links = [];
+        });
+        applyTheme();
+      }
+
+      function applyTheme() {
+        document.body.classList.toggle("light", data.theme === "light");
+        document.getElementById("themeButton").innerHTML = data.theme === "dark" ? "☀" : "🌙";
+      }
+      normalize();
+
       function save() {
         localStorage.setItem("favorites", JSON.stringify(data));
-        render()
+        applyTheme();
+        render();
+      }
+
+      function toggleTheme() {
+        data.theme = data.theme === "dark" ? "light" : "dark";
+        save();
       }
 
       function render() {
-        document.getElementById("title").innerHTML = data.title;
+        document.getElementById("pageTitle").innerHTML = data.title;
         if (data.background) {
-          document.body.style.setProperty("--background-image", `url("${data.background}")`)
+          document.body.style.setProperty("--background-image", `url("${data.background}")`);
         }
         let html = "";
         data.sections.forEach((section, s) => {
-          if (section.collapsed === undefined) section.collapsed = false;
           html += `
 
+
 							<div class="section"
-draggable="true"
-ondragstart="sectionDragStart(event,${s})"
-ondragover="sectionDragOver(event,${s})"
-ondrop="sectionDrop(event,${s})"
-ondragleave="clearDrop()">
-								<div class="section-title" onclick="toggleSection(${s})">
-									<span class="drag-handle" onclick="event.stopPropagation()">☷</span>
-									<span class="section-toggle">${section.collapsed?"▶":"▼"}</span>
-									<span>${section.title}</span>
-									<div class="section-actions">
-										<button class="delete" onclick="event.stopPropagation();deleteSection(${s})">×</button>
-									</div>
+style="left:${section.x}px;top:${section.y}px;z-index:${section.z}"
+data-index="${s}">
+								<div class="section-header">
+									<div class="drag-handle"
+onmousedown="startDrag(event,${s})">
+☰
+</div>
+									<div class="sectionName"
+onclick="toggleSection(${s})"
+ondblclick="event.stopPropagation();editSectionTitle(${s})">
+${section.title}
+</div>
+									<button class="iconButton"
+onclick="event.stopPropagation();editSectionTitle(${s})">
+✏
+</button>
+									<button class="iconButton"
+onclick="event.stopPropagation();deleteSection(${s})">
+×
+</button>
 								</div>
+
 `;
           if (!section.collapsed) {
             html += `
-								<div class="links">`;
+
+
+								<div class="links">
+
+`;
             section.links.forEach((link, l) => {
               html += `
+
 
 									<div class="link"
 draggable="true"
@@ -351,23 +418,38 @@ ondragstart="linkDragStart(event,${s},${l})"
 ondragover="linkDragOver(event,${s},${l})"
 ondrop="linkDrop(event,${s},${l})"
 ondragleave="clearDrop()">
-										<a href="${link.url}">${link.title}</a>
-										<button class="delete" onclick="deleteLink(${s},${l})">×</button>
+										<a href="${link.url}">
+${link.title}
+</a>
+										<button class="iconButton"
+onclick="deleteLink(${s},${l})">
+×
+</button>
 									</div>
+
 `;
             });
             html += `
 
+
 								</div>
-								<button onclick="addLink(${s})">+ Add Link</button>
+								<button class="addLinkButton"
+onclick="addLink(${s})">
++ Add Link
+</button>
+
 `;
           }
           html += `
-							</div>`;
+
+
+							</div>
+
+`;
         });
-        document.getElementById("content").innerHTML = html
+        document.getElementById("desktop").innerHTML = html;
       }
-      document.getElementById("title").onclick = function() {
+      document.getElementById("pageTitle").onclick = function() {
         let input = document.createElement("input");
         input.value = data.title;
         this.innerHTML = "";
@@ -376,32 +458,55 @@ ondragleave="clearDrop()">
         input.onkeydown = function(e) {
           if (e.key === "Enter") {
             data.title = this.value.trim() || "Shortcuts";
-            save()
+            save();
           }
-        }
+        };
       };
 
       function toggleSection(i) {
         data.sections[i].collapsed = !data.sections[i].collapsed;
-        save()
+        save();
+      }
+
+      function editSectionTitle(i) {
+        let div = document.getElementById("sectionTitle" + i);
+        if (!div) return;
+        let input = document.createElement("input");
+        input.value = data.sections[i].title;
+        div.innerHTML = "";
+        div.appendChild(input);
+        input.focus();
+        input.select();
+        input.onkeydown = function(e) {
+          if (e.key === "Enter") {
+            data.sections[i].title = this.value.trim() || "Section";
+            save();
+          }
+        };
+        input.onblur = function() {
+          data.sections[i].title = this.value.trim() || "Section";
+          save();
+        };
       }
 
       function addSection() {
         let title = prompt("Section name:");
-        if (title) {
-          data.sections.push({
-            title: title,
-            collapsed: false,
-            links: []
-          });
-          save()
-        }
+        if (!title) return;
+        data.sections.push({
+          title: title,
+          collapsed: false,
+          x: 60,
+          y: 80,
+          z: ++data.nextZ,
+          links: []
+        });
+        save();
       }
 
       function deleteSection(i) {
         if (confirm("Delete section?")) {
           data.sections.splice(i, 1);
-          save()
+          save();
         }
       }
 
@@ -411,9 +516,9 @@ ondragleave="clearDrop()">
         if (!url.startsWith("http")) url = "https://" + url;
         let title;
         try {
-          title = new URL(url).hostname.replace("www.", "")
+          title = new URL(url).hostname.replace("www.", "");
         } catch {
-          title = url
+          title = url;
         }
         let custom = prompt("Link title:", title);
         if (custom) title = custom;
@@ -421,58 +526,70 @@ ondragleave="clearDrop()">
           title: title,
           url: url
         });
-        save()
+        save();
       }
 
       function deleteLink(s, l) {
         data.sections[s].links.splice(l, 1);
-        save()
+        save();
+      }
+      let dragSection = null;
+      let dragOffsetX = 0;
+      let dragOffsetY = 0;
+
+      function startDrag(e, index) {
+        if (e.target.classList.contains("iconButton") || e.target.tagName === "INPUT") {
+          return;
+        }
+        e.preventDefault();
+        dragSection = index;
+        data.sections[index].z = ++data.nextZ;
+        let section = data.sections[index];
+        dragOffsetX = e.clientX - section.x;
+        dragOffsetY = e.clientY - section.y;
+        document.addEventListener("mousemove", dragMove);
+        document.addEventListener("mouseup", dragEnd);
       }
 
-      function changeBackground() {
-        let url = prompt("Background image URL:");
-        if (url) {
-          data.background = url;
-          save()
+      function dragMove(e) {
+        if (dragSection === null) return;
+        let x = e.clientX - dragOffsetX;
+        let y = e.clientY - dragOffsetY;
+        let maxX = Math.max(0, window.innerWidth - 340);
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (x > maxX) x = maxX;
+        data.sections[dragSection].x = x;
+        data.sections[dragSection].y = y;
+        let el = document.querySelector(`[data-index="${dragSection}"]`);
+        if (el) {
+          el.style.left = x + "px";
+          el.style.top = y + "px";
+          el.style.zIndex = data.sections[dragSection].z;
         }
       }
-      let draggedSection = null;
+
+      function dragEnd() {
+        document.removeEventListener("mousemove", dragMove);
+        document.removeEventListener("mouseup", dragEnd);
+        dragSection = null;
+        save();
+      }
       let draggedLink = null;
-
-      function sectionDragStart(e, index) {
-        draggedSection = index;
-        e.currentTarget.classList.add("dragging")
-      }
-
-      function sectionDragOver(e, index) {
-        e.preventDefault();
-        if (draggedSection === null || draggedSection === index) return;
-        showDropLine(e.currentTarget)
-      }
-
-      function sectionDrop(e, index) {
-        e.preventDefault();
-        removeDropLine();
-        if (draggedSection === null || draggedSection === index) return;
-        let item = data.sections.splice(draggedSection, 1)[0];
-        data.sections.splice(index, 0, item);
-        draggedSection = null;
-        save()
-      }
 
       function linkDragStart(e, section, index) {
         draggedLink = {
           section: section,
           index: index
         };
-        e.currentTarget.classList.add("dragging")
+        e.currentTarget.classList.add("dragging");
       }
 
       function linkDragOver(e, section, index) {
         e.preventDefault();
         if (!draggedLink) return;
         if (draggedLink.section === section && draggedLink.index === index) return;
-        showDropLine(e.currentTarget)
+        showDropLine(e.currentTarget);
       }
 
       function linkDrop(e, section, index) {
@@ -487,7 +604,7 @@ ondragleave="clearDrop()">
         }
         data.sections[section].links.splice(index, 0, item);
         draggedLink = null;
-        save()
+        save();
       }
 
       function showDropLine(element) {
@@ -498,13 +615,21 @@ ondragleave="clearDrop()">
       }
 
       function clearDrop() {
-        removeDropLine()
+        removeDropLine();
       }
 
       function removeDropLine() {
         let line = document.querySelector(".drop-line");
         if (line) {
-          line.remove()
+          line.remove();
+        }
+      }
+
+      function changeBackground() {
+        let url = prompt("Background image URL:");
+        if (url) {
+          data.background = url;
+          save();
         }
       }
 
@@ -532,14 +657,7 @@ ondragleave="clearDrop()">
       function loadJSON() {
         try {
           data = JSON.parse(document.getElementById("jsonInput").value);
-          data.sections.forEach(section => {
-            if (section.collapsed === undefined) {
-              section.collapsed = false;
-            }
-            if (!section.links) {
-              section.links = [];
-            }
-          });
+          normalize();
           save();
           closeModal();
         } catch {
