@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life Consumption Calculator</title>
+
+  <!-- Latest jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 650px;
+      padding: 40px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #222;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    select,
+    input[type="date"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .result-section {
+      margin-top: 35px;
+      display: none;
+    }
+
+	.progress-container {
+	  width: 100%;
+	  height: 45px;
+	  border-radius: 30px;
+	  overflow: hidden;
+	  position: relative;
+
+	  /* Background behind the bar */
+	  background: #d1d5db;
+
+	  /* Outer shadow */
+	  box-shadow:
+		0 4px 12px rgba(0, 0, 0, 0.12);
+
+	  /* Small border for depth */
+	  border: 1px solid rgba(255,255,255,0.5);
+	}
+
+	.progress-bar {
+	  height: 100%;
+	  width: 0%;
+	  background: linear-gradient(90deg, #22c55e, #16a34a);
+	  transition: width 1s ease;
+
+	  box-shadow: 0 0 10px rgba(34, 197, 94, 0.45);
+	}
+
+    .progress-text {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .message {
+      margin-top: 10px;
+      text-align: center;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .extra-info {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 16px;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Life Consumption Calculator</h1>
+
+    <div class="field">
+      <label for="gender">Gender</label>
+      <select id="gender">
+        <option value="">Select</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob">
+    </div>
+
+    <button id="calculateBtn">Calculate</button>
+
+    <div class="result-section" id="resultSection">
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="progress-text" id="progressText">0%</div>
+
+      <div class="extra-info" id="extraInfo"></div>
+
+      <div class="message" id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+
+      $("#calculateBtn").click(function () {
+
+        const gender = $("#gender").val();
+        const dobValue = $("#dob").val();
+
+        if (!gender || !dobValue) {
+          alert("Please complete all fields.");
+          return;
+        }
+
+        // Estimated life expectancy
+        let lifeExpectancy = 0;
+
+        if (gender === "male") {
+          lifeExpectancy = 76;
+        } else {
+          lifeExpectancy = 81;
+        }
+
+        const dob = new Date(dobValue);
+        const today = new Date();
+
+        // Age calculation in milliseconds
+        const ageMs = today - dob;
+
+        // Convert age to years
+        const ageYears = ageMs / (1000 * 60 * 60 * 24 * 365.25);
+
+        // Percentage consumed
+        let percentage = (ageYears / lifeExpectancy) * 100;
+
+        // Prevent exceeding 100%
+        if (percentage > 100) {
+          percentage = 100;
+        }
+
+        percentage = percentage.toFixed(2);
+
+        // Remaining years
+        let remainingYears = (lifeExpectancy - ageYears).toFixed(1);
+
+        if (remainingYears < 0) {
+          remainingYears = 0;
+        }
+
+        $("#resultSection").fadeIn();
+
+        $("#progressBar").css("width", percentage + "%");
+
+        $("#progressText").text(percentage + "% of life consumed");
+
+        $("#extraInfo").html(
+          "<strong>Estimated remaining years:</strong> " + remainingYears
+        );
+
+        $("#message").text(
+          "This result is an estimate based on an average life expectancy of " +
+          lifeExpectancy +
+          " years for " +
+          (gender === "male" ? "men." : "women.")
+        );
+      });
+
+    });
+  </script>
+
+</body>
+</html>
