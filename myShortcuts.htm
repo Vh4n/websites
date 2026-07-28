@@ -1,519 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shortcuts</title>
     <style>
-        :root{
-        --card:rgba(27,27,27,.78);
-        --hover:#252525;
-        --text:#eee;
-        --accent:#4da3ff;
-        --border:#333;
-        --drop:#4da3ff
-        }
-        *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-        body{
-        margin:0;
-        padding:25px;
-        min-height:100vh;
-        color:var(--text);
+      :root {
+        --card: rgba(27, 27, 27, .78);
+        --hover: #252525;
+        --text: #eee;
+        --accent: #4da3ff;
+        --border: #333;
+        --drop: #4da3ff
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif
+      }
+
+      body {
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        color: var(--text);
         background:
-        linear-gradient(rgba(0,0,0,.78),rgba(0,0,0,.78)),
-        var(--background-image,none);
-        background-size:cover;
-        background-position:center;
-        background-attachment:fixed
+          linear-gradient(rgba(0, 0, 0, .78), rgba(0, 0, 0, .78)),
+          var(--background-image, none);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px
+      }
+
+      .title {
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        word-break: break-word
+      }
+
+      .title input {
+        max-width: 100%;
+        background: #111;
+        color: white;
+        border: 1px solid var(--accent);
+        font-size: 26px;
+        padding: 5px;
+        border-radius: 6px
+      }
+
+      .container {
+        width: 100%;
+        max-width: 750px;
+        margin: 30px auto
+      }
+
+      .section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .25);
+        overflow: hidden
+      }
+
+      .section.dragging,
+      .link.dragging {
+        opacity: .45
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        min-width: 0
+      }
+
+      .section-title span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap
+      }
+
+      .drag-handle {
+        cursor: grab;
+        color: #888;
+        flex: none
+      }
+
+      .section-toggle {
+        color: #aaa;
+        width: 18px;
+        flex: none
+      }
+
+      .section-actions {
+        margin-left: auto;
+        flex: none
+      }
+
+      .links {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-top: 12px
+      }
+
+      .link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border-radius: 8px;
+        transition: .15s;
+        min-width: 0
+      }
+
+      .link:hover {
+        background: var(--hover);
+        transform: translateX(4px)
+      }
+
+      .link a {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--accent);
+        text-decoration: none
+      }
+
+      .link a:hover {
+        text-decoration: underline
+      }
+
+      .drop-line {
+        height: 3px;
+        background: var(--drop);
+        border-radius: 5px;
+        margin: 4px 0
+      }
+
+      button {
+        background: #222;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 7px;
+        padding: 7px 12px;
+        cursor: pointer;
+        white-space: nowrap
+      }
+
+      button:hover {
+        background: #333
+      }
+
+      .add-btn {
+        display: block;
+        margin: 10px auto;
+        background: #1677ff;
+        border: none
+      }
+
+      .delete {
+        background: none;
+        border: none;
+        color: #777;
+        font-size: 18px;
+        padding: 2px 6px
+      }
+
+      .delete:hover {
+        color: #ff5555;
+        background: none
+      }
+
+      .export-box {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        display: flex;
+        gap: 8px
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .7);
+        justify-content: center;
+        align-items: center;
+        padding: 15px
+      }
+
+      .modal-content {
+        width: 100%;
+        max-width: 500px;
+        background: #1c1c1c;
+        padding: 20px;
+        border-radius: 12px
+      }
+
+      textarea {
+        width: 100%;
+        height: 250px;
+        resize: none;
+        background: #111;
+        color: white;
+        border: 1px solid #444;
+        padding: 10px
+      }
+
+      @media(max-width:600px) {
+        body {
+          padding: 12px
         }
-        .header{
-        display:flex;
-        justify-content:space-between;
-        align-items:center
+
+        .header {
+          align-items: flex-start
         }
-        .title{
-        font-size:30px;
-        font-weight:bold;
-        cursor:pointer
+
+        .title {
+          font-size: 24px
         }
-        .title input{
-        background:#111;
-        color:white;
-        border:1px solid var(--accent);
-        font-size:26px;
-        padding:5px;
-        border-radius:6px
+
+        .title input {
+          font-size: 22px
         }
-        .container{
-        max-width:750px;
-        width:100%;
-        margin:35px auto
+
+        .container {
+          margin: 20px auto
         }
-        .section{
-        background:var(--card);
-        border:1px solid var(--border);
-        border-radius:12px;
-        padding:15px 18px;
-        margin-bottom:15px;
-        box-shadow:0 4px 15px rgba(0,0,0,.25)
+
+        .section {
+          padding: 12px;
+          border-radius: 10px
         }
-        .section.dragging,.link.dragging{
-        opacity:.45
+
+        .section-title {
+          font-size: 16px
         }
-        .section-title{
-        display:flex;
-        align-items:center;
-        gap:10px;
-        font-size:18px;
-        font-weight:bold;
-        cursor:pointer
+
+        .link {
+          padding: 8px
         }
-        .drag-handle{
-        cursor:grab;
-        color:#888
+
+        .export-box {
+          position: fixed;
+          right: 10px;
+          bottom: 10px;
+          flex-direction: column;
+          gap: 5px
         }
-        .section-toggle{
-        color:#aaa;
-        width:18px
+
+        .export-box button {
+          padding: 6px 10px;
+          font-size: 13px
         }
-        .section-actions{
-        margin-left:auto
+
+        button {
+          padding: 6px 10px;
+          font-size: 14px
         }
-        .links{
-        display:flex;
-        flex-direction:column;
-        gap:5px;
-        margin-top:12px
+
+        .background-btn {
+          font-size: 13px
         }
-        .link{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        padding:9px 12px;
-        border-radius:8px;
-        transition:.15s
-        }
-        .link:hover{
-        background:var(--hover);
-        transform:translateX(4px)
-        }
-        .link a{
-        flex-grow:1;
-        color:var(--accent);
-        text-decoration:none
-        }
-        .link a:hover{
-        text-decoration:underline
-        }
-        .drop-line{
-        height:3px;
-        background:var(--drop);
-        border-radius:5px;
-        margin:4px 0
-        }
-        button{
-        background:#222;
-        color:white;
-        border:1px solid #444;
-        border-radius:7px;
-        padding:7px 12px;
-        cursor:pointer
-        }
-        button:hover{
-        background:#333
-        }
-        .add-btn{
-        display:block;
-        margin:10px auto;
-        background:#1677ff;
-        border:none
-        }
-        .delete{
-        background:none;
-        border:none;
-        color:#777;
-        font-size:18px;
-        padding:2px 6px
-        }
-        .delete:hover{
-        color:#ff5555;
-        background:none
-        }
-        .export-box{
-        position:fixed;
-        right:20px;
-        bottom:20px;
-        display:flex;
-        gap:8px
-        }
-        .modal{
-        display:none;
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,.7);
-        justify-content:center;
-        align-items:center
-        }
-        .modal-content{
-        background:#1c1c1c;
-        padding:20px;
-        border-radius:12px
-        }
-        textarea{
-        width:450px;
-        height:250px;
-        background:#111;
-        color:white;
-        border:1px solid #444;
-        padding:10px
-        }
+      }
     </style>
-</head>
-
-<body>
-
+  </head>
+  <body>
     <div class="header">
-        <div id="title" class="title"></div>
-        <button onclick="changeBackground()">Background</button>
+      <div id="title" class="title"></div>
+      <button onclick="changeBackground()">Background</button>
     </div>
-
     <div id="content" class="container"></div>
-
     <button class="add-btn" onclick="addSection()">+ Add Section</button>
-
     <div class="export-box">
-        <button onclick="exportJSON()">Export</button>
-        <button onclick="importJSON()">Import</button>
+      <button onclick="exportJSON()">Export</button>
+      <button onclick="importJSON()">Import</button>
     </div>
-
     <div class="modal" id="jsonModal">
-        <div class="modal-content">
-            <h3>Import JSON</h3>
-            <textarea id="jsonInput"></textarea>
-            <br>
-            <br>
-            <button onclick="loadJSON()">Load</button>
-            <button onclick="closeModal()">Cancel</button>
-        </div>
+      <div class="modal-content">
+        <h3>Import JSON</h3>
+        <textarea id="jsonInput"></textarea>
+        <br>
+        <br>
+        <button onclick="loadJSON()">Load</button>
+        <button onclick="closeModal()">Cancel</button>
+      </div>
     </div>
-
     <script>
-        let data=JSON.parse(localStorage.getItem("favorites"))||{
-        title:"Shortcuts",
-        background:"",
-        sections:[]
-        };
-        
-        function save(){
-        localStorage.setItem("favorites",JSON.stringify(data));
+      let data = JSON.parse(localStorage.getItem("favorites")) || {
+        title: "Shortcuts",
+        background: "",
+        sections: []
+      };
+
+      function save() {
+        localStorage.setItem("favorites", JSON.stringify(data));
         render()
+      }
+
+      function render() {
+        document.getElementById("title").innerHTML = data.title;
+        if (data.background) {
+          document.body.style.setProperty("--background-image", `url("${data.background}")`)
         }
-        
-        function render(){
-        document.getElementById("title").innerHTML=data.title;
-        
-        if(data.background){
-        document.body.style.setProperty("--background-image",`url("${data.background}")`)
-        }
-        
-        let html="";
-        
-        data.sections.forEach((section,s)=>{
-        if(section.collapsed===undefined)section.collapsed=false;
-        
-        html+=`
-        <div class="section"
-        draggable="true"
-        ondragstart="sectionDragStart(event,${s})"
-        ondragover="sectionDragOver(event,${s})"
-        ondrop="sectionDrop(event,${s})"
-        ondragleave="clearDrop()">
-        
-        <div class="section-title" onclick="toggleSection(${s})">
-        
-        <span class="drag-handle" onclick="event.stopPropagation()">☷</span>
-        
-        <span class="section-toggle">${section.collapsed?"▶":"▼"}</span>
-        
-        <span>${section.title}</span>
-        
-        <div class="section-actions">
-        <button class="delete" onclick="event.stopPropagation();deleteSection(${s})">×</button>
-        </div>
-        
-        </div>
-        `;
-        
-        if(!section.collapsed){
-        html+=`<div class="links">`;
-        
-        section.links.forEach((link,l)=>{
-        html+=`
-        <div class="link"
-        draggable="true"
-        ondragstart="linkDragStart(event,${s},${l})"
-        ondragover="linkDragOver(event,${s},${l})"
-        ondrop="linkDrop(event,${s},${l})"
-        ondragleave="clearDrop()">
-        
-        <a href="${link.url}">${link.title}</a>
-        
-        <button class="delete" onclick="deleteLink(${s},${l})">×</button>
-        
-        </div>
-        `;
+        let html = "";
+        data.sections.forEach((section, s) => {
+          if (section.collapsed === undefined) section.collapsed = false;
+          html += `
+
+							<div class="section"
+draggable="true"
+ondragstart="sectionDragStart(event,${s})"
+ondragover="sectionDragOver(event,${s})"
+ondrop="sectionDrop(event,${s})"
+ondragleave="clearDrop()">
+								<div class="section-title" onclick="toggleSection(${s})">
+									<span class="drag-handle" onclick="event.stopPropagation()">☷</span>
+									<span class="section-toggle">${section.collapsed?"▶":"▼"}</span>
+									<span>${section.title}</span>
+									<div class="section-actions">
+										<button class="delete" onclick="event.stopPropagation();deleteSection(${s})">×</button>
+									</div>
+								</div>
+`;
+          if (!section.collapsed) {
+            html += `
+								<div class="links">`;
+            section.links.forEach((link, l) => {
+              html += `
+
+									<div class="link"
+draggable="true"
+ondragstart="linkDragStart(event,${s},${l})"
+ondragover="linkDragOver(event,${s},${l})"
+ondrop="linkDrop(event,${s},${l})"
+ondragleave="clearDrop()">
+										<a href="${link.url}">${link.title}</a>
+										<button class="delete" onclick="deleteLink(${s},${l})">×</button>
+									</div>
+`;
+            });
+            html += `
+
+								</div>
+								<button onclick="addLink(${s})">+ Add Link</button>
+`;
+          }
+          html += `
+							</div>`;
         });
-        
-        html+=`
-        </div>
-        <button onclick="addLink(${s})">+ Add Link</button>
-        `;
-        }
-        
-        html+=`</div>`;
-        });
-        
-        document.getElementById("content").innerHTML=html
-        }
-        
-        document.getElementById("title").onclick=function(){
-        let input=document.createElement("input");
-        input.value=data.title;
-        this.innerHTML="";
+        document.getElementById("content").innerHTML = html
+      }
+      document.getElementById("title").onclick = function() {
+        let input = document.createElement("input");
+        input.value = data.title;
+        this.innerHTML = "";
         this.appendChild(input);
         input.focus();
-        
-        input.onkeydown=function(e){
-        if(e.key==="Enter"){
-        data.title=this.value.trim()||"Shortcuts";
+        input.onkeydown = function(e) {
+          if (e.key === "Enter") {
+            data.title = this.value.trim() || "Shortcuts";
+            save()
+          }
+        }
+      };
+
+      function toggleSection(i) {
+        data.sections[i].collapsed = !data.sections[i].collapsed;
         save()
+      }
+
+      function addSection() {
+        let title = prompt("Section name:");
+        if (title) {
+          data.sections.push({
+            title: title,
+            collapsed: false,
+            links: []
+          });
+          save()
         }
+      }
+
+      function deleteSection(i) {
+        if (confirm("Delete section?")) {
+          data.sections.splice(i, 1);
+          save()
         }
-        };
-        
-        function toggleSection(i){
-        data.sections[i].collapsed=!data.sections[i].collapsed;
-        save()
-        }
-        
-        function addSection(){
-        let title=prompt("Section name:");
-        if(title){
-        data.sections.push({
-        title:title,
-        collapsed:false,
-        links:[]
-        });
-        save()
-        }
-        }
-        
-        function deleteSection(i){
-        if(confirm("Delete section?")){
-        data.sections.splice(i,1);
-        save()
-        }
-        }
-        
-        function addLink(section){
-        let url=prompt("Website URL:");
-        if(!url)return;
-        
-        if(!url.startsWith("http"))url="https://"+url;
-        
+      }
+
+      function addLink(section) {
+        let url = prompt("Website URL:");
+        if (!url) return;
+        if (!url.startsWith("http")) url = "https://" + url;
         let title;
-        
-        try{
-        title=new URL(url).hostname.replace("www.","")
-        }catch{
-        title=url
+        try {
+          title = new URL(url).hostname.replace("www.", "")
+        } catch {
+          title = url
         }
-        
-        let custom=prompt("Link title:",title);
-        
-        if(custom)title=custom;
-        
+        let custom = prompt("Link title:", title);
+        if (custom) title = custom;
         data.sections[section].links.push({
-        title:title,
-        url:url
+          title: title,
+          url: url
         });
-        
         save()
-        }
-        
-        function deleteLink(s,l){
-        data.sections[s].links.splice(l,1);
+      }
+
+      function deleteLink(s, l) {
+        data.sections[s].links.splice(l, 1);
         save()
+      }
+
+      function changeBackground() {
+        let url = prompt("Background image URL:");
+        if (url) {
+          data.background = url;
+          save()
         }
-        
-        function changeBackground(){
-        let url=prompt("Background image URL:");
-        if(url){
-        data.background=url;
-        save()
-        }
-        }
-        
-        let draggedSection=null;
-        let draggedLink=null;
-        
-        function sectionDragStart(e,index){
-        draggedSection=index;
+      }
+      let draggedSection = null;
+      let draggedLink = null;
+
+      function sectionDragStart(e, index) {
+        draggedSection = index;
         e.currentTarget.classList.add("dragging")
-        }
-        
-        function sectionDragOver(e,index){
+      }
+
+      function sectionDragOver(e, index) {
         e.preventDefault();
-        
-        if(draggedSection===null||draggedSection===index)return;
-        
+        if (draggedSection === null || draggedSection === index) return;
         showDropLine(e.currentTarget)
-        }
-        
-        function sectionDrop(e,index){
+      }
+
+      function sectionDrop(e, index) {
         e.preventDefault();
-        
         removeDropLine();
-        
-        if(draggedSection===null||draggedSection===index)return;
-        
-        let item=data.sections.splice(draggedSection,1)[0];
-        
-        data.sections.splice(index,0,item);
-        
-        draggedSection=null;
-        
+        if (draggedSection === null || draggedSection === index) return;
+        let item = data.sections.splice(draggedSection, 1)[0];
+        data.sections.splice(index, 0, item);
+        draggedSection = null;
         save()
-        }
-        
-        
-        function linkDragStart(e,section,index){
-        draggedLink={
-        section:section,
-        index:index
+      }
+
+      function linkDragStart(e, section, index) {
+        draggedLink = {
+          section: section,
+          index: index
         };
-        
         e.currentTarget.classList.add("dragging")
-        }
-        
-        function linkDragOver(e,section,index){
+      }
+
+      function linkDragOver(e, section, index) {
         e.preventDefault();
-        
-        if(!draggedLink)return;
-        
-        if(
-        draggedLink.section===section &&
-        draggedLink.index===index
-        )return;
-        
+        if (!draggedLink) return;
+        if (draggedLink.section === section && draggedLink.index === index) return;
         showDropLine(e.currentTarget)
-        }
-        
-        function linkDrop(e,section,index){
+      }
+
+      function linkDrop(e, section, index) {
         e.preventDefault();
-        
         removeDropLine();
-        
-        if(!draggedLink)return;
-        
-        let fromSection=draggedLink.section;
-        let fromIndex=draggedLink.index;
-        
-        let item=data.sections[fromSection].links.splice(fromIndex,1)[0];
-        
-        if(fromSection===section&&fromIndex<index){
-        index--
+        if (!draggedLink) return;
+        let fromSection = draggedLink.section;
+        let fromIndex = draggedLink.index;
+        let item = data.sections[fromSection].links.splice(fromIndex, 1)[0];
+        if (fromSection === section && fromIndex < index) {
+          index--;
         }
-        
-        data.sections[section].links.splice(index,0,item);
-        
-        draggedLink=null;
-        
+        data.sections[section].links.splice(index, 0, item);
+        draggedLink = null;
         save()
-        }
-        
-        
-        function showDropLine(element){
+      }
+
+      function showDropLine(element) {
         removeDropLine();
-        
-        let line=document.createElement("div");
-        line.className="drop-line";
-        
-        element.parentNode.insertBefore(line,element)
-        }
-        
-        function clearDrop(){
+        let line = document.createElement("div");
+        line.className = "drop-line";
+        element.parentNode.insertBefore(line, element);
+      }
+
+      function clearDrop() {
         removeDropLine()
+      }
+
+      function removeDropLine() {
+        let line = document.querySelector(".drop-line");
+        if (line) {
+          line.remove()
         }
-        
-        function removeDropLine(){
-        let line=document.querySelector(".drop-line");
-        
-        if(line){
-        line.remove()
+      }
+
+      function exportJSON() {
+        let blob = new Blob(
+          [
+            JSON.stringify(data, null, 4)
+          ], {
+            type: "application/json"
+          });
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "shortcuts.json";
+        a.click();
+      }
+
+      function importJSON() {
+        document.getElementById("jsonModal").style.display = "flex";
+      }
+
+      function closeModal() {
+        document.getElementById("jsonModal").style.display = "none";
+      }
+
+      function loadJSON() {
+        try {
+          data = JSON.parse(document.getElementById("jsonInput").value);
+          data.sections.forEach(section => {
+            if (section.collapsed === undefined) {
+              section.collapsed = false;
+            }
+            if (!section.links) {
+              section.links = [];
+            }
+          });
+          save();
+          closeModal();
+        } catch {
+          alert("Invalid JSON");
         }
-        }
-        
-        
-        function exportJSON(){
-        let blob=new Blob(
-        [
-        JSON.stringify(data,null,4)
-        ],
-        {
-        type:"application/json"
-        }
-        );
-        
-        let a=document.createElement("a");
-        
-        a.href=URL.createObjectURL(blob);
-        a.download="shortcuts.json";
-        a.click()
-        }
-        
-        
-        function importJSON(){
-        document.getElementById("jsonModal").style.display="flex"
-        }
-        
-        function closeModal(){
-        document.getElementById("jsonModal").style.display="none"
-        }
-        
-        
-        function loadJSON(){
-        try{
-        
-        data=JSON.parse(
-        document.getElementById("jsonInput").value
-        );
-        
-        data.sections.forEach(section=>{
-        
-        if(section.collapsed===undefined){
-        section.collapsed=false
-        }
-        
-        if(!section.links){
-        section.links=[]
-        }
-        
-        });
-        
-        save();
-        
-        closeModal()
-        
-        }catch{
-        alert("Invalid JSON")
-        }
-        }
-        
-        
-        render();
+      }
+      render();
     </script>
-
-</body>
-
+  </body>
 </html>
