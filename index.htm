@@ -141,6 +141,12 @@ const projects = [
         name: "Dog Life Calculator",
         description: "Calculate your dog's remaining life",
         url: "https://vh4n.github.io/websites/doglifeCalc.htm"
+    },
+
+    {
+        name: "Randomizer",
+        description: "Generate random values",
+        url: "https://vh4n.github.io/websites/randomizer.htm"
     }
 
 ];
@@ -155,9 +161,9 @@ function displayProjects(filter = "") {
 
     projectContainer.innerHTML = "";
 
-    let filtered = projects.filter(project => {
+    const filteredProjects = projects.filter(project => {
 
-        let text = (
+        const searchableText = (
             project.name +
             " " +
             project.description +
@@ -165,22 +171,26 @@ function displayProjects(filter = "") {
             project.url
         ).toLowerCase();
 
-        return text.includes(filter.toLowerCase());
+        return searchableText.includes(filter.toLowerCase());
 
     });
 
 
-    if(filtered.length === 0) {
+    if (filteredProjects.length === 0) {
+
         noResults.style.display = "block";
-        return;
+
+    } else {
+
+        noResults.style.display = "none";
+
     }
 
-    noResults.style.display = "none";
 
+    filteredProjects.forEach(project => {
 
-    filtered.forEach(project => {
+        const card = document.createElement("div");
 
-        let card = document.createElement("div");
         card.className = "project";
 
         card.innerHTML = `
@@ -206,7 +216,7 @@ function displayProjects(filter = "") {
 }
 
 
-search.addEventListener("input", function(){
+search.addEventListener("input", function() {
 
     displayProjects(this.value);
 
