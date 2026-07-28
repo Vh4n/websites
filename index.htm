@@ -1,1 +1,222 @@
-Hello World!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Vh4n Projects</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #121212;
+        color: #e0e0e0;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 900px;
+        margin: auto;
+        padding: 40px 0;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 36px;
+        margin-bottom: 30px;
+        color: #ffffff;
+    }
+
+    .search-box {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background: #1e1e1e;
+        color: white;
+        box-sizing: border-box;
+        margin-bottom: 30px;
+        outline: none;
+    }
+
+    .search-box:focus {
+        border-color: #888;
+    }
+
+    .projects {
+        display: grid;
+        gap: 20px;
+    }
+
+    .project {
+        background: #1c1c1c;
+        border: 1px solid #333;
+        border-radius: 10px;
+        padding: 20px;
+        transition: 0.2s;
+    }
+
+    .project:hover {
+        transform: translateY(-3px);
+        border-color: #777;
+    }
+
+    .project a {
+        color: #4da6ff;
+        text-decoration: none;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .project a:hover {
+        text-decoration: underline;
+    }
+
+    .description {
+        margin-top: 10px;
+        color: #bbbbbb;
+        font-size: 16px;
+    }
+
+    .url {
+        margin-top: 12px;
+        font-size: 13px;
+        color: #777;
+        word-break: break-all;
+    }
+
+    .no-results {
+        text-align: center;
+        color: #888;
+        font-size: 18px;
+        display: none;
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Vh4n's Github Projects</h1>
+
+    <input 
+        id="search"
+        class="search-box"
+        type="text"
+        placeholder="Search projects by name or description..."
+    >
+
+    <div id="projects" class="projects"></div>
+
+    <div id="noResults" class="no-results">
+        No projects found.
+    </div>
+
+</div>
+
+
+<script>
+
+const projects = [
+
+    {
+        name: "Watch Anime",
+        description: "Watch Anime online",
+        url: "https://vh4n.github.io/websites/animeSearch.htm"
+    },
+
+    {
+        name: "Life Calculator",
+        description: "Calculate your remaining life",
+        url: "https://vh4n.github.io/websites/lifeCalc.htm"
+    },
+
+    {
+        name: "Dog Life Calculator",
+        description: "Calculate your dog's remaining life",
+        url: "https://vh4n.github.io/websites/doglifeCalc.htm"
+    }
+
+];
+
+
+const projectContainer = document.getElementById("projects");
+const search = document.getElementById("search");
+const noResults = document.getElementById("noResults");
+
+
+function displayProjects(filter = "") {
+
+    projectContainer.innerHTML = "";
+
+    let filtered = projects.filter(project => {
+
+        let text = (
+            project.name +
+            " " +
+            project.description +
+            " " +
+            project.url
+        ).toLowerCase();
+
+        return text.includes(filter.toLowerCase());
+
+    });
+
+
+    if(filtered.length === 0) {
+        noResults.style.display = "block";
+        return;
+    }
+
+    noResults.style.display = "none";
+
+
+    filtered.forEach(project => {
+
+        let card = document.createElement("div");
+        card.className = "project";
+
+        card.innerHTML = `
+
+            <a href="${project.url}" target="_blank">
+                ${project.name}
+            </a>
+
+            <div class="description">
+                ${project.description}
+            </div>
+
+            <div class="url">
+                ${project.url}
+            </div>
+
+        `;
+
+        projectContainer.appendChild(card);
+
+    });
+
+}
+
+
+search.addEventListener("input", function(){
+
+    displayProjects(this.value);
+
+});
+
+
+displayProjects();
+
+
+</script>
+
+</body>
+</html>
