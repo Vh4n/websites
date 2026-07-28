@@ -92,22 +92,21 @@
         box-shadow: var(--shadow);
       }
 
+      .section.dragging {
+        opacity: .45;
+      }
+
       .section-header {
         height: 42px;
         display: flex;
         align-items: center;
         gap: 8px;
         padding: 0 10px;
-      }
-
-      .drag-handle {
         cursor: grab;
-        color: #999;
-        font-size: 20px;
         user-select: none;
       }
 
-      .drag-handle:active {
+      .section-header:active {
         cursor: grabbing;
       }
 
@@ -145,6 +144,7 @@
         font-size: 17px;
         cursor: pointer;
         padding: 2px 5px;
+        z-index: 5;
       }
 
       .iconButton:hover {
@@ -380,13 +380,10 @@
 							<div class="section"
 style="left:${section.x}px;top:${section.y}px;z-index:${section.z}"
 data-index="${s}">
-								<div class="section-header">
-									<div class="drag-handle"
-onmousedown="startDrag(event,${s})">
-☰
-</div>
+								<div class="section-header"
+onmousedown="startSectionAction(event,${s})">
 									<div class="sectionName"
-onclick="toggleSection(${s})"
+onclick="sectionClick(event,${s})"
 ondblclick="event.stopPropagation();editSectionTitle(${s})">
 ${section.title}
 </div>
@@ -462,6 +459,70 @@ onclick="addLink(${s})">
           }
         };
       };
+      let dragSection = null;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let originalX = 0;
+      let originalY = 0;
+      let moved = false;
+
+      function startSectionAction(e, index) {
+        if (e.target.classList.contains("iconButton") || e.target.tagName === "INPUT") {
+          return;
+        }
+        dragSection = index;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        originalX = data.sections[index].x;
+        originalY = data.sections[index].y;
+        moved = false;
+        document.addEventListener("mousemove", sectionMouseMove);
+        document.addEventListener("mouseup", sectionMouseUp);
+      }
+
+      function sectionMouseMove(e) {
+        if (dragSection === null) return;
+        let diffX = e.clientX - dragStartX;
+        let diffY = e.clientY - dragStartY;
+        if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) {
+          moved = true;
+          let x = originalX + diffX;
+          let y = originalY + diffY;
+          let maxX = Math.max(0, window.innerWidth - 340);
+          if (x < 0) x = 0;
+          if (y < 0) y = 0;
+          if (x > maxX) x = maxX;
+          data.sections[dragSection].x = x;
+          data.sections[dragSection].y = y;
+          let element = document.querySelector(`[data-index="${dragSection}"]`);
+          if (element) {
+            element.style.left = x + "px";
+            element.style.top = y + "px";
+            element.classList.add("dragging");
+          }
+        }
+      }
+
+      function sectionMouseUp() {
+        if (dragSection === null) return;
+        let element = document.querySelector(`[data-index="${dragSection}"]`);
+        if (element) {
+          element.classList.remove("dragging");
+        }
+        if (!moved) {
+          toggleSection(dragSection);
+        } else {
+          data.sections[dragSection].z = ++data.nextZ;
+          save();
+        }
+        document.removeEventListener("mousemove", sectionMouseMove);
+        document.removeEventListener("mouseup", sectionMouseUp);
+        dragSection = null;
+      }
+
+      function sectionClick(e, index) {
+        if (e.detail === 1) {}
+      }
 
       function toggleSection(i) {
         data.sections[i].collapsed = !data.sections[i].collapsed;
@@ -469,14 +530,15 @@ onclick="addLink(${s})">
       }
 
       function editSectionTitle(i) {
-        let div = document.getElementById("sectionTitle" + i);
-        if (!div) return;
+        let div = document.querySelector(`#sectionTitle${i}`);
+        if (!div) {
+          div = document.querySelectorAll(".sectionName")[i];
+        }
         let input = document.createElement("input");
         input.value = data.sections[i].title;
         div.innerHTML = "";
         div.appendChild(input);
         input.focus();
-        input.select();
         input.onkeydown = function(e) {
           if (e.key === "Enter") {
             data.sections[i].title = this.value.trim() || "Section";
@@ -533,76 +595,32 @@ onclick="addLink(${s})">
         data.sections[s].links.splice(l, 1);
         save();
       }
-      let dragSection = null;
-      let dragOffsetX = 0;
-      let dragOffsetY = 0;
-
-      function startDrag(e, index) {
-        if (e.target.classList.contains("iconButton") || e.target.tagName === "INPUT") {
-          return;
-        }
-        e.preventDefault();
-        dragSection = index;
-        data.sections[index].z = ++data.nextZ;
-        let section = data.sections[index];
-        dragOffsetX = e.clientX - section.x;
-        dragOffsetY = e.clientY - section.y;
-        document.addEventListener("mousemove", dragMove);
-        document.addEventListener("mouseup", dragEnd);
-      }
-
-      function dragMove(e) {
-        if (dragSection === null) return;
-        let x = e.clientX - dragOffsetX;
-        let y = e.clientY - dragOffsetY;
-        let maxX = Math.max(0, window.innerWidth - 340);
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
-        if (x > maxX) x = maxX;
-        data.sections[dragSection].x = x;
-        data.sections[dragSection].y = y;
-        let el = document.querySelector(`[data-index="${dragSection}"]`);
-        if (el) {
-          el.style.left = x + "px";
-          el.style.top = y + "px";
-          el.style.zIndex = data.sections[dragSection].z;
-        }
-      }
-
-      function dragEnd() {
-        document.removeEventListener("mousemove", dragMove);
-        document.removeEventListener("mouseup", dragEnd);
-        dragSection = null;
-        save();
-      }
       let draggedLink = null;
 
-      function linkDragStart(e, section, index) {
+      function linkDragStart(e, s, l) {
         draggedLink = {
-          section: section,
-          index: index
+          section: s,
+          index: l
         };
         e.currentTarget.classList.add("dragging");
       }
 
-      function linkDragOver(e, section, index) {
+      function linkDragOver(e, s, l) {
         e.preventDefault();
         if (!draggedLink) return;
-        if (draggedLink.section === section && draggedLink.index === index) return;
+        if (draggedLink.section === s && draggedLink.index === l) return;
         showDropLine(e.currentTarget);
       }
 
-      function linkDrop(e, section, index) {
+      function linkDrop(e, s, l) {
         e.preventDefault();
         removeDropLine();
         if (!draggedLink) return;
-        let fromSection = draggedLink.section;
-        let fromIndex = draggedLink.index;
-        let item = data.sections[fromSection].links.splice(fromIndex, 1)[0];
-        if (fromSection === section && fromIndex < index) {
-          index--;
+        let item = data.sections[draggedLink.section].links.splice(draggedLink.index, 1)[0];
+        if (draggedLink.section === s && draggedLink.index < l) {
+          l--;
         }
-        data.sections[section].links.splice(index, 0, item);
+        data.sections[s].links.splice(l, 0, item);
         draggedLink = null;
         save();
       }
