@@ -92,7 +92,8 @@
         box-shadow: var(--shadow);
       }
 
-      .section.dragging {
+      .section.dragging,
+      .googleSearch.dragging {
         opacity: .45;
       }
 
@@ -189,6 +190,48 @@
         background: #1677ff;
         border-radius: 5px;
         margin: 3px 0;
+      }
+
+      /* Google input */
+      .googleSearch {
+        position: absolute;
+        width: 340px;
+        z-index: 4000;
+      }
+
+      .googleInput {
+        width: 100%;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, .25);
+        background: rgba(255, 255, 255, .18);
+        color: white;
+        font-size: 16px;
+        padding: 0 14px;
+        outline: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, .15);
+        cursor: grab;
+      }
+
+      .googleInput:active {
+        cursor: grabbing;
+      }
+
+      .googleInput::placeholder {
+        color: rgba(255, 255, 255, .75);
+      }
+
+      .googleInput:focus {
+        border-color: var(--accent);
+      }
+
+      body.light .googleInput {
+        background: rgba(0, 0, 0, .12);
+        color: #111;
+      }
+
+      body.light .googleInput::placeholder {
+        color: #555;
       }
 
       .addLinkButton {
@@ -291,7 +334,8 @@
           gap: 15px;
         }
 
-        .section {
+        .section,
+        .googleSearch {
           position: relative !important;
           left: auto !important;
           top: auto !important;
@@ -334,12 +378,26 @@
         background: "",
         theme: "dark",
         nextZ: 1,
+        widget: {
+          enabled: true,
+          x: 60,
+          y: 20,
+          z: 1
+        },
         sections: []
       };
 
       function normalize() {
         if (!data.nextZ) data.nextZ = 1;
         if (!data.theme) data.theme = "dark";
+        if (!data.widget) {
+          data.widget = {
+            enabled: true,
+            x: 60,
+            y: 20,
+            z: 1
+          };
+        }
         data.sections.forEach((s, i) => {
           if (s.x == null) s.x = 60 + i * 30;
           if (s.y == null) s.y = 80 + i * 30;
@@ -373,64 +431,92 @@
           document.body.style.setProperty("--background-image", `url("${data.background}")`);
         }
         let html = "";
+        if (data.widget.enabled) {
+          html += `
+
+
+							<div class="googleSearch"
+style="
+left:${data.widget.x}px;
+top:${data.widget.y}px;
+z-index:${data.widget.z};
+"
+data-widget="true">
+								<input
+id="googleInput"
+class="googleInput"
+placeholder="Type+enter to google"
+onmousedown="startWidgetDrag(event)"
+onkeydown="googleSearch(event)"
+>
+								</div>
+
+`;
+        }
         data.sections.forEach((section, s) => {
           html += `
 
 
-							<div class="section"
-style="left:${section.x}px;top:${section.y}px;z-index:${section.z}"
+								<div class="section"
+style="
+left:${section.x}px;
+top:${section.y}px;
+z-index:${section.z};
+"
 data-index="${s}">
-								<div class="section-header"
+									<div class="section-header"
 onmousedown="startSectionAction(event,${s})">
-									<div class="sectionName"
-onclick="sectionClick(event,${s})"
+										<div class="sectionName"
+onclick="toggleSection(${s})"
 ondblclick="event.stopPropagation();editSectionTitle(${s})">
+
 ${section.title}
+
 </div>
-									<button class="iconButton"
+										<button class="iconButton"
 onclick="event.stopPropagation();editSectionTitle(${s})">
 ✏
 </button>
-									<button class="iconButton"
+										<button class="iconButton"
 onclick="event.stopPropagation();deleteSection(${s})">
 ×
 </button>
-								</div>
+									</div>
 
 `;
           if (!section.collapsed) {
             html += `
 
 
-								<div class="links">
+									<div class="links">
 
 `;
             section.links.forEach((link, l) => {
               html += `
 
 
-									<div class="link"
+										<div class="link"
 draggable="true"
 ondragstart="linkDragStart(event,${s},${l})"
 ondragover="linkDragOver(event,${s},${l})"
 ondrop="linkDrop(event,${s},${l})"
 ondragleave="clearDrop()">
-										<a href="${link.url}">
+											<a href="${link.url}">
 ${link.title}
 </a>
-										<button class="iconButton"
+											<button class="iconButton"
 onclick="deleteLink(${s},${l})">
 ×
 </button>
-									</div>
+										</div>
 
 `;
             });
             html += `
 
 
-								</div>
-								<button class="addLinkButton"
+									</div>
+									<button class="addLinkButton"
 onclick="addLink(${s})">
 + Add Link
 </button>
@@ -440,12 +526,79 @@ onclick="addLink(${s})">
           html += `
 
 
-							</div>
+								</div>
 
 `;
         });
         document.getElementById("desktop").innerHTML = html;
+        setTimeout(() => {
+          let input = document.getElementById("googleInput");
+          if (input) {
+            input.focus();
+          }
+        }, 100);
       }
+
+      function googleSearch(e) {
+        if (e.key === "Enter") {
+          let text = e.target.value.trim();
+          if (!text) return;
+          window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=14";
+        }
+      }
+      /* GOOGLE INPUT DRAG */
+      let widgetDragging = false;
+      let widgetStartX = 0;
+      let widgetStartY = 0;
+      let widgetOriginalX = 0;
+      let widgetOriginalY = 0;
+      let widgetMoved = false;
+
+      function startWidgetDrag(e) {
+        widgetDragging = true;
+        widgetMoved = false;
+        widgetStartX = e.clientX;
+        widgetStartY = e.clientY;
+        widgetOriginalX = data.widget.x;
+        widgetOriginalY = data.widget.y;
+        data.widget.z = ++data.nextZ;
+        document.addEventListener("mousemove", moveWidget);
+        document.addEventListener("mouseup", endWidgetDrag);
+      }
+
+      function moveWidget(e) {
+        if (!widgetDragging) return;
+        let dx = e.clientX - widgetStartX;
+        let dy = e.clientY - widgetStartY;
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+          widgetMoved = true;
+          let x = widgetOriginalX + dx;
+          let y = widgetOriginalY + dy;
+          if (x < 0) x = 0;
+          if (y < 0) y = 0;
+          data.widget.x = x;
+          data.widget.y = y;
+          let widget = document.querySelector("[data-widget='true']");
+          if (widget) {
+            widget.style.left = x + "px";
+            widget.style.top = y + "px";
+            widget.classList.add("dragging");
+          }
+        }
+      }
+
+      function endWidgetDrag() {
+        if (!widgetDragging) return;
+        widgetDragging = false;
+        let widget = document.querySelector("[data-widget='true']");
+        if (widget) widget.classList.remove("dragging");
+        document.removeEventListener("mousemove", moveWidget);
+        document.removeEventListener("mouseup", endWidgetDrag);
+        if (widgetMoved) {
+          save();
+        }
+      }
+      /* TITLE */
       document.getElementById("pageTitle").onclick = function() {
         let input = document.createElement("input");
         input.value = data.title;
@@ -459,70 +612,6 @@ onclick="addLink(${s})">
           }
         };
       };
-      let dragSection = null;
-      let dragStartX = 0;
-      let dragStartY = 0;
-      let originalX = 0;
-      let originalY = 0;
-      let moved = false;
-
-      function startSectionAction(e, index) {
-        if (e.target.classList.contains("iconButton") || e.target.tagName === "INPUT") {
-          return;
-        }
-        dragSection = index;
-        dragStartX = e.clientX;
-        dragStartY = e.clientY;
-        originalX = data.sections[index].x;
-        originalY = data.sections[index].y;
-        moved = false;
-        document.addEventListener("mousemove", sectionMouseMove);
-        document.addEventListener("mouseup", sectionMouseUp);
-      }
-
-      function sectionMouseMove(e) {
-        if (dragSection === null) return;
-        let diffX = e.clientX - dragStartX;
-        let diffY = e.clientY - dragStartY;
-        if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) {
-          moved = true;
-          let x = originalX + diffX;
-          let y = originalY + diffY;
-          let maxX = Math.max(0, window.innerWidth - 340);
-          if (x < 0) x = 0;
-          if (y < 0) y = 0;
-          if (x > maxX) x = maxX;
-          data.sections[dragSection].x = x;
-          data.sections[dragSection].y = y;
-          let element = document.querySelector(`[data-index="${dragSection}"]`);
-          if (element) {
-            element.style.left = x + "px";
-            element.style.top = y + "px";
-            element.classList.add("dragging");
-          }
-        }
-      }
-
-      function sectionMouseUp() {
-        if (dragSection === null) return;
-        let element = document.querySelector(`[data-index="${dragSection}"]`);
-        if (element) {
-          element.classList.remove("dragging");
-        }
-        if (!moved) {
-          toggleSection(dragSection);
-        } else {
-          data.sections[dragSection].z = ++data.nextZ;
-          save();
-        }
-        document.removeEventListener("mousemove", sectionMouseMove);
-        document.removeEventListener("mouseup", sectionMouseUp);
-        dragSection = null;
-      }
-
-      function sectionClick(e, index) {
-        if (e.detail === 1) {}
-      }
 
       function toggleSection(i) {
         data.sections[i].collapsed = !data.sections[i].collapsed;
@@ -530,10 +619,7 @@ onclick="addLink(${s})">
       }
 
       function editSectionTitle(i) {
-        let div = document.querySelector(`#sectionTitle${i}`);
-        if (!div) {
-          div = document.querySelectorAll(".sectionName")[i];
-        }
+        let div = document.querySelectorAll(".sectionName")[i];
         let input = document.createElement("input");
         input.value = data.sections[i].title;
         div.innerHTML = "";
@@ -550,7 +636,7 @@ onclick="addLink(${s})">
           save();
         };
       }
-
+      /* SECTIONS */
       function addSection() {
         let title = prompt("Section name:");
         if (!title) return;
@@ -571,7 +657,7 @@ onclick="addLink(${s})">
           save();
         }
       }
-
+      /* LINKS */
       function addLink(section) {
         let url = prompt("Website URL:");
         if (!url) return;
@@ -595,6 +681,63 @@ onclick="addLink(${s})">
         data.sections[s].links.splice(l, 1);
         save();
       }
+      /* SECTION DRAG */
+      let dragSection = null;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let originalX = 0;
+      let originalY = 0;
+      let moved = false;
+
+      function startSectionAction(e, index) {
+        if (e.target.classList.contains("iconButton") || e.target.tagName === "INPUT") return;
+        dragSection = index;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        originalX = data.sections[index].x;
+        originalY = data.sections[index].y;
+        moved = false;
+        document.addEventListener("mousemove", sectionMove);
+        document.addEventListener("mouseup", sectionUp);
+      }
+
+      function sectionMove(e) {
+        if (dragSection === null) return;
+        let dx = e.clientX - dragStartX;
+        let dy = e.clientY - dragStartY;
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+          moved = true;
+          let x = originalX + dx;
+          let y = originalY + dy;
+          if (x < 0) x = 0;
+          if (y < 0) y = 0;
+          data.sections[dragSection].x = x;
+          data.sections[dragSection].y = y;
+          let section = document.querySelector(`[data-index="${dragSection}"]`);
+          if (section) {
+            section.style.left = x + "px";
+            section.style.top = y + "px";
+            section.classList.add("dragging");
+          }
+        }
+      }
+
+      function sectionUp() {
+        if (dragSection === null) return;
+        let section = document.querySelector(`[data-index="${dragSection}"]`);
+        if (section) section.classList.remove("dragging");
+        if (!moved) {
+          toggleSection(dragSection);
+        } else {
+          data.sections[dragSection].z =
+            ++data.nextZ;
+          save();
+        }
+        document.removeEventListener("mousemove", sectionMove);
+        document.removeEventListener("mouseup", sectionUp);
+        dragSection = null;
+      }
+      /* LINK DRAG */
       let draggedLink = null;
 
       function linkDragStart(e, s, l) {
@@ -638,11 +781,9 @@ onclick="addLink(${s})">
 
       function removeDropLine() {
         let line = document.querySelector(".drop-line");
-        if (line) {
-          line.remove();
-        }
+        if (line) line.remove();
       }
-
+      /* BACKGROUND */
       function changeBackground() {
         let url = prompt("Background image URL:");
         if (url) {
@@ -650,7 +791,7 @@ onclick="addLink(${s})">
           save();
         }
       }
-
+      /* JSON */
       function exportJSON() {
         let blob = new Blob(
           [
