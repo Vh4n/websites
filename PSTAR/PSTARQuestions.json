@@ -1,0 +1,515 @@
+{
+  "sections": [
+    {
+      "section_code": "1.0",
+      "section_title": "Collision Avoidance",
+      "questions": [
+        {
+          "question_id": "1.01",
+          "question_text": "Which statement is true with regard to aircraft converging at approximately the same altitude?",
+          "options": [
+            {"id": 1, "questions": "A jet airliner has the right of way over all other aircraft", "correct": false},
+            {"id": 2, "questions": "An aircraft towing objects has the right of way over all power-driven heavier-than-air aircraft.", "correct": true},
+            {"id": 3, "questions": "An aeroplane has the right of way over all other aircraft which are converging from the left.", "correct": false},
+            {"id": 4, "questions": "Aeroplanes towing gliders must give way to helicopters.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "1.02",
+          "question_text": "When two aircraft are converging at approximately the same altitude",
+          "options": [
+            {"id": 1, "questions": "both aircraft shall alter heading to the left.", "correct": false},
+            {"id": 2, "questions": "the aircraft on the right shall avoid the other by descending.", "correct": false},
+            {"id": 3, "questions": "the aircraft that has the other on its right shall give way.", "correct": true},
+            {"id": 4, "questions": "the aircraft that has the other on its left shall give way.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "1.03",
+          "question_text": "When two aircraft are converging at approximately the same altitude, which statement applies?",
+          "options": [
+            {"id": 1, "questions": "Gliders shall give way to helicopters.", "correct": false},
+            {"id": 2, "questions": "Aeroplanes shall give way to power-driven heavier-than-air aircraft.", "correct": false},
+            {"id": 3, "questions": "Gliders shall give way to aeroplanes.", "correct": false},
+            {"id": 4, "questions": "Power-driven heavier-than-air aircraft shall give way to gliders.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "1.04",
+          "question_text": "When two aircraft are converging at approximately the same altitude, which statement applies?",
+          "options": [
+            {"id": 1, "questions": "Gliders shall give way to helicopters.", "correct": false},
+            {"id": 2, "questions": "Aeroplanes shall give way to helicopters.", "correct": false},
+            {"id": 3, "questions": "Helicopters shall give way to aeroplanes.", "correct": false},
+            {"id": 4, "questions": "Helicopters shall give way to gliders.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "1.05",
+          "question_text": "When two aircraft are converging at approximately the same altitude, which statement applies?",
+          "options": [
+            {"id": 1, "questions": "Gliders shall give way to helicopters.", "correct": false},
+            {"id": 2, "questions": "Aeroplanes shall give way to helicopters.", "correct": false},
+            {"id": 3, "questions": "Helicopters shall give way to aeroplanes.", "correct": false},
+            {"id": 4, "questions": "Gliders shall give way to balloons.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "1.06",
+          "question_text": "When converging at approximately the same altitude",
+          "options": [
+            {"id": 1, "questions": "balloons shall give way to hang gliders.", "correct": false},
+            {"id": 2, "questions": "aeroplanes towing gliders shall give way to balloons.", "correct": false},
+            {"id": 3, "questions": "balloons shall give way to gliders.", "correct": false},
+            {"id": 4, "questions": "balloons shall give way to airships.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "1.07",
+          "question_text": "When two power-driven heavier-than-air aircraft are converging at approximately the same altitude,",
+          "options": [
+            {"id": 1, "questions": "the one on the left has the right of way.", "correct": false},
+            {"id": 2, "questions": "both shall alter heading to the left.", "correct": false},
+            {"id": 3, "questions": "the one on the right has the right of way.", "correct": true},
+            {"id": 4, "questions": "the one on the right shall give way by descending.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "1.08",
+          "question_text": "When two aircraft are approaching head-on or approximately so and there is danger of collision, each pilot shall",
+          "options": [
+            {"id": 1, "questions": "decrease airspeed.", "correct": false},
+            {"id": 2, "questions": "increase airspeed.", "correct": false},
+            {"id": 3, "questions": "alter heading to the right.", "correct": true},
+            {"id": 4, "questions": "alter heading to the left.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "1.09",
+          "question_text": "When overtaking an aircraft at your 12 o'clock position, at your altitude, you should",
+          "options": [
+            {"id": 1, "questions": "climb.", "correct": false},
+            {"id": 2, "questions": "descend.", "correct": false},
+            {"id": 3, "questions": "alter heading to the right.", "correct": true},
+            {"id": 4, "questions": "alter heading to the left.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "1.10",
+          "question_text": "Two aircraft are on approach to land, the aircraft at the higher altitude shall",
+          "options": [
+            {"id": 1, "questions": "have the right of way.", "correct": false},
+            {"id": 2, "questions": "overtake the lower aircraft on the left.", "correct": false},
+            {"id": 3, "questions": "give way.", "correct": true},
+            {"id": 4, "questions": "complete a 360° turn to the right.", "correct": false}
+          ]
+        }
+      ]
+    },
+    {
+      "section_code": "2.0",
+      "section_title": "Visual Signals",
+      "questions": [
+        {
+          "question_id": "2.01",
+          "question_text": "A series of green flashes directed at an aircraft means respectively in flight / on the ground",
+          "options": [
+            {"id": 1, "questions": "cleared to land; cleared to taxi..", "correct": false},
+            {"id": 2, "questions": "return for landing; cleared for take-off.", "correct": true},
+            {"id": 3, "questions": "return for landing; cleared to taxi.", "correct": false},
+            {"id": 4, "questions": "cleared to land; cleared for take-off.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "2.02",
+          "question_text": "A steady red light directed at an aircraft means respectively in flight / on the ground",
+          "options": [
+            {"id": 1, "questions": "stop.", "correct": false},
+            {"id": 2, "questions": "give way to other aircraft and continue circling; taxi clear of landing area in use.", "correct": true},
+            {"id": 3, "questions": "give way to other aircraft and continue circling; taxi clear of landing area in use.", "correct": false},
+            {"id": 4, "questions": "airport unsafe do not land; stop.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "2.03",
+          "question_text": "A series of red flashes directed at an aircraft means respectively in flight / on the ground",
+          "options": [
+            {"id": 1, "questions": "airport unsafe, do not land; taxi clear of landing area in use.", "correct": true},
+            {"id": 2, "questions": "give way to other aircraft and continue circling; return to starting point on airport.", "correct": false},
+            {"id": 3, "questions": "do not land for time being; stop.", "correct": false},
+            {"id": 4, "questions": "you are in prohibited area, alter course; stop.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "2.04",
+          "question_text": "A steady green light directed at an aircraft means respectively in flight / on the ground",
+          "options": [
+            {"id": 1, "questions": "cleared to taxi.", "correct": false},
+            {"id": 2, "questions": "cleared to land; cleared to taxi.", "correct": true},
+            {"id": 3, "questions": "return for landing; cleared for take-off.", "correct": false},
+            {"id": 4, "questions": "return for landing; cleared for take-off.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "2.05",
+          "question_text": "A flashing white light directed at an aircraft on the manoeuvring area of an airport means",
+          "options": [
+            {"id": 1, "questions": "stop.", "correct": false},
+            {"id": 2, "questions": "return to starting point on the airport.", "correct": true},
+            {"id": 3, "questions": "cleared to taxi.", "correct": false},
+            {"id": 4, "questions": "taxi clear of landing area in use.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "2.06",
+          "question_text": "Blinking runway lights advises vehicles and pedestrians to",
+          "options": [
+            {"id": 1, "questions": "return to the apron.", "correct": false},
+            {"id": 2, "questions": "vacate the runways immediately.", "correct": true},
+            {"id": 3, "questions": "be aware that an emergency is in progress; continue with caution.", "correct": false},
+            {"id": 4, "questions": "be aware that an emergency is in progress; hold your position.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "2.07",
+          "question_text": "Chrome yellow and black strips painted on pylons or on the roof of a building identifies",
+          "options": [
+            {"id": 1, "questions": "an area where explosives are in use.", "correct": false},
+            {"id": 2, "questions": "a fur farm.", "correct": true},
+            {"id": 3, "questions": "an artillery range.", "correct": false},
+            {"id": 4, "questions": "an open pit mine.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "2.08",
+          "question_text": "Pilots should not overfly reindeer or caribou at an altitude of less than",
+          "options": [
+            {"id": 1, "questions": "2,500 feet AGL.", "correct": false},
+            {"id": 2, "questions": "2,000 feet AGL.", "correct": true},
+            {"id": 3, "questions": "1,500 feet AGL.", "correct": false},
+            {"id": 4, "questions": "1,000 feet AGL.", "correct": false}
+          ]
+        }
+      ]
+    },
+    {
+      "section_code": "3.0",
+      "section_title": "Communications",
+      "questions": [
+        {
+          "question_id": "3.01",
+          "question_text": "When making initial contact with a Canadian ATC unit, the pilot of aircraft C-GFLU should transmit the registration as",
+          "options": [
+            {"id": 1, "questions": "Lima Uniform over.", "correct": false},
+            {"id": 2, "questions": "Foxtrot - Lima - Uniform over.", "correct": false},
+            {"id": 3, "questions": "Golf - Foxtrot - Lima - Uniform over.", "correct": false},
+            {"id": 4, "questions": "Charlie Golf - Foxtrot - Lima - Uniform over.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "3.02",
+          "question_text": "When making initial contact with a Canadian ATC unit, the pilot of aircraft C-FBSQ should transmit the registration as",
+          "options": [
+            {"id": 1, "questions": "FBSQ.", "correct": false},
+            {"id": 2, "questions": "Fox, Baker, Sugar, Queen.", "correct": false},
+            {"id": 3, "questions": "Foxtrot, Bravo, Sierra, Quebec.", "correct": true},
+            {"id": 4, "questions": "Bravo, Sierra, Quebec.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.03",
+          "question_text": "After a Canadian privately registered aircraft has made initial contact with an ATS unit, which items may be omitted from subsequent transmissions? The aircraft type and",
+          "options": [
+            {"id": 1, "questions": "any registration letters omitted by ATS in the last communication.", "correct": false},
+            {"id": 2, "questions": "the first two letters of the registration, if initiated by ATS.", "correct": true},
+            {"id": 3, "questions": "the first three letters of the registration.", "correct": false},
+            {"id": 4, "questions": "the phonetic equivalents.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.04",
+          "question_text": "On initial radio contact with an ATS unit the pilot shall transmit the",
+          "options": [
+            {"id": 1, "questions": "type of aircraft and last four letters of the registration in phonetics.", "correct": false},
+            {"id": 2, "questions": "last three letters of the registration in phonetics.", "correct": false},
+            {"id": 3, "questions": "whole registration in phonetics.", "correct": false},
+            {"id": 4, "questions": "type of aircraft and the last three letters of the registration in phonetics.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "3.05",
+          "question_text": "ATIS is normally provided",
+          "options": [
+            {"id": 1, "questions": "to replace the FSS.", "correct": false},
+            {"id": 2, "questions": "to relieve frequency congestion.", "correct": true},
+            {"id": 3, "questions": "for the rapid updating of weather forecasts.", "correct": false},
+            {"id": 4, "questions": "only when VFR conditions exist at airports.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.06",
+          "question_text": "Where ATIS is available the information which should be included on first contact with ATC is the",
+          "options": [
+            {"id": 1, "questions": "phrase \"with the numbers\".", "correct": false},
+            {"id": 2, "questions": "phrase \"ATIS received\".", "correct": false},
+            {"id": 3, "questions": "phrase \"with the information\".", "correct": false},
+            {"id": 4, "questions": "ATIS phonetic identifier.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "3.07",
+          "question_text": "Whenever practicable, pilots operating VFR en route in uncontrolled airspace should continuously monitor",
+          "options": [
+            {"id": 1, "questions": "126.7 MHz.", "correct": true},
+            {"id": 2, "questions": "123.2 MHz.", "correct": false},
+            {"id": 3, "questions": "122.8 MHz.", "correct": false},
+            {"id": 4, "questions": "122.2 MHz.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.08",
+          "question_text": "En route aircraft should, whenever possible, maintain a listening watch for aircraft in distress on",
+          "options": [
+            {"id": 1, "questions": "the receiver mode of the ELT.", "correct": false},
+            {"id": 2, "questions": "121.5 on the aircraft receiver.", "correct": true},
+            {"id": 3, "questions": "121.5 during the first 5 minutes of each hour.", "correct": false},
+            {"id": 4, "questions": "the voice frequency of the navigation aid in use.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.09",
+          "question_text": "The specific frequency, distance and altitude within which MF procedures are to be followed are given in the",
+          "options": [
+            {"id": 1, "questions": "CFS.", "correct": true},
+            {"id": 2, "questions": "Designated Airspace Handbook.", "correct": false},
+            {"id": 3, "questions": "A.I.P. Canada.", "correct": false},
+            {"id": 4, "questions": "Flight Training Manual.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.10",
+          "question_text": "Pilots broadcasting on a MF where no ground station is in operation should direct their transmission to the",
+          "options": [
+            {"id": 1, "questions": "aerodrome UNICOM.", "correct": false},
+            {"id": 2, "questions": "closest ATC unit.", "correct": false},
+            {"id": 3, "questions": "aerodrome traffic.", "correct": true},
+            {"id": 4, "questions": "first aircraft heard on the frequency.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.11",
+          "question_text": "Pilots operating in VMC and intending to land at aerodromes where no UNICOM exists, should broadcast their intentions on the ATF of",
+          "options": [
+            {"id": 1, "questions": "121.5 MHz.", "correct": false},
+            {"id": 2, "questions": "122.2 MHz.", "correct": false},
+            {"id": 3, "questions": "123.2 MHz.", "correct": true},
+            {"id": 4, "questions": "126.7 MHz.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.12",
+          "question_text": "If a MF is in use, pilots departing VFR shall monitor that frequency until",
+          "options": [
+            {"id": 1, "questions": "beyond the specified distance or altitude.", "correct": true},
+            {"id": 2, "questions": "established en route.", "correct": false},
+            {"id": 3, "questions": "established at cruise altitude.", "correct": false},
+            {"id": 4, "questions": "clear of the aerodrome circuit pattern.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.13",
+          "question_text": "A pilot is cleared to taxi to the runway in use without a hold short clearance. To get there, the aircraft must cross two taxiways and one runway. This authorizes the pilot to taxi to",
+          "options": [
+            {"id": 1, "questions": "the runway in use, but must hold short.", "correct": false},
+            {"id": 2, "questions": "the runway in use, but further clearance is required to cross each taxiway and runway en route.", "correct": false},
+            {"id": 3, "questions": "position on the runway without further clearance.", "correct": true},
+            {"id": 4, "questions": "the runway in use, but further clearance is required to cross the other runway.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.14",
+          "question_text": "Ground control authorizes GOLF ALPHA BRAVO CHARLIE TAXI RUNWAY 29 HOLD SHORT OF RUNWAY 04. The pilot should acknowledge this by replying...",
+          "options": [
+            {"id": 1, "questions": "RUNWAY 04", "correct": false},
+            {"id": 2, "questions": "RUNWAY 29", "correct": false},
+            {"id": 3, "questions": "HOLD SHORT OF 29", "correct": false},
+            {"id": 4, "questions": "HOLD SHORT OF 04", "correct": true}
+          ]
+        },
+        {
+          "question_id": "3.15",
+          "question_text": "When a clearance for an immediate take-off is accepted, the pilot shall",
+          "options": [
+            {"id": 1, "questions": "back-track on the runway to use the maximum available length for take-off.", "correct": false},
+            {"id": 2, "questions": "taxi to a full stop in position on the runway and take off without further clearance.", "correct": false},
+            {"id": 3, "questions": "taxi onto the runway and take off in one continuous movement.", "correct": true},
+            {"id": 4, "questions": "complete the pre-take-off check before taxiing onto the runway and taking off.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.16",
+          "question_text": "A pilot flying a heading of 270°, receives the following message from ATC, \"Traffic 2 o'clock, 5 miles, eastbound\". This information indicates the traffic is",
+          "options": [
+            {"id": 1, "questions": "60° to the left, altitude unknown.", "correct": false},
+            {"id": 2, "questions": "60° to the right, altitude unknown.", "correct": true},
+            {"id": 3, "questions": "90° to the right, at same altitude.", "correct": false},
+            {"id": 4, "questions": "90° to the left, at same altitude.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.17",
+          "question_text": "A pilot receives the following ATC clearance \"CLEARED TO LAND, TURN RIGHT AT THE FIRST INTERSECTION\". The pilot should",
+          "options": [
+            {"id": 1, "questions": "land and attempt to turn off even though the speed is considered too high to safely accomplish the turn.", "correct": false},
+            {"id": 2, "questions": "complete a touch-and-go if it is not possible to safely accomplish the turn.", "correct": false},
+            {"id": 3, "questions": "land and turn off at the nearest intersection possible commensurate with safety.", "correct": true},
+            {"id": 4, "questions": "land and do a 180° turn and taxi back to clear the runway at the required intersection.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.18",
+          "question_text": "The radiotelephone distress signal to indicate grave and/or imminent danger requiring immediate assistance is",
+          "options": [
+            {"id": 1, "questions": "MAYDAY, MAYDAY, MAYDAY.", "correct": true},
+            {"id": 2, "questions": "PAN PAN, PAN PAN, PAN PAN.", "correct": false},
+            {"id": 3, "questions": "SECURITY, SECURITY, SECURITY.", "correct": false},
+            {"id": 4, "questions": "EMERGENCY, EMERGENCY, EMERGENCY.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.19",
+          "question_text": "The radiotelephone urgency signal to indicate a condition concerning the safety of an aircraft, vehicle or of some person on board which does not require immediate assistance is",
+          "options": [
+            {"id": 1, "questions": "MAYDAY, MAYDAY, MAYDAY.", "correct": false},
+            {"id": 2, "questions": "PAN PAN, PAN PAN, PAN PAN.", "correct": true},
+            {"id": 3, "questions": "EMERGENCY, EMERGENCY, EMERGENCY.", "correct": false},
+            {"id": 4, "questions": "URGENCY, URGENCY, URGENCY.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.20",
+          "question_text": "What should be included along with the call sign of the aircraft and time, to indicate cancellation of a distress message?",
+          "options": [
+            {"id": 1, "questions": "MAYDAY, MAYDAY, MAYDAY, ALL STATIONS, DISTRESS TRAFFIC ENDED, OUT.", "correct": true},
+            {"id": 2, "questions": "MAYDAY, ALL STATIONS, ALL STATIONS, ALL STATIONS, SILENCE FINISHED, OUT.", "correct": false},
+            {"id": 3, "questions": "MAYDAY CANCELLED, MAYDAY CANCELLED, MAYDAY CANCELLED.", "correct": false},
+            {"id": 4, "questions": "ALL STATIONS, ALL STATIONS, ALL STATIONS, EMERGENCY OVER.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.21",
+          "question_text": "A departing flight will normally remain on tower frequency until",
+          "options": [
+            {"id": 1, "questions": "the flight is 2,000 feet AGL.", "correct": false},
+            {"id": 2, "questions": "25 NM from the airport.", "correct": false},
+            {"id": 3, "questions": "15 NM from the Control Zone.", "correct": false},
+            {"id": 4, "questions": "clear of the Control Zone.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "3.22",
+          "question_text": "You advise ATC that you are on the downwind leg. If there is other traffic in the circuit, ATC will then",
+          "options": [
+            {"id": 1, "questions": "inform you of your number in the approach sequence or other appropriate instructions.", "correct": true},
+            {"id": 2, "questions": "inform you of the runway in use, wind and altimeter.", "correct": false},
+            {"id": 3, "questions": "advise you of all other circuit traffic.", "correct": false},
+            {"id": 4, "questions": "clear you to land.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.23",
+          "question_text": "A radio equipped aircraft has been cleared to land at a controlled airport. The pilot should acknowledge the clearance by",
+          "options": [
+            {"id": 1, "questions": "replying \"Roger\".", "correct": false},
+            {"id": 2, "questions": "replying \"Wilco\".", "correct": false},
+            {"id": 3, "questions": "clicking the microphone button.", "correct": false},
+            {"id": 4, "questions": "transmitting the aircraft call sign.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "3.24",
+          "question_text": "An initial call to Timmins FSS should be \"Timmins...",
+          "options": [
+            {"id": 1, "questions": "radio this is...\"", "correct": false},
+            {"id": 2, "questions": "Flight Service Station this is...\"", "correct": false},
+            {"id": 3, "questions": "UNICOM this is...\"", "correct": false},
+            {"id": 4, "questions": "this is...\"", "correct": true}
+          ]
+        },
+        {
+          "question_id": "3.25",
+          "question_text": "A responsibility of a flight service specialist is to provide",
+          "options": [
+            {"id": 1, "questions": "air traffic control.", "correct": false},
+            {"id": 2, "questions": "flight planning service.", "correct": true},
+            {"id": 3, "questions": "air traffic service in uncontrolled airspace only.", "correct": false},
+            {"id": 4, "questions": "terminal radar service.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.26",
+          "question_text": "NOTAM are",
+          "options": [
+            {"id": 1, "questions": "available at all FSS.", "correct": true},
+            {"id": 2, "questions": "mailed to all pilots.", "correct": false},
+            {"id": 3, "questions": "issued for airport facility closures only.", "correct": false},
+            {"id": 4, "questions": "valid for 24 hours.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.27",
+          "question_text": "A new or replacing NOTAM without the term \"APRX\" is valid",
+          "options": [
+            {"id": 1, "questions": "for 48 hours only.", "correct": false},
+            {"id": 2, "questions": "for the day it was issued.", "correct": false},
+            {"id": 3, "questions": "until the time quoted in the NOTAM.", "correct": true},
+            {"id": 4, "questions": "until a cancelling NOTAM is issued.", "correct": false}
+          ]
+        },
+        {
+          "question_id": "3.28",
+          "question_text": "The term \"APRX\" when contained in a new or replacing NOTAM means the NOTAM is valid",
+          "options": [
+            {"id": 1, "questions": "for approximately 24 hours.", "correct": false},
+            {"id": 2, "questions": "for approximately 48 hours.", "correct": false},
+            {"id": 3, "questions": "until the time quoted in the NOTAM.", "correct": false},
+            {"id": 4, "questions": "until a cancelling or replacing NOTAM is issued.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "3.29",
+          "question_text": "Your radio transmissions are reported READABILITY THREE. This means that your transmissions are",
+          "options": [
+            {"id": 1, "questions": "readable now and then.", "correct": false},
+            {"id": 2, "questions": "readable with difficulty.", "correct": true},
+            {"id": 3, "questions": "readable.", "correct": false},
+            {"id": 4, "questions": "perfectly readable.", "correct": false}
+          ]
+        }
+      ]
+    },
+    {
+      "section_code": "4.0",
+      "section_title": "Aerodromes",
+      "questions": [
+        {
+          "question_id": "4.01",
+          "question_text": "An airport is",
+          "options": [
+            {"id": 1, "questions": "an aerodrome with paved runways.", "correct": false},
+            {"id": 2, "questions": "an aerodrome with a control tower.", "correct": false},
+            {"id": 3, "questions": "a registered aerodrome.", "correct": false},
+            {"id": 4, "questions": "a certified aerodrome.", "correct": true}
+          ]
+        },
+        {
+          "question_id": "4.02",
+          "question_text": "A dry Transport Canada standard wind direction indicator when horizontal indicates a wind speed of at least",
+          "options": [
+            {"id": 1, "questions": "25 KT.", "correct": false}
+          ]
+        }
+      ]
+    }
+  ]
+}
