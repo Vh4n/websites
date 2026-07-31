@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSTAR Practice</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Segoe UI, Arial, sans-serif;
+      }
+
+      body {
+        background: #111827;
+        color: #f9fafb;
+        min-height: 100vh;
+      }
+
+      button {
+        cursor: pointer;
+        border: none;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .container {
+        width: min(1200px, 95%);
+        margin: auto;
+        padding: 25px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      header h1 {
+        font-size: 42px;
+        color: #60a5fa;
+        margin-bottom: 10px;
+      }
+
+      header p {
+        color: #cbd5e1;
+      }
+
+      /* HOME */
+      .sections {
+        display: grid;
+        grid-template-columns:
+          repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .sectionCard {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 12px;
+        padding: 20px;
+        transition: .2s;
+      }
+
+      .sectionCard:hover {
+        border-color: #60a5fa;
+        transform: translateY(-3px);
+      }
+
+      .sectionCard h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+      }
+
+      .progressBackground {
+        height: 12px;
+        width: 100%;
+        background: #0f172a;
+        border-radius: 20px;
+        overflow: hidden;
+      }
+
+      .progressBar {
+        height: 100%;
+        width: 0%;
+        background: #2563eb;
+        transition: .3s;
+      }
+
+      .progressText {
+        display: flex;
+        justify-content: space-between;
+        color: #cbd5e1;
+        font-size: 14px;
+        margin-top: 8px;
+      }
+
+      .actionButtons {
+        display: flex;
+        gap: 15px;
+        margin-top: 35px;
+      }
+
+      .primary {
+        background: #2563eb;
+        color: white;
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        flex: 1;
+      }
+
+      .primary:hover {
+        background: #1d4ed8;
+      }
+
+      .secondary {
+        background: #374151;
+        color: white;
+        padding: 14px 20px;
+        border-radius: 8px;
+      }
+
+      .secondary:hover {
+        background: #4b5563;
+      }
+
+      .practice {
+        background: #16a34a;
+      }
+
+      .practice:hover {
+        background: #15803d;
+      }
+
+      /* QUIZ */
+      .quizCard {
+        background: #1f2937;
+        border-radius: 12px;
+        border: 1px solid #374151;
+        padding: 25px;
+      }
+
+      .quizHeader {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 25px;
+      }
+
+      .quizTitle {
+        color: #60a5fa;
+        font-size: 24px;
+      }
+
+      .counter {
+        color: #cbd5e1;
+      }
+
+      .question {
+        font-size: 22px;
+        line-height: 1.6;
+        margin-bottom: 30px;
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .option {
+        background: #111827;
+        border: 2px solid #374151;
+        padding: 18px;
+        border-radius: 10px;
+        transition: .2s;
+      }
+
+      .option:hover {
+        border-color: #60a5fa;
+      }
+
+      .option.wrong {
+        background: #7f1d1d;
+        border-color: #ef4444;
+      }
+
+      .option.correct {
+        background: #14532d;
+        border-color: #22c55e;
+      }
+
+      .option.disabled {
+        pointer-events: none;
+      }
+
+      .navigation {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 30px;
+      }
+
+      /* RESULTS */
+      .result {
+        background: #1f2937;
+        border-radius: 12px;
+        border: 1px solid #374151;
+        padding: 40px;
+        text-align: center;
+      }
+
+      .resultStatus {
+        font-size: 70px;
+        margin: 30px;
+      }
+
+      .pass {
+        color: #22c55e;
+      }
+
+      .fail {
+        color: #ef4444;
+      }
+
+      .score {
+        font-size: 40px;
+      }
+
+      .review {
+        margin-top: 35px;
+        text-align: left;
+      }
+
+      .reviewItem {
+        background: #111827;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+      }
+
+      .reviewCorrect {
+        border-left: 5px solid #22c55e;
+      }
+
+      .reviewWrong {
+        border-left: 5px solid #ef4444;
+      }
+
+      @media(max-width:700px) {
+        header h1 {
+          font-size: 32px;
+        }
+
+        .quizHeader {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .question {
+          font-size: 18px;
+        }
+
+        .actionButtons {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading" class="container" style="text-align:center;font-size:30px"> Loading PSTAR Questions... </div>
+    <div id="home" class="hidden">
+      <div class="container">
+        <header>
+          <h1>PSTAR Practice</h1>
+          <p> Practice by section or complete a full 50-question test. </p>
+        </header>
+        <div id="sections" class="sections"></div>
+        <div class="actionButtons">
+          <button class="primary practice" onclick="startPracticeTest()"> Practice Test </button>
+          <button class="secondary" onclick="resetProgress()"> Reset Progress </button>
+        </div>
+      </div>
+    </div>
+    <div id="quiz" class="hidden">
+      <div class="container">
+        <button class="secondary" onclick="goHome()"> ← Home </button>
+        <br>
+        <br>
+        <div class="quizCard">
+          <div class="quizHeader">
+            <div id="sectionTitle" class="quizTitle"></div>
+            <div id="questionCounter" class="counter"></div>
+          </div>
+          <div id="questionText" class="question"></div>
+          <div id="options" class="options"></div>
+          <div class="navigation">
+            <button id="nextButton" class="primary hidden" onclick="nextQuestion()"> Next </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="results" class="hidden">
+      <div class="container">
+        <div class="result">
+          <h1> Practice Test Complete </h1>
+          <div id="status" class="resultStatus"></div>
+          <div id="score" class="score"></div>
+          <div id="review" class="review"></div>
+          <br>
+          <button class="primary" onclick="goHome()"> Home </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const QUESTIONS_URL = "/PSTAR/PSTARQuestions.json";
+      let data = null;
+      let currentQuestions = [];
+      let currentIndex = 0;
+      let currentSection = null;
+      let mode = "";
+      let firstAttempt = true;
+      let practiceScore = 0;
+      let practiceResults = [];
+      let progress = {};
+      async function init() {
+        try {
+          const response = await fetch(QUESTIONS_URL);
+          data = await response.json();
+          loadProgress();
+          buildHome();
+          document.getElementById("loading").classList.add("hidden");
+          document.getElementById("home").classList.remove("hidden");
+        } catch (error) {
+          document.getElementById("loading").innerHTML = "Unable to load questions.";
+        }
+      }
+
+      function loadProgress() {
+        const saved = localStorage.getItem("pstarProgress");
+        if (saved) {
+          progress = JSON.parse(saved);
+        }
+      }
+
+      function saveProgress() {
+        localStorage.setItem("pstarProgress", JSON.stringify(progress));
+      }
+
+      function buildHome() {
+        const container = document.getElementById("sections");
+        container.innerHTML = "";
+        data.sections.forEach((section, index) => {
+          if (!progress[index]) {
+            progress[index] = {
+              completed: 0,
+              total: section.questions.length
+            };
+          }
+          const percent = Math.round(
+            (progress[index].completed / progress[index].total) * 100);
+          const card = document.createElement("div");
+          card.className = "sectionCard";
+          card.onclick = () => {
+            openSection(index);
+          };
+          card.innerHTML = `
+
+
+								<h2>
+${section.section_title}
+</h2>
+								<div class="progressBackground">
+									<div class="progressBar"
+style="width:${percent}%"></div>
+								</div>
+								<div class="progressText">
+									<span>
+${progress[index].completed}
+/
+${progress[index].total}
+</span>
+									<span>
+${percent}%
+</span>
+								</div>
+
+`;
+          container.appendChild(card);
+        });
+        saveProgress();
+      }
+
+      function shuffle(array) {
+        return [...array].sort(() => Math.random() - 0.5);
+      }
+
+      function openSection(index) {
+        mode = "learning";
+        currentSection = index;
+        currentQuestions = shuffle(data.sections[index].questions);
+        currentIndex = 0;
+        openQuiz();
+      }
+
+      function startPracticeTest() {
+        mode = "practice";
+        let all = [];
+        data.sections.forEach(section => {
+          all.push(...section.questions);
+        });
+        currentQuestions = shuffle(all).slice(0, 50);
+        currentIndex = 0;
+        practiceScore = 0;
+        practiceResults = [];
+        openQuiz();
+      }
+
+      function openQuiz() {
+        document.getElementById("home").classList.add("hidden");
+        document.getElementById("results").classList.add("hidden");
+        document.getElementById("quiz").classList.remove("hidden");
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        firstAttempt = true;
+        document.getElementById("nextButton").classList.add("hidden");
+        const q = currentQuestions[currentIndex];
+        document.getElementById("questionCounter").innerHTML = `${currentIndex+1} / ${currentQuestions.length}`;
+        document.getElementById("sectionTitle").innerHTML = mode === "learning" ? data.sections[currentSection].section_title : "";
+        document.getElementById("questionText").innerHTML = q.question_text;
+        const options = document.getElementById("options");
+        options.innerHTML = "";
+        shuffle(q.options).forEach(option => {
+          const div = document.createElement("div");
+          div.className = "option";
+          div.innerHTML = option.text;
+          div.onclick = () => {
+            selectAnswer(div, option);
+          };
+          options.appendChild(div);
+        });
+      }
+
+      function selectAnswer(element, option) {
+        if (element.classList.contains("disabled")) {
+          return;
+        }
+        if (option.correct) {
+          element.classList.add("correct");
+          document.querySelectorAll(".option").forEach(item => {
+            item.classList.add("disabled");
+          });
+          if (mode === "learning") {
+            if (firstAttempt) {
+              progress[currentSection].completed = Math.max(progress[currentSection].completed, currentIndex + 1);
+              saveProgress();
+            }
+          } else if (mode === "practice") {
+            practiceResults.push({
+              question: currentQuestions[currentIndex].question_text,
+              correct: firstAttempt
+            });
+            if (firstAttempt) {
+              practiceScore++;
+            }
+          }
+          document.getElementById("nextButton").classList.remove("hidden");
+        } else {
+          element.classList.add("wrong");
+          element.classList.add("disabled");
+          firstAttempt = false;
+        }
+      }
+
+      function nextQuestion() {
+        currentIndex++;
+        if (currentIndex >= currentQuestions.length) {
+          if (mode === "practice") {
+            showResults();
+          } else {
+            goHome();
+          }
+          return;
+        }
+        renderQuestion();
+      }
+
+      function showResults() {
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("results").classList.remove("hidden");
+        const passed = practiceScore >= 45;
+        const status = document.getElementById("status");
+        status.innerHTML = passed ? "PASS" : "FAIL";
+        status.className = passed ? "resultStatus pass" : "resultStatus fail";
+        document.getElementById("score").innerHTML = `${practiceScore} / 50`;
+        const review = document.getElementById("review");
+        review.innerHTML = "";
+        practiceResults.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = item.correct ? "reviewItem reviewCorrect" : "reviewItem reviewWrong";
+          div.innerHTML = `
+
+        
+								<strong>
+        Question ${index+1}
+        </strong>
+								<br>
+									<br>
+
+        ${item.question}
+
+        
+										<br>
+											<br>
+
+        ${
+            item.correct
+            ? "Correct on first attempt"
+            : "Incorrect on first attempt"
+        }
+
+        `;
+          review.appendChild(div);
+        });
+      }
+
+      function resetProgress() {
+        const confirmReset = confirm("Reset all section progress?");
+        if (!confirmReset) {
+          return;
+        }
+        localStorage.removeItem("pstarProgress");
+        progress = {};
+        buildHome();
+      }
+
+      function goHome() {
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("results").classList.add("hidden");
+        document.getElementById("home").classList.remove("hidden");
+        buildHome();
+      }
+      init();
+    </script>
+  </body>
+</html>
