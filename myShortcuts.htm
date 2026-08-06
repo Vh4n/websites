@@ -1,688 +1,1076 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Shortcuts</title>
-    <style>
-      :root {
-        --card: rgba(27, 27, 27, .82);
-        --hover: #252525;
-        --text: #eee;
-        --accent: #4da3ff;
-        --border: #333;
-        --shadow: 0 8px 25px rgba(0, 0, 0, .35);
-        --background-overlay: rgba(0, 0, 0, .10);
-      }
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Shortcuts</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js" async defer></script>
+  <style>
+   :root {
+    --card: rgba(27, 27, 27, .82);
+    --hover: #252525;
+    --text: #eee;
+    --accent: #4da3ff;
+    --border: #333;
+    --shadow: 0 8px 25px rgba(0, 0, 0, .35);
+    --background-color: #1b1f24;
+    --background-overlay: rgba(0, 0, 0, .10)
+   }
 
-      body.light {
-        --card: rgba(255, 255, 255, .85);
-        --hover: #e9e9e9;
-        --text: #111;
-        --accent: #1677ff;
-        --border: #ccc;
-        --shadow: 0 8px 25px rgba(0, 0, 0, .15);
-        --background-overlay: rgba(255, 255, 255, .10);
-      }
+   body.light {
+    --card: rgba(255, 255, 255, .85);
+    --hover: #e9e9e9;
+    --text: #111;
+    --accent: #1677ff;
+    --border: #ccc;
+    --shadow: 0 8px 25px rgba(0, 0, 0, .15);
+    --background-color: #edf1f5;
+    --background-overlay: rgba(255, 255, 255, .10)
+   }
 
-      * {
-        box-sizing: border-box;
-        font-family: Arial, Helvetica, sans-serif;
-      }
+   * {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif
+   }
 
-      body {
-        margin: 0;
-        min-height: 100vh;
-        overflow: auto;
-        color: var(--text);
-        background:
-          linear-gradient(var(--background-overlay), var(--background-overlay)),
-          var(--background-image, none);
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-      }
+   body {
+    margin: 0;
+    min-height: 100vh;
+    overflow: auto;
+    color: var(--text);
+    background: linear-gradient(var(--background-overlay), var(--background-overlay)), var(--background-color);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed
+   }
 
-      #pageTitle {
-        position: absolute;
-        left: 25px;
-        top: 20px;
-        font-size: 30px;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 5000;
-        color: #ddd;
-      }
+   body.hasBackground {
+    background: linear-gradient(var(--background-overlay), var(--background-overlay)), var(--background-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed
+   }
 
-      body.light #pageTitle {
-        color: #ddd;
-      }
+   #pageTitle {
+    position: absolute;
+    left: 25px;
+    top: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 5000;
+    color: #ddd
+   }
 
-      #pageTitle input {
-        font-size: 28px;
-        background: #111;
-        color: white;
-        border: 1px solid var(--accent);
-        border-radius: 6px;
-        padding: 4px 8px;
-      }
+   #pageTitle input {
+    font-size: 28px;
+    background: #555;
+    color: white;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 4px 8px
+   }
 
-      .topButtons {
-        position: absolute;
-        right: 25px;
-        top: 20px;
-        display: flex;
-        gap: 8px;
-        z-index: 5000;
-      }
+   body.light #pageTitle input {
+    background: #eee;
+    color: #111
+   }
 
-      .desktop {
-        position: relative;
-        width: 100%;
-        min-height: 100vh;
-      }
+   .topButtons {
+    position: absolute;
+    right: 25px;
+    top: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 5000
+   }
 
-      .section {
-        position: absolute;
-        width: 340px;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: var(--shadow);
-      }
+   .exportBox {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 6000
+   }
 
-      .section.dragging {
-        opacity: .45;
-      }
+   .dropdown {
+    position: relative
+   }
 
-      .section-header {
-        height: 42px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0 10px;
-        cursor: grab;
-        user-select: none;
-      }
+   .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 38px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-width: 200px;
+    overflow: hidden;
+    box-shadow: var(--shadow)
+   }
 
-      .section-header:active {
-        cursor: grabbing;
-      }
+   .dropdown.active .dropdown-content {
+    display: block
+   }
 
-      .sectionName {
-        flex: 1;
-        font-weight: bold;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        cursor: pointer;
-      }
+   .dropdown-content button {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    text-align: left;
+    background: transparent
+   }
 
-      .sectionName:hover {
-        text-decoration: underline;
-      }
+   .dropdown-content button:hover {
+    background: var(--hover)
+   }
 
-      .sectionName input {
-        width: 100%;
-        background: #111;
-        color: white;
-        border: 1px solid var(--accent);
-        border-radius: 4px;
-        padding: 2px 5px;
-      }
+   .desktop {
+    padding-top: 70px;
+    min-height: 100vh
+   }
 
-      body.light .sectionName input {
-        background: white;
-        color: #111;
-      }
+   .section {
+    position: absolute;
+    width: 340px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    touch-action: none
+   }
 
-      .iconButton {
-        background: none;
-        border: none;
-        color: #888;
-        font-size: 17px;
-        cursor: pointer;
-        padding: 2px 5px;
-        z-index: 5;
-      }
+   .section.dragging,
+   .googleSearch.dragging {
+    opacity: .45
+   }
 
-      .iconButton:hover {
-        color: var(--text);
-      }
+   .section-header {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    cursor: grab;
+    user-select: none
+   }
 
-      .links {
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
+   .section-header:active {
+    cursor: grabbing
+   }
 
-      .link {
-        display: flex;
-        align-items: center;
-        padding: 8px;
-        border-radius: 8px;
-        transition: .15s;
-        cursor: grab;
-      }
+   .sectionName {
+    flex: 1;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer
+   }
 
-      .link.dragging {
-        opacity: .4;
-      }
+   .sectionName input {
+    width: 100%;
+    background: #111;
+    color: white;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 2px 5px
+   }
 
-      .link:hover {
-        background: var(--hover);
-      }
+   body.light .sectionName input {
+    background: white;
+    color: #111
+   }
 
-      .link a {
-        flex: 1;
-        color: var(--accent);
-        text-decoration: none;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
+   .iconButton {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 17px;
+    cursor: pointer;
+    padding: 2px 5px
+   }
 
-      .drop-line {
-        height: 3px;
-        background: #1677ff;
-        border-radius: 5px;
-        margin: 3px 0;
-      }
+   .iconButton:hover {
+    color: var(--text)
+   }
 
-      .addLinkButton {
-        width: calc(100% - 20px);
-        margin: 0 10px 10px;
-      }
+   .links {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px
+   }
 
-      button {
-        background: #222;
-        color: white;
-        border: 1px solid #444;
-        border-radius: 7px;
-        padding: 7px 12px;
-        cursor: pointer;
-      }
+   .link {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    touch-action: none
+   }
 
-      button:hover {
-        background: #333;
-      }
+   .link:hover {
+    background: var(--hover)
+   }
 
-      body.light button {
-        background: #fff;
-        color: #111;
-        border-color: #bbb;
-      }
+   .link a {
+    flex: 1;
+    color: var(--accent);
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+   }
 
-      body.light button:hover {
-        background: #e5e5e5;
-      }
+   .link.dragging {
+    opacity: .35
+   }
 
-      .addSection {
-        position: fixed;
-        left: 50%;
-        bottom: 20px;
-        transform: translateX(-50%);
-        background: #1677ff !important;
-        color: white !important;
-        border: none !important;
-        z-index: 6000;
-      }
+   .drop-line {
+    height: 3px;
+    background: #1677ff;
+    border-radius: 5px;
+    margin: 3px 0;
+    box-shadow: 0 0 8px rgba(22, 119, 255, .9)
+   }
 
-      .exportBox {
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
-        display: flex;
-        gap: 8px;
-        z-index: 6000;
-      }
+   .addLinkButton {
+    width: calc(100% - 20px);
+    margin: 0 10px 10px
+   }
 
-      .modal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, .7);
-        justify-content: center;
-        align-items: center;
-        z-index: 7000;
-      }
+   button {
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 7px;
+    padding: 7px 12px;
+    cursor: pointer
+   }
 
-      .modalBox {
-        width: min(500px, 90vw);
-        background: var(--card);
-        padding: 20px;
-        border-radius: 12px;
-        color: var(--text);
-      }
+   button:hover {
+    background: #333
+   }
 
-      textarea {
-        width: 100%;
-        height: 260px;
-        resize: none;
-        background: #111;
-        color: white;
-        border: 1px solid #444;
-      }
+   body.light button {
+    background: #fff;
+    color: #111;
+    border-color: #bbb
+   }
 
-      body.light textarea {
-        background: #fff;
-        color: #111;
-      }
+   body.light button:hover {
+    background: #e5e5e5
+   }
 
-      @media(max-width:700px) {
-        #pageTitle {
-          left: 15px;
-          top: 15px;
-          font-size: 24px;
-        }
+   .addSection {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    background: #1677ff !important;
+    color: white !important;
+    border: none !important;
+    z-index: 6000
+   }
 
-        .topButtons {
-          top: 15px;
-          right: 15px;
-        }
+   .googleSearch {
+    position: absolute;
+    width: 340px;
+    z-index: 4000;
+    cursor: move;
+    touch-action: none;
+    user-select: none
+   }
 
-        .desktop {
-          padding-top: 70px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 15px;
-        }
+   .googleInput {
+    width: 100%;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, .25);
+    background: rgba(255, 255, 255, .18);
+    color: white;
+    font-size: 16px;
+    padding: 0 14px;
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .15);
+    cursor: text
+   }
 
-        .section {
-          position: relative !important;
-          left: auto !important;
-          top: auto !important;
-          width: 92vw;
-        }
+   .googleInput::placeholder {
+    color: rgba(255, 255, 255, .75)
+   }
 
-        .exportBox {
-          right: 10px;
-          bottom: 10px;
-          flex-direction: column;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="pageTitle"></div>
-    <div class="topButtons">
-      <button onclick="changeBackground()">Background</button>
-      <button onclick="toggleTheme()" id="themeButton">☀</button>
+   .googleInput:focus {
+    border-color: var(--accent)
+   }
+
+   body.light .googleInput {
+    background: rgba(0, 0, 0, .12);
+    color: #111
+   }
+
+   body.light .googleInput::placeholder {
+    color: #555
+   }
+
+   .modal,
+   .driveFolderModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .7);
+    justify-content: center;
+    align-items: center;
+    z-index: 7000
+   }
+
+   .modalBox,
+   .driveFolderBox {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    color: var(--text)
+   }
+
+   .modalBox {
+    width: min(500px, 90vw)
+   }
+
+   .driveFolderBox {
+    width: min(400px, 90vw)
+   }
+
+   textarea {
+    width: 100%;
+    height: 260px;
+    resize: none;
+    background: #111;
+    color: white;
+    border: 1px solid #444;
+    padding: 10px
+   }
+
+   body.light textarea {
+    background: white;
+    color: #111
+   }
+
+   .driveFolderBox input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border)
+   }
+
+   @media(max-width:700px) {
+    #pageTitle {
+     left: 15px;
+     top: 15px;
+     font-size: 24px
+    }
+
+    .topButtons {
+     top: 15px;
+     right: 15px;
+     flex-wrap: wrap
+    }
+
+    .desktop {
+     padding-top: 80px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 20px
+    }
+
+    .section {
+     position: relative !important;
+     left: auto !important;
+     top: auto !important;
+     width: 92vw;
+     max-width: 340px
+    }
+
+    .googleSearch {
+     position: relative !important;
+     left: auto !important;
+     top: auto !important;
+     width: 92vw;
+     max-width: 340px;
+     margin-top: 80px
+    }
+
+    .exportBox {
+     right: 10px;
+     bottom: 10px;
+     flex-direction: column
+    }
+
+    .addSection {
+     bottom: 90px
+    }
+   }
+  </style>
+ </head>
+ <body>
+  <div id="pageTitle"></div>
+  <div class="topButtons">
+   <button onclick="changeBackground()">Background</button>
+   <button onclick="toggleTheme()" id="themeButton">☀</button>
+  </div>
+  <div id="desktop" class="desktop"></div>
+  <button class="addSection" onclick="addSection()">+ Section</button>
+  <div class="exportBox">
+   <div class="dropdown">
+    <button onclick="toggleDropdown(event)">Export</button>
+    <div class="dropdown-content">
+     <button onclick="copyJSON();closeDropdowns()">Copy JSON</button>
+     <button onclick="downloadJSON();closeDropdowns()">Export JSON file</button>
+     <button onclick="saveGoogleDrive();closeDropdowns()">Save to Google Drive</button>
     </div>
-    <div id="desktop" class="desktop"></div>
-    <button class="addSection" onclick="addSection()"> + Section </button>
-    <div class="exportBox">
-      <button onclick="exportJSON()">Export</button>
-      <button onclick="importJSON()">Import</button>
+   </div>
+   <div class="dropdown">
+    <button onclick="toggleDropdown(event)">Import</button>
+    <div class="dropdown-content">
+     <button onclick="openPasteJSON();closeDropdowns()">Paste JSON</button>
+     <button onclick="openJSONFile();closeDropdowns()">Import JSON file</button>
+     <button onclick="loadGoogleDrive();closeDropdowns()">Load from Google Drive</button>
     </div>
-    <div class="modal" id="jsonModal">
-      <div class="modalBox">
-        <h3>Import JSON</h3>
-        <textarea id="jsonInput"></textarea>
-        <br>
-        <br>
-        <button onclick="loadJSON()">Load</button>
-        <button onclick="closeModal()">Cancel</button>
-      </div>
-    </div>
-    <script>
-      let data = JSON.parse(localStorage.getItem("favorites")) || {
-        title: "Shortcuts",
-        background: "",
-        theme: "dark",
-        nextZ: 1,
-        sections: []
-      };
+   </div>
+  </div>
+  <input id="jsonFileInput" type="file" accept=".json" style="display:none">
+  <div class="modal" id="jsonModal">
+   <div class="modalBox">
+    <h3>Paste JSON</h3>
+    <textarea id="jsonInput"></textarea>
+    <br>
+    <br>
+    <button onclick="loadJSON()">Load</button>
+    <button onclick="closeModal()">Cancel</button>
+   </div>
+  </div>
+  <div class="driveFolderModal" id="driveFolderModal">
+   <div class="driveFolderBox">
+    <h3>Save to Google Drive</h3>
+    <input id="driveFileName" value="shortcuts.json">
+    <button onclick="pickDriveFolder()">Select Folder</button>
+    <button onclick="closeDriveFolderModal()">Cancel</button>
+   </div>
+  </div>
+  <script>
+   const GOOGLE_CLIENT_ID = "523208842364-elen13m9plu51b0maahbn48a4vppbpqi.apps.googleusercontent.com";
+   const GOOGLE_API_KEY = "AIzaSyDkoJewiBKHvo7FTgNZ0hUnlLWNzUf3UN0";
+   const GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";
+   let googleTokenClient = null;
+   let googleAccessToken = null;
+   let googlePickerLoaded = false;
+   let googleApiLoaded = false;
+   let selectedDriveFolder = null;
+   let data = JSON.parse(localStorage.getItem("favorites")) || {
+    title: "Shortcuts",
+    background: "",
+    theme: "dark",
+    nextZ: 1,
+    widget: {
+     enabled: true,
+     x: null,
+     y: null,
+     z: 1
+    },
+    sections: []
+   };
 
-      function normalize() {
-        if (!data.nextZ) data.nextZ = 1;
-        if (!data.theme) data.theme = "dark";
-        data.sections.forEach((s, i) => {
-          if (s.x == null) s.x = 60 + i * 30;
-          if (s.y == null) s.y = 80 + i * 30;
-          if (s.z == null) s.z = i + 1;
-          if (s.collapsed == null) s.collapsed = false;
-          if (!s.links) s.links = [];
-        });
-        applyTheme();
-      }
+   function normalize() {
+    if (!data.nextZ) data.nextZ = 1;
+    if (!data.theme) data.theme = "dark";
+    if (!data.widget) data.widget = {
+     enabled: true,
+     x: null,
+     y: null,
+     z: 1
+    };
+    if (!data.sections) data.sections = [];
+    data.sections.forEach((s, i) => {
+     if (s.x == null) s.x = 60 + i * 30;
+     if (s.y == null) s.y = 100 + i * 30;
+     if (s.z == null) s.z = i + 1;
+     if (s.collapsed == null) s.collapsed = false;
+     if (!s.links) s.links = [];
+    });
+    applyTheme();
+   }
 
-      function applyTheme() {
-        document.body.classList.toggle("light", data.theme === "light");
-        document.getElementById("themeButton").innerHTML = data.theme === "dark" ? "☀" : "🌙";
+   function applyTheme() {
+    document.body.classList.toggle("light", data.theme === "light");
+    document.getElementById("themeButton").innerHTML = data.theme === "dark" ? "☀" : "🌙";
+   }
+   normalize();
+
+   function save() {
+    localStorage.setItem("favorites", JSON.stringify(data));
+    applyTheme();
+    render();
+   }
+
+   function toggleTheme() {
+    data.theme = data.theme === "dark" ? "light" : "dark";
+    save();
+   }
+
+   function closeDropdowns() {
+    document.querySelectorAll(".dropdown").forEach(d => {
+     d.classList.remove("active");
+    });
+   }
+
+   function toggleDropdown(e) {
+    e.stopPropagation();
+    let dropdown = e.currentTarget.parentElement;
+    document.querySelectorAll(".dropdown").forEach(d => {
+     if (d !== dropdown) d.classList.remove("active");
+    });
+    dropdown.classList.toggle("active");
+   }
+   document.addEventListener("click", e => {
+    if (!e.target.closest(".dropdown")) {
+     closeDropdowns();
+    }
+   });
+
+   function initGoogleDrive() {
+    if (typeof google === "undefined") return;
+    googleApiLoaded = true;
+    gapi.load("picker", {
+     callback: function() {
+      googlePickerLoaded = true;
+     }
+    });
+    googleTokenClient = google.accounts.oauth2.initTokenClient({
+     client_id: GOOGLE_CLIENT_ID,
+     scope: GOOGLE_SCOPES,
+     callback: function(response) {
+      if (response.access_token) {
+       googleAccessToken = response.access_token;
       }
+     }
+    });
+   }
+   window.addEventListener("load", () => {
+    setTimeout(initGoogleDrive, 1000);
+   });
+
+   function requestGoogleAccess(callback) {
+    if (!googleTokenClient) {
+     alert("Google API not loaded yet. Try again.");
+     return;
+    }
+    if (googleAccessToken) {
+     callback();
+     return;
+    }
+    googleTokenClient.callback = function(response) {
+     if (response.access_token) {
+      googleAccessToken = response.access_token;
+      callback();
+     }
+    };
+    googleTokenClient.requestAccessToken();
+   }
+
+   function saveGoogleDrive() {
+    requestGoogleAccess(() => {
+     document.getElementById("driveFolderModal").style.display = "flex";
+    });
+   }
+
+   function closeDriveFolderModal() {
+    document.getElementById("driveFolderModal").style.display = "none";
+    selectedDriveFolder = null;
+   }
+
+   function pickDriveFolder() {
+    if (!googlePickerLoaded) {
+     alert("Google Picker is still loading.");
+     return;
+    }
+    let picker = new google.picker.PickerBuilder().addView(new google.picker.DocsView().setIncludeFolders(true).setSelectFolderEnabled(true)).setOAuthToken(googleAccessToken).setDeveloperKey(GOOGLE_API_KEY).setCallback(driveFolderCallback).build();
+    picker.setVisible(true);
+   }
+
+   function driveFolderCallback(pickerData) {
+    if (pickerData.action === google.picker.Action.PICKED) {
+     selectedDriveFolder = pickerData.docs[0].id;
+     uploadGoogleDriveFile();
+    }
+   }
+
+   function uploadGoogleDriveFile() {
+    let fileName = document.getElementById("driveFileName").value.trim() || "shortcuts.json";
+    let metadata = {
+     name: fileName,
+     mimeType: "application/json",
+     parents: selectedDriveFolder ? [selectedDriveFolder] : []
+    };
+    let boundary = "-------314159265358979323846";
+    let body = "--" + boundary + "\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" + JSON.stringify(metadata) + "\r\n--" + boundary + "\r\nContent-Type: application/json\r\n\r\n" + JSON.stringify(data, null, 4) + "\r\n--" + boundary + "--";
+    fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+     method: "POST",
+     headers: {
+      Authorization: "Bearer " + googleAccessToken,
+      "Content-Type": "multipart/related; boundary=" + boundary
+     },
+     body: body
+    }).then(r => r.json()).then(result => {
+     if (result.id) {
+      alert("Saved to Google Drive");
+      closeDriveFolderModal();
+     } else {
+      alert("Google Drive save failed");
+     }
+    });
+   }
+
+   function loadGoogleDrive() {
+    requestGoogleAccess(() => {
+     if (!googlePickerLoaded) {
+      alert("Google Picker is still loading.");
+      return;
+     }
+     let picker = new google.picker.PickerBuilder().addView(new google.picker.DocsView().setMimeTypes("application/json")).setOAuthToken(googleAccessToken).setDeveloperKey(GOOGLE_API_KEY).setCallback(pickerCallback).build();
+     picker.setVisible(true);
+    });
+   }
+
+   function pickerCallback(dataPicker) {
+    if (dataPicker.action === google.picker.Action.PICKED) {
+     let fileId = dataPicker.docs[0].id;
+     fetch("https://www.googleapis.com/drive/v3/files/" + fileId + "?alt=media", {
+      headers: {
+       Authorization: "Bearer " + googleAccessToken
+      }
+     }).then(r => r.json()).then(json => {
+      data = json;
       normalize();
+      save();
+      alert("Loaded from Google Drive");
+     });
+    }
+   }
 
-      function save() {
-        localStorage.setItem("favorites", JSON.stringify(data));
-        applyTheme();
-        render();
-      }
+   function googleSearch(e) {
+    if (e.key === "Enter") {
+     let text = e.target.value.trim();
+     if (text) {
+      window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=14";
+     }
+    }
+   }
+   let widgetDrag = {
+    active: false,
+    dragging: false,
+    startX: 0,
+    startY: 0,
+    originX: 0,
+    originY: 0
+   };
 
-      function toggleTheme() {
-        data.theme = data.theme === "dark" ? "light" : "dark";
-        save();
-      }
+   function startWidgetDrag(e) {
+    if (e.button !== 0) return;
+    widgetDrag.active = true;
+    widgetDrag.dragging = false;
+    widgetDrag.startX = e.clientX;
+    widgetDrag.startY = e.clientY;
+    widgetDrag.originX = data.widget.x == null ? (window.innerWidth / 2 - 170) : data.widget.x;
+    widgetDrag.originY = data.widget.y == null ? 80 : data.widget.y;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    document.addEventListener("pointermove", moveWidgetDrag);
+    document.addEventListener("pointerup", endWidgetDrag);
+   }
 
-      function render() {
-        document.getElementById("pageTitle").innerHTML = data.title;
-        if (data.background) {
-          document.body.style.setProperty("--background-image", `url("${data.background}")`);
-        }
-        let html = "";
-        data.sections.forEach((section, s) => {
-          html += `
+   function moveWidgetDrag(e) {
+    if (!widgetDrag.active) return;
+    let dx = e.clientX - widgetDrag.startX;
+    let dy = e.clientY - widgetDrag.startY;
+    if (!widgetDrag.dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+     widgetDrag.dragging = true;
+    }
+    if (widgetDrag.dragging) {
+     e.preventDefault();
+     let x = Math.max(0, widgetDrag.originX + dx);
+     let y = Math.max(0, widgetDrag.originY + dy);
+     data.widget.x = x;
+     data.widget.y = y;
+     let box = document.querySelector("[data-widget='true']");
+     if (box) {
+      box.style.left = x + "px";
+      box.style.top = y + "px";
+      box.classList.add("dragging");
+     }
+    }
+   }
 
+   function endWidgetDrag() {
+    if (!widgetDrag.active) return;
+    widgetDrag.active = false;
+    let box = document.querySelector("[data-widget='true']");
+    if (box) box.classList.remove("dragging");
+    document.removeEventListener("pointermove", moveWidgetDrag);
+    document.removeEventListener("pointerup", endWidgetDrag);
+    if (widgetDrag.dragging) {
+     data.widget.z = ++data.nextZ;
+     save();
+    }
+   }
 
-							<div class="section"
-style="left:${section.x}px;top:${section.y}px;z-index:${section.z}"
-data-index="${s}">
-								<div class="section-header"
-onmousedown="startSectionAction(event,${s})">
-									<div class="sectionName"
-onclick="sectionClick(event,${s})"
+   function render() {
+    document.getElementById("pageTitle").innerHTML = data.title;
+    if (data.background) {
+     document.body.classList.add("hasBackground");
+     document.body.style.setProperty("--background-image", `url("${data.background}")`);
+    } else {
+     document.body.classList.remove("hasBackground");
+    }
+    let html = "";
+    let mobile = window.innerWidth <= 700;
+    let widgetX = data.widget.x;
+    let widgetY = data.widget.y;
+    if (window.innerWidth <= 700) {
+     widgetY = 15;
+     widgetX = 20;
+    }
+    if (widgetX == null || widgetY == null) {
+     widgetX = (window.innerWidth / 2) - 170;
+     widgetY = 80;
+    }
+    if (data.widget.enabled) {
+     html += `
+
+									<div class="googleSearch"
+data-widget="true"
+style="left:${mobile?"4vw":widgetX+"px"};top:${mobile?"15px":widgetY+"px"};z-index:${data.widget.z};"
+onpointerdown="startWidgetDrag(event)">
+										<input id="googleInput" class="googleInput" placeholder="Google me" onkeydown="googleSearch(event)">
+										</div>`;
+    }
+    data.sections.forEach((section, s) => {
+     let position = mobile ? "" : `left:${section.x}px;top:${section.y}px;z-index:${section.z};`;
+     html += `
+
+										<div class="section"
+data-index="${s}"
+style="${position}">
+											<div class="section-header"
+onpointerdown="startSectionDrag(event,${s})">
+												<div class="sectionName"
+onclick="toggleSection(${s})"
 ondblclick="event.stopPropagation();editSectionTitle(${s})">
+
 ${section.title}
+
 </div>
-									<button class="iconButton"
+												<button class="iconButton"
 onclick="event.stopPropagation();editSectionTitle(${s})">
 ✏
 </button>
-									<button class="iconButton"
+												<button class="iconButton"
 onclick="event.stopPropagation();deleteSection(${s})">
 ×
 </button>
-								</div>
-
+											</div>
 `;
-          if (!section.collapsed) {
-            html += `
+     if (!section.collapsed) {
+      html += `
+											<div class="links">`;
+      section.links.forEach((link, l) => {
+       html += `
 
-
-								<div class="links">
-
-`;
-            section.links.forEach((link, l) => {
-              html += `
-
-
-									<div class="link"
+												<div class="link"
 draggable="true"
 ondragstart="linkDragStart(event,${s},${l})"
 ondragover="linkDragOver(event,${s},${l})"
-ondrop="linkDrop(event,${s},${l})"
-ondragleave="clearDrop()">
-										<a href="${link.url}">
+ondrop="linkDrop(event)"
+ondragleave="clearDropLine()">
+													<a href="${link.url}" target="_blank">
 ${link.title}
 </a>
-										<button class="iconButton"
-onclick="deleteLink(${s},${l})">
+													<button class="iconButton"
+onclick="event.stopPropagation();editLink(${s},${l})">
+✏
+</button>
+													<button class="iconButton"
+onclick="event.stopPropagation();deleteLink(${s},${l})">
 ×
 </button>
-									</div>
+												</div>`;
+      });
+      html += `
 
-`;
-            });
-            html += `
-
-
-								</div>
-								<button class="addLinkButton"
+											</div>
+											<button class="addLinkButton"
 onclick="addLink(${s})">
 + Add Link
-</button>
+</button>`;
+     }
+     html += `
 
-`;
-          }
-          html += `
+										</div>`;
+    });
+    document.getElementById("desktop").innerHTML = html;
+    setTimeout(() => {
+     let input = document.getElementById("googleInput");
+     if (input) input.focus();
+    }, 100);
+   }
+   document.getElementById("pageTitle").onclick = function() {
+    let input = document.createElement("input");
+    input.value = data.title;
+    this.innerHTML = "";
+    this.appendChild(input);
+    input.focus();
+    input.onkeydown = function(e) {
+     if (e.key === "Enter") {
+      data.title = this.value.trim() || "Shortcuts";
+      save();
+     }
+    };
+    input.onblur = function() {
+     data.title = this.value.trim() || "Shortcuts";
+     save();
+    };
+   };
 
+   function toggleSection(i) {
+    data.sections[i].collapsed = !data.sections[i].collapsed;
+    save();
+   }
 
-							</div>
+   function editSectionTitle(i) {
+    let title = prompt("Section name:", data.sections[i].title);
+    if (title !== null) {
+     data.sections[i].title = title.trim() || "Section";
+     save();
+    }
+   }
 
-`;
-        });
-        document.getElementById("desktop").innerHTML = html;
+   function addSection() {
+    let title = prompt("Section name:");
+    if (!title) return;
+    let mobile = window.innerWidth <= 700;
+    data.sections.push({
+     title: title,
+     collapsed: false,
+     x: mobile ? 0 : 60,
+     y: mobile ? 0 : 100,
+     z: ++data.nextZ,
+     links: []
+    });
+    save();
+   }
+
+   function deleteSection(i) {
+    if (confirm("Delete section?")) {
+     data.sections.splice(i, 1);
+     save();
+    }
+   }
+
+   function addLink(s) {
+    let url = prompt("Website URL:");
+    if (!url) return;
+    if (!url.startsWith("http")) url = "https://" + url;
+    let title;
+    try {
+     title = new URL(url).hostname.replace("www.", "");
+    } catch {
+     title = url;
+    }
+    let custom = prompt("Link title:", title);
+    if (custom) title = custom;
+    data.sections[s].links.push({
+     title: title,
+     url: url
+    });
+    save();
+   }
+
+   function editLink(s, l) {
+    let link = data.sections[s].links[l];
+    let url = prompt("Website URL:", link.url);
+    if (url === null) return;
+    let title = prompt("Link title:", link.title);
+    if (title === null) return;
+    link.url = url.startsWith("http") ? url : "https://" + url;
+    link.title = title.trim() || link.title;
+    save();
+   }
+
+   function deleteLink(s, l) {
+    data.sections[s].links.splice(l, 1);
+    save();
+   }
+
+   function copyJSON() {
+    navigator.clipboard.writeText(JSON.stringify(data, null, 4));
+    alert("JSON copied");
+   }
+
+   function downloadJSON() {
+    let blob = new Blob(
+     [JSON.stringify(data, null, 4)], {
+      type: "application/json"
+     });
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "shortcuts.json";
+    a.click();
+   }
+
+   function openPasteJSON() {
+    document.getElementById("jsonModal").style.display = "flex";
+    setTimeout(() => {
+     document.getElementById("jsonInput").focus();
+    }, 100);
+   }
+
+   function openJSONFile() {
+    let input = document.getElementById("jsonFileInput");
+    input.onchange = function(e) {
+     let reader = new FileReader();
+     reader.onload = function() {
+      try {
+       data = JSON.parse(reader.result);
+       normalize();
+       save();
+      } catch {
+       alert("Invalid JSON");
       }
-      document.getElementById("pageTitle").onclick = function() {
-        let input = document.createElement("input");
-        input.value = data.title;
-        this.innerHTML = "";
-        this.appendChild(input);
-        input.focus();
-        input.onkeydown = function(e) {
-          if (e.key === "Enter") {
-            data.title = this.value.trim() || "Shortcuts";
-            save();
-          }
-        };
-      };
-      let dragSection = null;
-      let dragStartX = 0;
-      let dragStartY = 0;
-      let originalX = 0;
-      let originalY = 0;
-      let moved = false;
+     };
+     reader.readAsText(e.target.files[0]);
+    };
+    input.click();
+   }
 
-      function startSectionAction(e, index) {
-        if (e.target.classList.contains("iconButton") || e.target.tagName === "INPUT") {
-          return;
-        }
-        dragSection = index;
-        dragStartX = e.clientX;
-        dragStartY = e.clientY;
-        originalX = data.sections[index].x;
-        originalY = data.sections[index].y;
-        moved = false;
-        document.addEventListener("mousemove", sectionMouseMove);
-        document.addEventListener("mouseup", sectionMouseUp);
-      }
+   function loadJSON() {
+    try {
+     data = JSON.parse(document.getElementById("jsonInput").value);
+     normalize();
+     save();
+     closeModal();
+    } catch {
+     alert("Invalid JSON");
+    }
+   }
 
-      function sectionMouseMove(e) {
-        if (dragSection === null) return;
-        let diffX = e.clientX - dragStartX;
-        let diffY = e.clientY - dragStartY;
-        if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) {
-          moved = true;
-          let x = originalX + diffX;
-          let y = originalY + diffY;
-          let maxX = Math.max(0, window.innerWidth - 340);
-          if (x < 0) x = 0;
-          if (y < 0) y = 0;
-          if (x > maxX) x = maxX;
-          data.sections[dragSection].x = x;
-          data.sections[dragSection].y = y;
-          let element = document.querySelector(`[data-index="${dragSection}"]`);
-          if (element) {
-            element.style.left = x + "px";
-            element.style.top = y + "px";
-            element.classList.add("dragging");
-          }
-        }
-      }
+   function closeModal() {
+    document.getElementById("jsonModal").style.display = "none";
+   }
 
-      function sectionMouseUp() {
-        if (dragSection === null) return;
-        let element = document.querySelector(`[data-index="${dragSection}"]`);
-        if (element) {
-          element.classList.remove("dragging");
-        }
-        if (!moved) {
-          toggleSection(dragSection);
-        } else {
-          data.sections[dragSection].z = ++data.nextZ;
-          save();
-        }
-        document.removeEventListener("mousemove", sectionMouseMove);
-        document.removeEventListener("mouseup", sectionMouseUp);
-        dragSection = null;
-      }
+   function changeBackground() {
+    let url = prompt("Background image URL:");
+    if (url) {
+     data.background = url;
+     save();
+    }
+   }
+   let sectionDrag = null;
 
-      function sectionClick(e, index) {
-        if (e.detail === 1) {}
-      }
+   function startSectionDrag(e, i) {
+    if (e.target.classList.contains("iconButton")) return;
+    if (window.innerWidth <= 700) return;
+    e.preventDefault();
+    sectionDrag = {
+     index: i,
+     startX: e.clientX,
+     startY: e.clientY,
+     originX: data.sections[i].x,
+     originY: data.sections[i].y,
+     moved: false
+    };
+    document.addEventListener("pointermove", moveSection);
+    document.addEventListener("pointerup", endSection);
+   }
 
-      function toggleSection(i) {
-        data.sections[i].collapsed = !data.sections[i].collapsed;
-        save();
-      }
+   function moveSection(e) {
+    if (!sectionDrag) return;
+    let dx = e.clientX - sectionDrag.startX;
+    let dy = e.clientY - sectionDrag.startY;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+     sectionDrag.moved = true;
+     let x = Math.max(0, sectionDrag.originX + dx);
+     let y = Math.max(0, sectionDrag.originY + dy);
+     data.sections[sectionDrag.index].x = x;
+     data.sections[sectionDrag.index].y = y;
+     let el = document.querySelector(`[data-index="${sectionDrag.index}"]`);
+     if (el) {
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+     }
+    }
+   }
 
-      function editSectionTitle(i) {
-        let div = document.querySelector(`#sectionTitle${i}`);
-        if (!div) {
-          div = document.querySelectorAll(".sectionName")[i];
-        }
-        let input = document.createElement("input");
-        input.value = data.sections[i].title;
-        div.innerHTML = "";
-        div.appendChild(input);
-        input.focus();
-        input.onkeydown = function(e) {
-          if (e.key === "Enter") {
-            data.sections[i].title = this.value.trim() || "Section";
-            save();
-          }
-        };
-        input.onblur = function() {
-          data.sections[i].title = this.value.trim() || "Section";
-          save();
-        };
-      }
+   function endSection() {
+    if (!sectionDrag) return;
+    if (sectionDrag.moved) {
+     data.sections[sectionDrag.index].z = ++data.nextZ;
+     save();
+    } else {
+     toggleSection(sectionDrag.index);
+    }
+    document.removeEventListener("pointermove", moveSection);
+    document.removeEventListener("pointerup", endSection);
+    sectionDrag = null;
+   }
+   let draggedLink = null;
+   let dropLine = null;
 
-      function addSection() {
-        let title = prompt("Section name:");
-        if (!title) return;
-        data.sections.push({
-          title: title,
-          collapsed: false,
-          x: 60,
-          y: 80,
-          z: ++data.nextZ,
-          links: []
-        });
-        save();
-      }
+   function linkDragStart(e, s, l) {
+    draggedLink = {
+     section: s,
+     index: l
+    };
+   }
 
-      function deleteSection(i) {
-        if (confirm("Delete section?")) {
-          data.sections.splice(i, 1);
-          save();
-        }
-      }
+   function linkDragOver(e, s, l) {
+    e.preventDefault();
+    if (!draggedLink) return;
+    clearDropLine();
+    dropLine = document.createElement("div");
+    dropLine.className = "drop-line";
+    e.currentTarget.parentNode.insertBefore(dropLine, e.currentTarget);
+   }
 
-      function addLink(section) {
-        let url = prompt("Website URL:");
-        if (!url) return;
-        if (!url.startsWith("http")) url = "https://" + url;
-        let title;
-        try {
-          title = new URL(url).hostname.replace("www.", "");
-        } catch {
-          title = url;
-        }
-        let custom = prompt("Link title:", title);
-        if (custom) title = custom;
-        data.sections[section].links.push({
-          title: title,
-          url: url
-        });
-        save();
-      }
+   function linkDrop(e) {
+    e.preventDefault();
+    if (!draggedLink || !dropLine) return;
+    let container = dropLine.parentNode;
+    let newIndex = Array.from(container.children).indexOf(dropLine);
+    let targetSection = parseInt(container.closest(".section").dataset.index);
+    let item = data.sections[draggedLink.section].links.splice(draggedLink.index, 1)[0];
+    if (draggedLink.section === targetSection && draggedLink.index < newIndex) newIndex--;
+    data.sections[targetSection].links.splice(newIndex, 0, item);
+    clearDropLine();
+    draggedLink = null;
+    save();
+   }
 
-      function deleteLink(s, l) {
-        data.sections[s].links.splice(l, 1);
-        save();
-      }
-      let draggedLink = null;
-
-      function linkDragStart(e, s, l) {
-        draggedLink = {
-          section: s,
-          index: l
-        };
-        e.currentTarget.classList.add("dragging");
-      }
-
-      function linkDragOver(e, s, l) {
-        e.preventDefault();
-        if (!draggedLink) return;
-        if (draggedLink.section === s && draggedLink.index === l) return;
-        showDropLine(e.currentTarget);
-      }
-
-      function linkDrop(e, s, l) {
-        e.preventDefault();
-        removeDropLine();
-        if (!draggedLink) return;
-        let item = data.sections[draggedLink.section].links.splice(draggedLink.index, 1)[0];
-        if (draggedLink.section === s && draggedLink.index < l) {
-          l--;
-        }
-        data.sections[s].links.splice(l, 0, item);
-        draggedLink = null;
-        save();
-      }
-
-      function showDropLine(element) {
-        removeDropLine();
-        let line = document.createElement("div");
-        line.className = "drop-line";
-        element.parentNode.insertBefore(line, element);
-      }
-
-      function clearDrop() {
-        removeDropLine();
-      }
-
-      function removeDropLine() {
-        let line = document.querySelector(".drop-line");
-        if (line) {
-          line.remove();
-        }
-      }
-
-      function changeBackground() {
-        let url = prompt("Background image URL:");
-        if (url) {
-          data.background = url;
-          save();
-        }
-      }
-
-      function exportJSON() {
-        let blob = new Blob(
-          [
-            JSON.stringify(data, null, 4)
-          ], {
-            type: "application/json"
-          });
-        let a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "shortcuts.json";
-        a.click();
-      }
-
-      function importJSON() {
-        document.getElementById("jsonModal").style.display = "flex";
-      }
-
-      function closeModal() {
-        document.getElementById("jsonModal").style.display = "none";
-      }
-
-      function loadJSON() {
-        try {
-          data = JSON.parse(document.getElementById("jsonInput").value);
-          normalize();
-          save();
-          closeModal();
-        } catch {
-          alert("Invalid JSON");
-        }
-      }
-      render();
-    </script>
-  </body>
+   function clearDropLine() {
+    if (dropLine) {
+     dropLine.remove();
+     dropLine = null;
+    }
+   }
+   window.addEventListener("resize", () => {
+    render();
+   });
+   render();
+  </script>
+ </body>
 </html>
