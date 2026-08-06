@@ -129,7 +129,8 @@
    }
 
    .desktop {
-    padding-top: 70px;
+    position: relative;
+    width: 100%;
     min-height: 100vh
    }
 
@@ -217,7 +218,11 @@
    }
 
    .link:hover {
-    background: var(--hover)
+    background: rgba(255, 255, 255, .08)
+   }
+
+   body.light .link:hover {
+    background: rgba(0, 0, 0, .08)
    }
 
    .link a {
@@ -284,7 +289,7 @@
     position: absolute;
     width: 340px;
     z-index: 4000;
-    cursor: move;
+    cursor: grab;
     touch-action: none;
     user-select: none
    }
@@ -333,14 +338,11 @@
 
    .modalBox,
    .driveFolderBox {
+    width: min(500px, 90vw);
     background: var(--card);
     padding: 20px;
     border-radius: 12px;
     color: var(--text)
-   }
-
-   .modalBox {
-    width: min(500px, 90vw)
    }
 
    .driveFolderBox {
@@ -375,14 +377,14 @@
      left: 15px;
      top: 15px;
      font-size: 24px;
-     position: fixed;
+     position: fixed
     }
 
     .topButtons {
      top: 15px;
      right: 15px;
      position: fixed;
-     flex-wrap: wrap;
+     flex-wrap: wrap
     }
 
     .desktop {
@@ -390,7 +392,7 @@
      min-height: 100vh;
      display: flex;
      flex-direction: column;
-     gap: 15px;
+     gap: 15px
     }
 
     .section {
@@ -399,7 +401,7 @@
      max-width: none;
      left: auto !important;
      top: auto !important;
-     margin: 0 auto;
+     margin: 0 auto
     }
 
     .googleSearch {
@@ -407,13 +409,13 @@
      width: 92vw;
      left: auto !important;
      top: auto !important;
-     margin: 0 auto 15px;
+     margin: 0 auto 15px
     }
 
     .exportBox {
      right: 10px;
      bottom: 75px;
-     flex-direction: column;
+     flex-direction: column
     }
 
     .addSection {
@@ -423,8 +425,7 @@
      width: 92vw;
      height: 45px;
      transform: none;
-     font-size: 18px;
-     z-index: 6000;
+     font-size: 18px
     }
    }
   </style>
@@ -470,7 +471,7 @@
    <div class="driveFolderBox">
     <h3>Save to Google Drive</h3>
     <input id="driveFileName" value="shortcuts.json">
-    <button onclick="pickDriveFolder()">Select Folder</button>
+    <button onclick="uploadGoogleDriveFile()">Save</button>
     <button onclick="closeDriveFolderModal()">Cancel</button>
    </div>
   </div>
@@ -482,7 +483,6 @@
    let googleAccessToken = null;
    let googlePickerLoaded = false;
    let googleApiLoaded = false;
-   let selectedDriveFolder = null;
    let data = JSON.parse(localStorage.getItem("favorites")) || {
     title: "Shortcuts",
     background: "",
@@ -534,26 +534,6 @@
     save();
    }
 
-   function closeDropdowns() {
-    document.querySelectorAll(".dropdown").forEach(d => {
-     d.classList.remove("active");
-    });
-   }
-
-   function toggleDropdown(e) {
-    e.stopPropagation();
-    let dropdown = e.currentTarget.parentElement;
-    document.querySelectorAll(".dropdown").forEach(d => {
-     if (d !== dropdown) d.classList.remove("active");
-    });
-    dropdown.classList.toggle("active");
-   }
-   document.addEventListener("click", e => {
-    if (!e.target.closest(".dropdown")) {
-     closeDropdowns();
-    }
-   });
-
    function initGoogleDrive() {
     if (typeof google === "undefined") return;
     googleApiLoaded = true;
@@ -602,31 +582,13 @@
 
    function closeDriveFolderModal() {
     document.getElementById("driveFolderModal").style.display = "none";
-    selectedDriveFolder = null;
-   }
-
-   function pickDriveFolder() {
-    if (!googlePickerLoaded) {
-     alert("Google Picker is still loading.");
-     return;
-    }
-    let picker = new google.picker.PickerBuilder().addView(new google.picker.DocsView().setIncludeFolders(true).setSelectFolderEnabled(true)).setOAuthToken(googleAccessToken).setDeveloperKey(GOOGLE_API_KEY).setCallback(driveFolderCallback).build();
-    picker.setVisible(true);
-   }
-
-   function driveFolderCallback(pickerData) {
-    if (pickerData.action === google.picker.Action.PICKED) {
-     selectedDriveFolder = pickerData.docs[0].id;
-     uploadGoogleDriveFile();
-    }
    }
 
    function uploadGoogleDriveFile() {
     let fileName = document.getElementById("driveFileName").value.trim() || "shortcuts.json";
     let metadata = {
      name: fileName,
-     mimeType: "application/json",
-     parents: selectedDriveFolder ? [selectedDriveFolder] : []
+     mimeType: "application/json"
     };
     let boundary = "-------314159265358979323846";
     let body = "--" + boundary + "\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" + JSON.stringify(metadata) + "\r\n--" + boundary + "\r\nContent-Type: application/json\r\n\r\n" + JSON.stringify(data, null, 4) + "\r\n--" + boundary + "--";
@@ -643,6 +605,7 @@
       closeDriveFolderModal();
      } else {
       alert("Google Drive save failed");
+      console.log(result);
      }
     });
    }
@@ -692,14 +655,13 @@
    };
 
    function startWidgetDrag(e) {
-    if (e.button !== 0) return;
+    if (e.button !== undefined && e.button !== 0) return;
     widgetDrag.active = true;
     widgetDrag.dragging = false;
     widgetDrag.startX = e.clientX;
     widgetDrag.startY = e.clientY;
     widgetDrag.originX = data.widget.x == null ? (window.innerWidth / 2 - 170) : data.widget.x;
     widgetDrag.originY = data.widget.y == null ? 80 : data.widget.y;
-    e.currentTarget.setPointerCapture(e.pointerId);
     document.addEventListener("pointermove", moveWidgetDrag);
     document.addEventListener("pointerup", endWidgetDrag);
    }
@@ -710,6 +672,7 @@
     let dy = e.clientY - widgetDrag.startY;
     if (!widgetDrag.dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
      widgetDrag.dragging = true;
+     document.body.style.userSelect = "none";
     }
     if (widgetDrag.dragging) {
      e.preventDefault();
@@ -729,6 +692,7 @@
    function endWidgetDrag() {
     if (!widgetDrag.active) return;
     widgetDrag.active = false;
+    document.body.style.userSelect = "";
     let box = document.querySelector("[data-widget='true']");
     if (box) box.classList.remove("dragging");
     document.removeEventListener("pointermove", moveWidgetDrag);
@@ -739,6 +703,26 @@
     }
    }
 
+   function closeDropdowns() {
+    document.querySelectorAll(".dropdown").forEach(d => {
+     d.classList.remove("active");
+    });
+   }
+
+   function toggleDropdown(e) {
+    e.stopPropagation();
+    let dropdown = e.currentTarget.parentElement;
+    document.querySelectorAll(".dropdown").forEach(d => {
+     if (d !== dropdown) d.classList.remove("active");
+    });
+    dropdown.classList.toggle("active");
+   }
+   document.addEventListener("click", e => {
+    if (!e.target.closest(".dropdown")) {
+     closeDropdowns();
+    }
+   });
+
    function render() {
     document.getElementById("pageTitle").innerHTML = data.title;
     if (data.background) {
@@ -748,13 +732,8 @@
      document.body.classList.remove("hasBackground");
     }
     let html = "";
-    let mobile = window.innerWidth <= 700;
     let widgetX = data.widget.x;
     let widgetY = data.widget.y;
-    if (window.innerWidth <= 700) {
-     widgetY = 15;
-     widgetX = 20;
-    }
     if (widgetX == null || widgetY == null) {
      widgetX = (window.innerWidth / 2) - 170;
      widgetY = 80;
@@ -762,22 +741,21 @@
     if (data.widget.enabled) {
      html += `
 
-									
+
 									<div class="googleSearch"
 data-widget="true"
-style="left:${mobile?"4vw":widgetX+"px"};top:${mobile?"15px":widgetY+"px"};z-index:${data.widget.z};"
+style="left:${widgetX}px;top:${widgetY}px;z-index:${data.widget.z};"
 onpointerdown="startWidgetDrag(event)">
 										<input id="googleInput" class="googleInput" placeholder="Google me" onkeydown="googleSearch(event)">
 										</div>`;
     }
     data.sections.forEach((section, s) => {
-     let position = mobile ? "" : `left:${section.x}px;top:${section.y}px;z-index:${section.z};`;
      html += `
 
-										
+
 										<div class="section"
 data-index="${s}"
-style="${position}">
+style="left:${section.x}px;top:${section.y}px;z-index:${section.z};">
 											<div class="section-header"
 onpointerdown="startSectionDrag(event,${s})">
 												<div class="sectionName"
@@ -795,22 +773,22 @@ onclick="event.stopPropagation();editSectionTitle(${s})">
 onclick="event.stopPropagation();deleteSection(${s})">
 ×
 </button>
-											</div>
-`;
+											</div>`;
      if (!section.collapsed) {
       html += `
-											
+
+
 											<div class="links">`;
       section.links.forEach((link, l) => {
        html += `
 
-												
+
 												<div class="link"
 draggable="true"
 ondragstart="linkDragStart(event,${s},${l})"
 ondragover="linkDragOver(event,${s},${l})"
 ondrop="linkDrop(event)"
-ondragleave="clearDropLine()">
+ondragleave="clearDropLine">
 													<a href="${link.url}" target="_blank">
 ${link.title}
 </a>
@@ -826,7 +804,7 @@ onclick="event.stopPropagation();deleteLink(${s},${l})">
       });
       html += `
 
-											
+
 											</div>
 											<button class="addLinkButton"
 onclick="addLink(${s})">
@@ -835,14 +813,14 @@ onclick="addLink(${s})">
      }
      html += `
 
-										
+
 										</div>`;
     });
     document.getElementById("desktop").innerHTML = html;
     setTimeout(() => {
      let input = document.getElementById("googleInput");
      if (input && window.innerWidth > 700) {
-      setTimeout(() => input.focus(), 100);
+      input.focus();
      }
     }, 100);
    }
@@ -880,12 +858,11 @@ onclick="addLink(${s})">
    function addSection() {
     let title = prompt("Section name:");
     if (!title) return;
-    let mobile = window.innerWidth <= 700;
     data.sections.push({
      title: title,
      collapsed: false,
-     x: mobile ? 0 : 60,
-     y: mobile ? 0 : 100,
+     x: 60,
+     y: 100,
      z: ++data.nextZ,
      links: []
     });
@@ -1001,8 +978,6 @@ onclick="addLink(${s})">
 
    function startSectionDrag(e, i) {
     if (e.target.classList.contains("iconButton")) return;
-    if (window.innerWidth <= 700) return;
-    e.preventDefault();
     sectionDrag = {
      index: i,
      startX: e.clientX,
@@ -1071,7 +1046,9 @@ onclick="addLink(${s})">
     let newIndex = Array.from(container.children).indexOf(dropLine);
     let targetSection = parseInt(container.closest(".section").dataset.index);
     let item = data.sections[draggedLink.section].links.splice(draggedLink.index, 1)[0];
-    if (draggedLink.section === targetSection && draggedLink.index < newIndex) newIndex--;
+    if (draggedLink.section === targetSection && draggedLink.index < newIndex) {
+     newIndex--;
+    }
     data.sections[targetSection].links.splice(newIndex, 0, item);
     clearDropLine();
     draggedLink = null;
@@ -1084,9 +1061,6 @@ onclick="addLink(${s})">
      dropLine = null;
     }
    }
-   window.addEventListener("resize", () => {
-    render();
-   });
    render();
   </script>
  </body>
