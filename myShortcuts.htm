@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Shortcuts</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js" async defer></script>
     <style>
       :root {
         --card: rgba(27, 27, 27, .82);
@@ -12,7 +14,8 @@
         --accent: #4da3ff;
         --border: #333;
         --shadow: 0 8px 25px rgba(0, 0, 0, .35);
-        --background-overlay: rgba(0, 0, 0, .10);
+        --background-color: #1b1f24;
+        --background-overlay: rgba(0, 0, 0, .10)
       }
 
       body.light {
@@ -22,12 +25,13 @@
         --accent: #1677ff;
         --border: #ccc;
         --shadow: 0 8px 25px rgba(0, 0, 0, .15);
-        --background-overlay: rgba(255, 255, 255, .10);
+        --background-color: #edf1f5;
+        --background-overlay: rgba(255, 255, 255, .10)
       }
 
       * {
         box-sizing: border-box;
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: Arial, Helvetica, sans-serif
       }
 
       body {
@@ -37,10 +41,19 @@
         color: var(--text);
         background:
           linear-gradient(var(--background-overlay), var(--background-overlay)),
-          var(--background-image, none);
+          var(--background-color);
         background-size: cover;
         background-position: center;
-        background-attachment: fixed;
+        background-attachment: fixed
+      }
+
+      body.hasBackground {
+        background:
+          linear-gradient(var(--background-overlay), var(--background-overlay)),
+          var(--background-image);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed
       }
 
       #pageTitle {
@@ -51,20 +64,21 @@
         font-weight: bold;
         cursor: pointer;
         z-index: 5000;
-        color: #ddd;
-      }
-
-      body.light #pageTitle {
-        color: #ddd;
+        color: #ddd
       }
 
       #pageTitle input {
         font-size: 28px;
-        background: #111;
+        background: #555;
         color: white;
         border: 1px solid var(--accent);
         border-radius: 6px;
-        padding: 4px 8px;
+        padding: 4px 8px
+      }
+
+      body.light #pageTitle input {
+        background: #eee;
+        color: #111
       }
 
       .topButtons {
@@ -73,13 +87,55 @@
         top: 20px;
         display: flex;
         gap: 8px;
-        z-index: 5000;
+        z-index: 5000
+      }
+
+      .exportBox {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        display: flex;
+        gap: 8px;
+        z-index: 6000
+      }
+
+      .dropdown {
+        position: relative
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        bottom: 38px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        min-width: 200px;
+        overflow: hidden;
+        box-shadow: var(--shadow)
+      }
+
+      .dropdown.active .dropdown-content {
+        display: block
+      }
+
+      .dropdown-content button {
+        width: 100%;
+        border: 0;
+        border-radius: 0;
+        text-align: left;
+        background: transparent
+      }
+
+      .dropdown-content button:hover {
+        background: var(--hover)
       }
 
       .desktop {
         position: relative;
         width: 100%;
-        min-height: 100vh;
+        min-height: 100vh
       }
 
       .section {
@@ -90,11 +146,12 @@
         border-radius: 12px;
         overflow: hidden;
         box-shadow: var(--shadow);
+        touch-action: none
       }
 
       .section.dragging,
       .googleSearch.dragging {
-        opacity: .45;
+        opacity: .45
       }
 
       .section-header {
@@ -104,11 +161,11 @@
         gap: 8px;
         padding: 0 10px;
         cursor: grab;
-        user-select: none;
+        user-select: none
       }
 
       .section-header:active {
-        cursor: grabbing;
+        cursor: grabbing
       }
 
       .sectionName {
@@ -117,11 +174,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        cursor: pointer;
-      }
-
-      .sectionName:hover {
-        text-decoration: underline;
+        cursor: pointer
       }
 
       .sectionName input {
@@ -130,12 +183,12 @@
         color: white;
         border: 1px solid var(--accent);
         border-radius: 4px;
-        padding: 2px 5px;
+        padding: 2px 5px
       }
 
       body.light .sectionName input {
         background: white;
-        color: #111;
+        color: #111
       }
 
       .iconButton {
@@ -144,19 +197,18 @@
         color: #888;
         font-size: 17px;
         cursor: pointer;
-        padding: 2px 5px;
-        z-index: 5;
+        padding: 2px 5px
       }
 
       .iconButton:hover {
-        color: var(--text);
+        color: var(--text)
       }
 
       .links {
         padding: 10px;
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 5px
       }
 
       .link {
@@ -164,16 +216,13 @@
         align-items: center;
         padding: 8px;
         border-radius: 8px;
-        transition: .15s;
         cursor: grab;
-      }
-
-      .link.dragging {
-        opacity: .4;
+        user-select: none;
+        touch-action: none
       }
 
       .link:hover {
-        background: var(--hover);
+        background: var(--hover)
       }
 
       .link a {
@@ -183,6 +232,11 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        pointer-events: none
+      }
+
+      .link.dragging {
+        opacity: .35
       }
 
       .drop-line {
@@ -190,13 +244,59 @@
         background: #1677ff;
         border-radius: 5px;
         margin: 3px 0;
+        box-shadow: 0 0 8px rgba(22, 119, 255, .9)
       }
 
-      /* Google input */
+      .addLinkButton {
+        width: calc(100% - 20px);
+        margin: 0 10px 10px
+      }
+
+      button {
+        background: #222;
+        color: white;
+        border: 1px solid #444;
+        border-radius: 7px;
+        padding: 7px 12px;
+        cursor: pointer
+      }
+
+      button:hover {
+        background: #333
+      }
+
+      body.light button {
+        background: #fff;
+        color: #111;
+        border-color: #bbb
+      }
+
+      body.light button:hover {
+        background: #e5e5e5
+      }
+
+      .addSection {
+        position: fixed;
+        left: 50%;
+        bottom: 20px;
+        transform: translateX(-50%);
+        background: #1677ff !important;
+        color: white !important;
+        border: none !important;
+        z-index: 6000
+      }
+
       .googleSearch {
         position: absolute;
         width: 340px;
         z-index: 4000;
+        cursor: grab;
+        touch-action: none;
+        user-select: none
+      }
+
+      .googleSearch.dragging {
+        opacity: .45
       }
 
       .googleInput {
@@ -210,76 +310,24 @@
         padding: 0 14px;
         outline: none;
         box-shadow: 0 4px 15px rgba(0, 0, 0, .15);
-        cursor: grab;
-      }
-
-      .googleInput:active {
-        cursor: grabbing;
+        cursor: text
       }
 
       .googleInput::placeholder {
-        color: rgba(255, 255, 255, .75);
+        color: rgba(255, 255, 255, .75)
       }
 
       .googleInput:focus {
-        border-color: var(--accent);
+        border-color: var(--accent)
       }
 
       body.light .googleInput {
         background: rgba(0, 0, 0, .12);
-        color: #111;
+        color: #111
       }
 
       body.light .googleInput::placeholder {
-        color: #555;
-      }
-
-      .addLinkButton {
-        width: calc(100% - 20px);
-        margin: 0 10px 10px;
-      }
-
-      button {
-        background: #222;
-        color: white;
-        border: 1px solid #444;
-        border-radius: 7px;
-        padding: 7px 12px;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background: #333;
-      }
-
-      body.light button {
-        background: #fff;
-        color: #111;
-        border-color: #bbb;
-      }
-
-      body.light button:hover {
-        background: #e5e5e5;
-      }
-
-      .addSection {
-        position: fixed;
-        left: 50%;
-        bottom: 20px;
-        transform: translateX(-50%);
-        background: #1677ff !important;
-        color: white !important;
-        border: none !important;
-        z-index: 6000;
-      }
-
-      .exportBox {
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
-        display: flex;
-        gap: 8px;
-        z-index: 6000;
+        color: #555
       }
 
       .modal {
@@ -289,7 +337,7 @@
         background: rgba(0, 0, 0, .7);
         justify-content: center;
         align-items: center;
-        z-index: 7000;
+        z-index: 7000
       }
 
       .modalBox {
@@ -297,7 +345,7 @@
         background: var(--card);
         padding: 20px;
         border-radius: 12px;
-        color: var(--text);
+        color: var(--text)
       }
 
       textarea {
@@ -307,45 +355,35 @@
         background: #111;
         color: white;
         border: 1px solid #444;
+        padding: 10px
       }
 
       body.light textarea {
-        background: #fff;
-        color: #111;
+        background: white;
+        color: #111
       }
 
       @media(max-width:700px) {
         #pageTitle {
           left: 15px;
           top: 15px;
-          font-size: 24px;
+          font-size: 24px
         }
 
         .topButtons {
           top: 15px;
-          right: 15px;
-        }
-
-        .desktop {
-          padding-top: 70px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 15px;
+          right: 15px
         }
 
         .section,
         .googleSearch {
-          position: relative !important;
-          left: auto !important;
-          top: auto !important;
-          width: 92vw;
+          width: 92vw
         }
 
         .exportBox {
           right: 10px;
           bottom: 10px;
-          flex-direction: column;
+          flex-direction: column
         }
       }
     </style>
@@ -357,22 +395,45 @@
       <button onclick="toggleTheme()" id="themeButton">☀</button>
     </div>
     <div id="desktop" class="desktop"></div>
-    <button class="addSection" onclick="addSection()"> + Section </button>
+    <button class="addSection" onclick="addSection()">+ Section</button>
     <div class="exportBox">
-      <button onclick="exportJSON()">Export</button>
-      <button onclick="importJSON()">Import</button>
+      <div class="dropdown">
+        <button onclick="toggleDropdown(event)"> Export </button>
+        <div class="dropdown-content">
+          <button onclick="copyJSON();closeDropdowns()"> Copy JSON </button>
+          <button onclick="downloadJSON();closeDropdowns()"> Export JSON file </button>
+          <button onclick="saveGoogleDrive();closeDropdowns()"> Save to Google Drive </button>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button onclick="toggleDropdown(event)"> Import </button>
+        <div class="dropdown-content">
+          <button onclick="openPasteJSON();closeDropdowns()"> Paste JSON </button>
+          <button onclick="openJSONFile();closeDropdowns()"> Import JSON file </button>
+          <button onclick="loadGoogleDrive();closeDropdowns()"> Load from Google Drive </button>
+        </div>
+      </div>
     </div>
+    <input id="jsonFileInput" type="file" accept=".json" style="display:none">
     <div class="modal" id="jsonModal">
       <div class="modalBox">
-        <h3>Import JSON</h3>
+        <h3>Paste JSON</h3>
         <textarea id="jsonInput"></textarea>
         <br>
         <br>
-        <button onclick="loadJSON()">Load</button>
-        <button onclick="closeModal()">Cancel</button>
+        <button onclick="loadJSON()"> Load </button>
+        <button onclick="closeModal()"> Cancel </button>
       </div>
     </div>
     <script>
+      /* GOOGLE DRIVE CONFIG */
+      const GOOGLE_CLIENT_ID = "523208842364-elen13m9plu51b0maahbn48a4vppbpqi.apps.googleusercontent.com";
+      const GOOGLE_API_KEY = "AIzaSyDkoJewiBKHvo7FTgNZ0hUnlLWNzUf3UN0";
+      const GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";
+      let googleTokenClient = null;
+      let googleAccessToken = null;
+      let googlePickerLoaded = false;
+      let googleApiLoaded = false;
       let data = JSON.parse(localStorage.getItem("favorites")) || {
         title: "Shortcuts",
         background: "",
@@ -380,8 +441,8 @@
         nextZ: 1,
         widget: {
           enabled: true,
-          x: 60,
-          y: 20,
+          x: null,
+          y: null,
           z: 1
         },
         sections: []
@@ -393,14 +454,15 @@
         if (!data.widget) {
           data.widget = {
             enabled: true,
-            x: 60,
-            y: 20,
+            x: null,
+            y: null,
             z: 1
           };
         }
+        if (!data.sections) data.sections = [];
         data.sections.forEach((s, i) => {
           if (s.x == null) s.x = 60 + i * 30;
-          if (s.y == null) s.y = 80 + i * 30;
+          if (s.y == null) s.y = 100 + i * 30;
           if (s.z == null) s.z = i + 1;
           if (s.collapsed == null) s.collapsed = false;
           if (!s.links) s.links = [];
@@ -424,33 +486,223 @@
         data.theme = data.theme === "dark" ? "light" : "dark";
         save();
       }
+      /* GOOGLE DRIVE INITIALIZATION */
+      function initGoogleDrive() {
+        if (typeof google === "undefined") return;
+        googleApiLoaded = true;
+        gapi.load("picker", {
+          callback: function() {
+            googlePickerLoaded = true;
+          }
+        });
+        googleTokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID,
+          scope: GOOGLE_SCOPES,
+          callback: function(response) {
+            if (response.access_token) {
+              googleAccessToken = response.access_token;
+            }
+          }
+        });
+      }
+      window.addEventListener("load",
+        () => {
+          setTimeout(initGoogleDrive, 1000);
+        });
+
+      function requestGoogleAccess(callback) {
+        if (!googleTokenClient) {
+          alert("Google API not loaded yet. Try again.");
+          return;
+        }
+        if (googleAccessToken) {
+          callback();
+          return;
+        }
+        googleTokenClient.callback = function(response) {
+          if (response.access_token) {
+            googleAccessToken = response.access_token;
+            callback();
+          }
+        };
+        googleTokenClient.requestAccessToken();
+      }
+      /* GOOGLE SEARCH */
+      function googleSearch(e) {
+        if (e.key === "Enter") {
+          let text = e.target.value.trim();
+          if (text) {
+            window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=14";
+          }
+        }
+      }
+      /* GOOGLE BOX DRAG */
+      let widgetDrag = {
+        active: false,
+        dragging: false,
+        startX: 0,
+        startY: 0,
+        originX: 0,
+        originY: 0
+      };
+
+      function startWidgetDrag(e) {
+        widgetDrag.active = true;
+        widgetDrag.dragging = false;
+        widgetDrag.startX = e.clientX;
+        widgetDrag.startY = e.clientY;
+        widgetDrag.originX = data.widget.x == null ? (window.innerWidth / 2 - 170) : data.widget.x;
+        widgetDrag.originY = data.widget.y == null ? 80 : data.widget.y;
+        document.addEventListener("pointermove", moveWidgetDrag);
+        document.addEventListener("pointerup", endWidgetDrag);
+      }
+
+      function moveWidgetDrag(e) {
+        if (!widgetDrag.active) return;
+        let dx = e.clientX - widgetDrag.startX;
+        let dy = e.clientY - widgetDrag.startY;
+        if (!widgetDrag.dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          widgetDrag.dragging = true;
+        }
+        if (widgetDrag.dragging) {
+          e.preventDefault();
+          let x = Math.max(0, widgetDrag.originX + dx);
+          let y = Math.max(0, widgetDrag.originY + dy);
+          data.widget.x = x;
+          data.widget.y = y;
+          let box = document.querySelector("[data-widget='true']");
+          if (box) {
+            box.style.left = x + "px";
+            box.style.top = y + "px";
+            box.classList.add("dragging");
+          }
+        }
+      }
+
+      function endWidgetDrag() {
+        if (!widgetDrag.active) return;
+        widgetDrag.active = false;
+        let box = document.querySelector("[data-widget='true']");
+        if (box) box.classList.remove("dragging");
+        document.removeEventListener("pointermove", moveWidgetDrag);
+        document.removeEventListener("pointerup", endWidgetDrag);
+        if (widgetDrag.dragging) {
+          data.widget.z =
+            ++data.nextZ;
+          save();
+        }
+        setTimeout(() => {
+          let input = document.getElementById("googleInput");
+          if (input) input.focus();
+        }, 100);
+      }
+      /* DROPDOWNS */
+      function closeDropdowns() {
+        document.querySelectorAll(".dropdown").forEach(d => {
+          d.classList.remove("active");
+        });
+      }
+
+      function toggleDropdown(e) {
+        e.stopPropagation();
+        let dropdown = e.currentTarget.parentElement;
+        document.querySelectorAll(".dropdown").forEach(d => {
+          if (d !== dropdown) d.classList.remove("active");
+        });
+        dropdown.classList.toggle("active");
+      }
+      document.addEventListener("click", e => {
+        if (!e.target.closest(".dropdown")) closeDropdowns();
+      });
+      /* GOOGLE DRIVE SAVE */
+      function saveGoogleDrive() {
+        requestGoogleAccess(
+          () => {
+            let fileContent = JSON.stringify(data, null, 4);
+            let metadata = {
+              name: "shortcuts.json",
+              mimeType: "application/json"
+            };
+            let boundary = "-------314159265358979323846";
+            let body = "--" + boundary + "\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" + JSON.stringify(metadata) + "\r\n--" + boundary + "\r\nContent-Type: application/json\r\n\r\n" + fileContent + "\r\n--" + boundary + "--";
+            fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+              method: "POST",
+              headers: {
+                Authorization: "Bearer " + googleAccessToken,
+                "Content-Type": "multipart/related; boundary=" + boundary
+              },
+              body: body
+            }).then(r => r.json()).then(result => {
+              if (result.id) {
+                alert("Saved to Google Drive");
+              } else {
+                alert("Google Drive save failed");
+              }
+            });
+          });
+      }
+      /* GOOGLE DRIVE PICKER LOAD */
+      function loadGoogleDrive() {
+        requestGoogleAccess(
+          () => {
+            if (!googlePickerLoaded) {
+              alert("Google Picker is still loading.");
+              return;
+            }
+            let picker = new google.picker.PickerBuilder().addView(new google.picker.DocsView().setMimeTypes("application/json")).setOAuthToken(googleAccessToken).setDeveloperKey(GOOGLE_API_KEY).setCallback(pickerCallback).build();
+            picker.setVisible(true);
+          });
+      }
+
+      function pickerCallback(dataPicker) {
+        if (dataPicker.action === google.picker.Action.PICKED) {
+          let fileId = dataPicker.docs[0].id;
+          fetch("https://www.googleapis.com/drive/v3/files/" + fileId + "?alt=media", {
+            headers: {
+              Authorization: "Bearer " + googleAccessToken
+            }
+          }).then(r => r.json()).then(json => {
+            data = json;
+            normalize();
+            save();
+            alert("Loaded from Google Drive");
+          });
+        }
+      }
 
       function render() {
         document.getElementById("pageTitle").innerHTML = data.title;
         if (data.background) {
+          document.body.classList.add("hasBackground");
           document.body.style.setProperty("--background-image", `url("${data.background}")`);
+        } else {
+          document.body.classList.remove("hasBackground");
         }
         let html = "";
+        let widgetX = data.widget.x;
+        let widgetY = data.widget.y;
+        if (widgetX == null || widgetY == null) {
+          widgetX = (window.innerWidth / 2) - 170;
+          widgetY = 80;
+        }
         if (data.widget.enabled) {
           html += `
 
 
-							
-							<div class="googleSearch"
+								<div class="googleSearch"
+data-widget="true"
 style="
-left:${data.widget.x}px;
-top:${data.widget.y}px;
+left:${widgetX}px;
+top:${widgetY}px;
 z-index:${data.widget.z};
 "
-data-widget="true">
-								<input
+onpointerdown="startWidgetDrag(event)">
+									<input
 id="googleInput"
 class="googleInput"
 placeholder="Google me"
-onmousedown="startWidgetDrag(event)"
-onkeydown="googleSearch(event)"
->
-								</div>
+onkeydown="googleSearch(event)">
+									</div>
 
 `;
         }
@@ -458,70 +710,70 @@ onkeydown="googleSearch(event)"
           html += `
 
 
-								
-								<div class="section"
+									<div class="section"
+data-index="${s}"
 style="
 left:${section.x}px;
 top:${section.y}px;
 z-index:${section.z};
-"
-data-index="${s}">
-									<div class="section-header"
-onmousedown="startSectionAction(event,${s})">
-										<div class="sectionName"
+">
+										<div class="section-header"
+onpointerdown="startSectionDrag(event,${s})">
+											<div class="sectionName"
 onclick="toggleSection(${s})"
 ondblclick="event.stopPropagation();editSectionTitle(${s})">
 
 ${section.title}
 
 </div>
-										<button class="iconButton"
+											<button class="iconButton"
 onclick="event.stopPropagation();editSectionTitle(${s})">
 ✏
 </button>
-										<button class="iconButton"
+											<button class="iconButton"
 onclick="event.stopPropagation();deleteSection(${s})">
 ×
 </button>
-									</div>
+										</div>
 
 `;
           if (!section.collapsed) {
             html += `
 
 
-									
-									<div class="links">
+										<div class="links">
 
 `;
             section.links.forEach((link, l) => {
               html += `
 
 
-										
-										<div class="link"
+											<div class="link"
 draggable="true"
 ondragstart="linkDragStart(event,${s},${l})"
 ondragover="linkDragOver(event,${s},${l})"
-ondrop="linkDrop(event,${s},${l})"
-ondragleave="clearDrop()">
-											<a href="${link.url}">
+ondrop="linkDrop(event)"
+ondragleave="clearDropLine()">
+												<a href="${link.url}" target="_blank">
 ${link.title}
 </a>
-											<button class="iconButton"
+												<button class="iconButton"
+onclick="editLink(${s},${l})">
+✏
+</button>
+												<button class="iconButton"
 onclick="deleteLink(${s},${l})">
 ×
 </button>
-										</div>
+											</div>
 
 `;
             });
             html += `
 
 
-									
-									</div>
-									<button class="addLinkButton"
+										</div>
+										<button class="addLinkButton"
 onclick="addLink(${s})">
 + Add Link
 </button>
@@ -531,81 +783,13 @@ onclick="addLink(${s})">
           html += `
 
 
-								
-								</div>
+									</div>
 
 `;
         });
         document.getElementById("desktop").innerHTML = html;
       }
-      /* GOOGLE SEARCH */
-      function googleSearch(e) {
-        if (e.key === "Enter") {
-          let text = e.target.value.trim();
-          if (!text) return;
-          window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=14";
-        }
-      }
-      /* ONE TIME GOOGLE FOCUS */
-      window.addEventListener("load", () => {
-        let input = document.getElementById("googleInput");
-        if (input) {
-          input.focus();
-        }
-      });
-      /* GOOGLE INPUT DRAG */
-      let widgetDragging = false;
-      let widgetStartX = 0;
-      let widgetStartY = 0;
-      let widgetOriginalX = 0;
-      let widgetOriginalY = 0;
-      let widgetMoved = false;
-
-      function startWidgetDrag(e) {
-        widgetDragging = true;
-        widgetMoved = false;
-        widgetStartX = e.clientX;
-        widgetStartY = e.clientY;
-        widgetOriginalX = data.widget.x;
-        widgetOriginalY = data.widget.y;
-        data.widget.z = ++data.nextZ;
-        document.addEventListener("mousemove", moveWidget);
-        document.addEventListener("mouseup", endWidgetDrag);
-      }
-
-      function moveWidget(e) {
-        if (!widgetDragging) return;
-        let dx = e.clientX - widgetStartX;
-        let dy = e.clientY - widgetStartY;
-        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-          widgetMoved = true;
-          let x = widgetOriginalX + dx;
-          let y = widgetOriginalY + dy;
-          if (x < 0) x = 0;
-          if (y < 0) y = 0;
-          data.widget.x = x;
-          data.widget.y = y;
-          let widget = document.querySelector("[data-widget='true']");
-          if (widget) {
-            widget.style.left = x + "px";
-            widget.style.top = y + "px";
-            widget.classList.add("dragging");
-          }
-        }
-      }
-
-      function endWidgetDrag() {
-        if (!widgetDragging) return;
-        widgetDragging = false;
-        let widget = document.querySelector("[data-widget='true']");
-        if (widget) widget.classList.remove("dragging");
-        document.removeEventListener("mousemove", moveWidget);
-        document.removeEventListener("mouseup", endWidgetDrag);
-        if (widgetMoved) {
-          save();
-        }
-      }
-      /* PAGE TITLE */
+      /* TITLE */
       document.getElementById("pageTitle").onclick = function() {
         let input = document.createElement("input");
         input.value = data.title;
@@ -618,32 +802,25 @@ onclick="addLink(${s})">
             save();
           }
         };
+        input.onblur = function() {
+          data.title = this.value.trim() || "Shortcuts";
+          save();
+        };
       };
-
+      /* SECTION FUNCTIONS */
       function toggleSection(i) {
         data.sections[i].collapsed = !data.sections[i].collapsed;
         save();
       }
 
       function editSectionTitle(i) {
-        let div = document.querySelectorAll(".sectionName")[i];
-        let input = document.createElement("input");
-        input.value = data.sections[i].title;
-        div.innerHTML = "";
-        div.appendChild(input);
-        input.focus();
-        input.onkeydown = function(e) {
-          if (e.key === "Enter") {
-            data.sections[i].title = this.value.trim() || "Section";
-            save();
-          }
-        };
-        input.onblur = function() {
-          data.sections[i].title = this.value.trim() || "Section";
+        let title = prompt("Section name:", data.sections[i].title);
+        if (title !== null) {
+          data.sections[i].title = title.trim() || "Section";
           save();
-        };
+        }
       }
-      /* SECTION MANAGEMENT */
+
       function addSection() {
         let title = prompt("Section name:");
         if (!title) return;
@@ -651,7 +828,7 @@ onclick="addLink(${s})">
           title: title,
           collapsed: false,
           x: 60,
-          y: 80,
+          y: 100,
           z: ++data.nextZ,
           links: []
         });
@@ -664,8 +841,8 @@ onclick="addLink(${s})">
           save();
         }
       }
-      /* LINK MANAGEMENT */
-      function addLink(section) {
+      /* LINK FUNCTIONS */
+      function addLink(s) {
         let url = prompt("Website URL:");
         if (!url) return;
         if (!url.startsWith("http")) url = "https://" + url;
@@ -677,10 +854,21 @@ onclick="addLink(${s})">
         }
         let custom = prompt("Link title:", title);
         if (custom) title = custom;
-        data.sections[section].links.push({
+        data.sections[s].links.push({
           title: title,
           url: url
         });
+        save();
+      }
+
+      function editLink(s, l) {
+        let link = data.sections[s].links[l];
+        let url = prompt("Website URL:", link.url);
+        if (url === null) return;
+        let title = prompt("Link title:", link.title);
+        if (title === null) return;
+        link.url = url.startsWith("http") ? url : "https://" + url;
+        link.title = title.trim() || link.title;
         save();
       }
 
@@ -688,118 +876,13 @@ onclick="addLink(${s})">
         data.sections[s].links.splice(l, 1);
         save();
       }
-      /* SECTION DRAG */
-      let dragSection = null;
-      let dragStartX = 0;
-      let dragStartY = 0;
-      let originalX = 0;
-      let originalY = 0;
-      let moved = false;
-
-      function startSectionAction(e, index) {
-        if (e.target.classList.contains("iconButton") || e.target.tagName === "INPUT") return;
-        dragSection = index;
-        dragStartX = e.clientX;
-        dragStartY = e.clientY;
-        originalX = data.sections[index].x;
-        originalY = data.sections[index].y;
-        moved = false;
-        document.addEventListener("mousemove", sectionMove);
-        document.addEventListener("mouseup", sectionUp);
+      /* FILE IMPORT EXPORT */
+      function copyJSON() {
+        navigator.clipboard.writeText(JSON.stringify(data, null, 4));
+        alert("JSON copied");
       }
 
-      function sectionMove(e) {
-        if (dragSection === null) return;
-        let dx = e.clientX - dragStartX;
-        let dy = e.clientY - dragStartY;
-        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-          moved = true;
-          let x = originalX + dx;
-          let y = originalY + dy;
-          if (x < 0) x = 0;
-          if (y < 0) y = 0;
-          data.sections[dragSection].x = x;
-          data.sections[dragSection].y = y;
-          let section = document.querySelector(`[data-index="${dragSection}"]`);
-          if (section) {
-            section.style.left = x + "px";
-            section.style.top = y + "px";
-            section.classList.add("dragging");
-          }
-        }
-      }
-
-      function sectionUp() {
-        if (dragSection === null) return;
-        let section = document.querySelector(`[data-index="${dragSection}"]`);
-        if (section) section.classList.remove("dragging");
-        if (!moved) {
-          toggleSection(dragSection);
-        } else {
-          data.sections[dragSection].z =
-            ++data.nextZ;
-          save();
-        }
-        document.removeEventListener("mousemove", sectionMove);
-        document.removeEventListener("mouseup", sectionUp);
-        dragSection = null;
-      }
-      /* LINK DRAG */
-      let draggedLink = null;
-
-      function linkDragStart(e, s, l) {
-        draggedLink = {
-          section: s,
-          index: l
-        };
-        e.currentTarget.classList.add("dragging");
-      }
-
-      function linkDragOver(e, s, l) {
-        e.preventDefault();
-        if (!draggedLink) return;
-        if (draggedLink.section === s && draggedLink.index === l) return;
-        showDropLine(e.currentTarget);
-      }
-
-      function linkDrop(e, s, l) {
-        e.preventDefault();
-        removeDropLine();
-        if (!draggedLink) return;
-        let item = data.sections[draggedLink.section].links.splice(draggedLink.index, 1)[0];
-        if (draggedLink.section === s && draggedLink.index < l) {
-          l--;
-        }
-        data.sections[s].links.splice(l, 0, item);
-        draggedLink = null;
-        save();
-      }
-
-      function showDropLine(element) {
-        removeDropLine();
-        let line = document.createElement("div");
-        line.className = "drop-line";
-        element.parentNode.insertBefore(line, element);
-      }
-
-      function clearDrop() {
-        removeDropLine();
-      }
-
-      function removeDropLine() {
-        let line = document.querySelector(".drop-line");
-        if (line) line.remove();
-      }
-      /* BACKGROUND */
-      function changeBackground() {
-        let url = prompt("Background image URL:");
-        if (url) {
-          data.background = url;
-          save();
-        }
-      }
-      /* IMPORT / EXPORT */
-      function exportJSON() {
+      function downloadJSON() {
         let blob = new Blob(
           [
             JSON.stringify(data, null, 4)
@@ -812,12 +895,26 @@ onclick="addLink(${s})">
         a.click();
       }
 
-      function importJSON() {
+      function openPasteJSON() {
         document.getElementById("jsonModal").style.display = "flex";
       }
 
-      function closeModal() {
-        document.getElementById("jsonModal").style.display = "none";
+      function openJSONFile() {
+        let input = document.getElementById("jsonFileInput");
+        input.onchange = function(e) {
+          let reader = new FileReader();
+          reader.onload = function() {
+            try {
+              data = JSON.parse(reader.result);
+              normalize();
+              save();
+            } catch {
+              alert("Invalid JSON");
+            }
+          };
+          reader.readAsText(e.target.files[0]);
+        };
+        input.click();
       }
 
       function loadJSON() {
@@ -828,6 +925,108 @@ onclick="addLink(${s})">
           closeModal();
         } catch {
           alert("Invalid JSON");
+        }
+      }
+
+      function closeModal() {
+        document.getElementById("jsonModal").style.display = "none";
+      }
+
+      function changeBackground() {
+        let url = prompt("Background image URL:");
+        if (url) {
+          data.background = url;
+          save();
+        }
+      }
+      /* SECTION DRAG */
+      let sectionDrag = null;
+
+      function startSectionDrag(e, i) {
+        if (e.target.classList.contains("iconButton")) return;
+        sectionDrag = {
+          index: i,
+          startX: e.clientX,
+          startY: e.clientY,
+          originX: data.sections[i].x,
+          originY: data.sections[i].y,
+          moved: false
+        };
+        document.addEventListener("pointermove", moveSection);
+        document.addEventListener("pointerup", endSection);
+      }
+
+      function moveSection(e) {
+        if (!sectionDrag) return;
+        let dx = e.clientX - sectionDrag.startX;
+        let dy = e.clientY - sectionDrag.startY;
+        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+          sectionDrag.moved = true;
+          let x = Math.max(0, sectionDrag.originX + dx);
+          let y = Math.max(0, sectionDrag.originY + dy);
+          data.sections[sectionDrag.index].x = x;
+          data.sections[sectionDrag.index].y = y;
+          let el = document.querySelector(`[data-index="${sectionDrag.index}"]`);
+          if (el) {
+            el.style.left = x + "px";
+            el.style.top = y + "px";
+          }
+        }
+      }
+
+      function endSection() {
+        if (!sectionDrag) return;
+        if (sectionDrag.moved) {
+          data.sections[sectionDrag.index].z =
+            ++data.nextZ;
+          save();
+        } else {
+          toggleSection(sectionDrag.index);
+        }
+        document.removeEventListener("pointermove", moveSection);
+        document.removeEventListener("pointerup", endSection);
+        sectionDrag = null;
+      }
+      /* LINK DRAG */
+      let draggedLink = null;
+      let dropLine = null;
+
+      function linkDragStart(e, s, l) {
+        draggedLink = {
+          section: s,
+          index: l
+        };
+      }
+
+      function linkDragOver(e, s, l) {
+        e.preventDefault();
+        if (!draggedLink) return;
+        clearDropLine();
+        dropLine = document.createElement("div");
+        dropLine.className = "drop-line";
+        e.currentTarget.parentNode.insertBefore(dropLine, e.currentTarget);
+      }
+
+      function linkDrop(e) {
+        e.preventDefault();
+        if (!draggedLink || !dropLine) return;
+        let container = dropLine.parentNode;
+        let newIndex = Array.from(container.children).indexOf(dropLine);
+        let targetSection = parseInt(container.closest(".section").dataset.index);
+        let item = data.sections[draggedLink.section].links.splice(draggedLink.index, 1)[0];
+        if (draggedLink.section === targetSection && draggedLink.index < newIndex) {
+          newIndex--;
+        }
+        data.sections[targetSection].links.splice(newIndex, 0, item);
+        clearDropLine();
+        draggedLink = null;
+        save();
+      }
+
+      function clearDropLine() {
+        if (dropLine) {
+          dropLine.remove();
+          dropLine = null;
         }
       }
       render();
