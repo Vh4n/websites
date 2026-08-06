@@ -1,1035 +1,1040 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Shortcuts</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://apis.google.com/js/api.js" async defer></script>
-    <style>
-      :root {
-        --card: rgba(27, 27, 27, .82);
-        --hover: #252525;
-        --text: #eee;
-        --accent: #4da3ff;
-        --border: #333;
-        --shadow: 0 8px 25px rgba(0, 0, 0, .35);
-        --background-color: #1b1f24;
-        --background-overlay: rgba(0, 0, 0, .10)
-      }
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Shortcuts</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js" async defer></script>
+  <style>
+   :root {
+    --card: rgba(27, 27, 27, .82);
+    --hover: #252525;
+    --text: #eee;
+    --accent: #4da3ff;
+    --border: #333;
+    --shadow: 0 8px 25px rgba(0, 0, 0, .35);
+    --background-color: #1b1f24;
+    --background-overlay: rgba(0, 0, 0, .10)
+   }
 
-      body.light {
-        --card: rgba(255, 255, 255, .85);
-        --hover: #e9e9e9;
-        --text: #111;
-        --accent: #1677ff;
-        --border: #ccc;
-        --shadow: 0 8px 25px rgba(0, 0, 0, .15);
-        --background-color: #edf1f5;
-        --background-overlay: rgba(255, 255, 255, .10)
-      }
+   body.light {
+    --card: rgba(255, 255, 255, .85);
+    --hover: #e9e9e9;
+    --text: #111;
+    --accent: #1677ff;
+    --border: #ccc;
+    --shadow: 0 8px 25px rgba(0, 0, 0, .15);
+    --background-color: #edf1f5;
+    --background-overlay: rgba(255, 255, 255, .10)
+   }
 
-      * {
-        box-sizing: border-box;
-        font-family: Arial, Helvetica, sans-serif
-      }
+   * {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif
+   }
 
-      body {
-        margin: 0;
-        min-height: 100vh;
-        overflow: auto;
-        color: var(--text);
-        background:
-          linear-gradient(var(--background-overlay), var(--background-overlay)),
-          var(--background-color);
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed
-      }
+   body {
+    margin: 0;
+    min-height: 100vh;
+    overflow: auto;
+    color: var(--text);
+    background: linear-gradient(var(--background-overlay), var(--background-overlay)), var(--background-color);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed
+   }
 
-      body.hasBackground {
-        background:
-          linear-gradient(var(--background-overlay), var(--background-overlay)),
-          var(--background-image);
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed
-      }
+   body.hasBackground {
+    background: linear-gradient(var(--background-overlay), var(--background-overlay)), var(--background-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed
+   }
 
-      #pageTitle {
-        position: absolute;
-        left: 25px;
-        top: 20px;
-        font-size: 30px;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 5000;
-        color: #ddd
-      }
+   #pageTitle {
+    position: absolute;
+    left: 25px;
+    top: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 5000;
+    color: #ddd
+   }
 
-      #pageTitle input {
-        font-size: 28px;
-        background: #555;
-        color: white;
-        border: 1px solid var(--accent);
-        border-radius: 6px;
-        padding: 4px 8px
-      }
+   #pageTitle input {
+    font-size: 28px;
+    background: #555;
+    color: white;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 4px 8px
+   }
 
-      body.light #pageTitle input {
-        background: #eee;
-        color: #111
-      }
+   body.light #pageTitle input {
+    background: #eee;
+    color: #111
+   }
 
-      .topButtons {
-        position: absolute;
-        right: 25px;
-        top: 20px;
-        display: flex;
-        gap: 8px;
-        z-index: 5000
-      }
+   .topButtons {
+    position: absolute;
+    right: 25px;
+    top: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 5000
+   }
 
-      .exportBox {
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
-        display: flex;
-        gap: 8px;
-        z-index: 6000
-      }
+   .exportBox {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 6000
+   }
 
-      .dropdown {
-        position: relative
-      }
+   .dropdown {
+    position: relative
+   }
 
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        right: 0;
-        bottom: 38px;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        min-width: 200px;
-        overflow: hidden;
-        box-shadow: var(--shadow)
-      }
+   .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 38px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-width: 200px;
+    overflow: hidden;
+    box-shadow: var(--shadow)
+   }
 
-      .dropdown.active .dropdown-content {
-        display: block
-      }
+   .dropdown.active .dropdown-content {
+    display: block
+   }
 
-      .dropdown-content button {
-        width: 100%;
-        border: 0;
-        border-radius: 0;
-        text-align: left;
-        background: transparent
-      }
+   .dropdown-content button {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    text-align: left;
+    background: transparent
+   }
 
-      .dropdown-content button:hover {
-        background: var(--hover)
-      }
+   .dropdown-content button:hover {
+    background: var(--hover)
+   }
 
-      .desktop {
-        position: relative;
-        width: 100%;
-        min-height: 100vh
-      }
+   .desktop {
+    position: relative;
+    width: 100%;
+    min-height: 100vh
+   }
 
-      .section {
-        position: absolute;
-        width: 340px;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        touch-action: none
-      }
+   .section {
+    position: absolute;
+    width: 340px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    touch-action: none
+   }
 
-      .section.dragging,
-      .googleSearch.dragging {
-        opacity: .45
-      }
+   .section.dragging,
+   .googleSearch.dragging {
+    opacity: .45
+   }
 
-      .section-header {
-        height: 42px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0 10px;
-        cursor: grab;
-        user-select: none
-      }
+   .section-header {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+    cursor: grab;
+    user-select: none
+   }
 
-      .section-header:active {
-        cursor: grabbing
-      }
+   .section-header:active {
+    cursor: grabbing
+   }
 
-      .sectionName {
-        flex: 1;
-        font-weight: bold;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        cursor: pointer
-      }
+   .sectionName {
+    flex: 1;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer
+   }
 
-      .sectionName input {
-        width: 100%;
-        background: #111;
-        color: white;
-        border: 1px solid var(--accent);
-        border-radius: 4px;
-        padding: 2px 5px
-      }
+   .sectionName input {
+    width: 100%;
+    background: #111;
+    color: white;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 2px 5px
+   }
 
-      body.light .sectionName input {
-        background: white;
-        color: #111
-      }
+   body.light .sectionName input {
+    background: white;
+    color: #111
+   }
 
-      .iconButton {
-        background: none;
-        border: none;
-        color: #888;
-        font-size: 17px;
-        cursor: pointer;
-        padding: 2px 5px
-      }
+   .iconButton {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 17px;
+    cursor: pointer;
+    padding: 2px 5px
+   }
 
-      .iconButton:hover {
-        color: var(--text)
-      }
+   .iconButton:hover {
+    color: var(--text)
+   }
 
-      .links {
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 5px
-      }
+   .links {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px
+   }
 
-      .link {
-        display: flex;
-        align-items: center;
-        padding: 8px;
-        border-radius: 8px;
-        cursor: grab;
-        user-select: none;
-        touch-action: none
-      }
+   .link {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    touch-action: none
+   }
 
-      .link:hover {
-        background: var(--hover)
-      }
+   .link:hover {
+    background: var(--hover)
+   }
 
-      .link a {
-        flex: 1;
-        color: var(--accent);
-        text-decoration: none;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        pointer-events: none
-      }
+   .link a {
+    flex: 1;
+    color: var(--accent);
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    pointer-events: auto
+   }
 
-      .link.dragging {
-        opacity: .35
-      }
+   .link.dragging {
+    opacity: .35
+   }
 
-      .drop-line {
-        height: 3px;
-        background: #1677ff;
-        border-radius: 5px;
-        margin: 3px 0;
-        box-shadow: 0 0 8px rgba(22, 119, 255, .9)
-      }
+   .drop-line {
+    height: 3px;
+    background: #1677ff;
+    border-radius: 5px;
+    margin: 3px 0;
+    box-shadow: 0 0 8px rgba(22, 119, 255, .9)
+   }
 
-      .addLinkButton {
-        width: calc(100% - 20px);
-        margin: 0 10px 10px
-      }
+   .addLinkButton {
+    width: calc(100% - 20px);
+    margin: 0 10px 10px
+   }
 
-      button {
-        background: #222;
-        color: white;
-        border: 1px solid #444;
-        border-radius: 7px;
-        padding: 7px 12px;
-        cursor: pointer
-      }
+   button {
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 7px;
+    padding: 7px 12px;
+    cursor: pointer
+   }
 
-      button:hover {
-        background: #333
-      }
+   button:hover {
+    background: #333
+   }
 
-      body.light button {
-        background: #fff;
-        color: #111;
-        border-color: #bbb
-      }
+   body.light button {
+    background: #fff;
+    color: #111;
+    border-color: #bbb
+   }
 
-      body.light button:hover {
-        background: #e5e5e5
-      }
+   body.light button:hover {
+    background: #e5e5e5
+   }
 
-      .addSection {
-        position: fixed;
-        left: 50%;
-        bottom: 20px;
-        transform: translateX(-50%);
-        background: #1677ff !important;
-        color: white !important;
-        border: none !important;
-        z-index: 6000
-      }
+   .addSection {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    background: #1677ff !important;
+    color: white !important;
+    border: none !important;
+    z-index: 6000
+   }
 
-      .googleSearch {
-        position: absolute;
-        width: 340px;
-        z-index: 4000;
-        cursor: grab;
-        touch-action: none;
-        user-select: none
-      }
+   .googleSearch {
+    position: absolute;
+    width: 340px;
+    z-index: 4000;
+    cursor: grab;
+    touch-action: none;
+    user-select: none
+   }
 
-      .googleSearch.dragging {
-        opacity: .45
-      }
+   .googleInput {
+    width: 100%;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, .25);
+    background: rgba(255, 255, 255, .18);
+    color: white;
+    font-size: 16px;
+    padding: 0 14px;
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .15);
+    cursor: text
+   }
 
-      .googleInput {
-        width: 100%;
-        height: 42px;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, .25);
-        background: rgba(255, 255, 255, .18);
-        color: white;
-        font-size: 16px;
-        padding: 0 14px;
-        outline: none;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, .15);
-        cursor: text
-      }
+   .googleInput::placeholder {
+    color: rgba(255, 255, 255, .75)
+   }
 
-      .googleInput::placeholder {
-        color: rgba(255, 255, 255, .75)
-      }
+   .googleInput:focus {
+    border-color: var(--accent)
+   }
 
-      .googleInput:focus {
-        border-color: var(--accent)
-      }
+   body.light .googleInput {
+    background: rgba(0, 0, 0, .12);
+    color: #111
+   }
 
-      body.light .googleInput {
-        background: rgba(0, 0, 0, .12);
-        color: #111
-      }
+   body.light .googleInput::placeholder {
+    color: #555
+   }
 
-      body.light .googleInput::placeholder {
-        color: #555
-      }
+   .modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .7);
+    justify-content: center;
+    align-items: center;
+    z-index: 7000
+   }
 
-      .modal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, .7);
-        justify-content: center;
-        align-items: center;
-        z-index: 7000
-      }
+   .modalBox {
+    width: min(500px, 90vw);
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    color: var(--text)
+   }
 
-      .modalBox {
-        width: min(500px, 90vw);
-        background: var(--card);
-        padding: 20px;
-        border-radius: 12px;
-        color: var(--text)
-      }
+   textarea {
+    width: 100%;
+    height: 260px;
+    resize: none;
+    background: #111;
+    color: white;
+    border: 1px solid #444;
+    padding: 10px
+   }
 
-      textarea {
-        width: 100%;
-        height: 260px;
-        resize: none;
-        background: #111;
-        color: white;
-        border: 1px solid #444;
-        padding: 10px
-      }
+   body.light textarea {
+    background: white;
+    color: #111
+   }
 
-      body.light textarea {
-        background: white;
-        color: #111
-      }
+   .driveFolderModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .7);
+    justify-content: center;
+    align-items: center;
+    z-index: 7000
+   }
 
-      @media(max-width:700px) {
-        #pageTitle {
-          left: 15px;
-          top: 15px;
-          font-size: 24px
-        }
+   .driveFolderBox {
+    width: min(400px, 90vw);
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    color: var(--text)
+   }
 
-        .topButtons {
-          top: 15px;
-          right: 15px
-        }
+   .driveFolderBox input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border)
+   }
 
-        .section,
-        .googleSearch {
-          width: 92vw
-        }
+   .mobile-drop-line {
+    height: 4px;
+    background: #1677ff;
+    border-radius: 5px;
+    margin: 8px auto;
+    width: 92vw
+   }
 
-        .exportBox {
-          right: 10px;
-          bottom: 10px;
-          flex-direction: column
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="pageTitle"></div>
-    <div class="topButtons">
-      <button onclick="changeBackground()">Background</button>
-      <button onclick="toggleTheme()" id="themeButton">☀</button>
+   .section.mobileDragging {
+    opacity: .5
+   }
+
+   @media(max-width:700px) {
+    #pageTitle {
+     left: 15px;
+     top: 15px;
+     font-size: 24px
+    }
+
+    .topButtons {
+     top: 15px;
+     right: 15px;
+     flex-wrap: wrap
+    }
+
+    .desktop {
+     display: flex;
+     flex-direction: column;
+     padding-top: 70px;
+     min-height: 100vh
+    }
+
+    .section,
+    .googleSearch {
+     width: 92vw;
+     max-width: 340px
+    }
+
+    .section {
+     position: relative !important;
+     left: auto !important;
+     top: auto !important;
+     margin: 15px auto
+    }
+
+    .googleSearch {
+     left: 4vw !important
+    }
+
+    .exportBox {
+     right: 10px;
+     bottom: 10px;
+     flex-direction: column
+    }
+
+    .addSection {
+     bottom: 90px
+    }
+   }
+  </style>
+ </head>
+ <body>
+  <div id="pageTitle"></div>
+  <div class="topButtons">
+   <button onclick="changeBackground()">Background</button>
+   <button onclick="toggleTheme()" id="themeButton">☀</button>
+  </div>
+  <div id="desktop" class="desktop"></div>
+  <button class="addSection" onclick="addSection()">+ Section</button>
+  <div class="exportBox">
+   <div class="dropdown">
+    <button onclick="toggleDropdown(event)">Export</button>
+    <div class="dropdown-content">
+     <button onclick="copyJSON();closeDropdowns()">Copy JSON</button>
+     <button onclick="downloadJSON();closeDropdowns()">Export JSON file</button>
+     <button onclick="saveGoogleDrive();closeDropdowns()">Save to Google Drive</button>
     </div>
-    <div id="desktop" class="desktop"></div>
-    <button class="addSection" onclick="addSection()">+ Section</button>
-    <div class="exportBox">
-      <div class="dropdown">
-        <button onclick="toggleDropdown(event)"> Export </button>
-        <div class="dropdown-content">
-          <button onclick="copyJSON();closeDropdowns()"> Copy JSON </button>
-          <button onclick="downloadJSON();closeDropdowns()"> Export JSON file </button>
-          <button onclick="saveGoogleDrive();closeDropdowns()"> Save to Google Drive </button>
-        </div>
-      </div>
-      <div class="dropdown">
-        <button onclick="toggleDropdown(event)"> Import </button>
-        <div class="dropdown-content">
-          <button onclick="openPasteJSON();closeDropdowns()"> Paste JSON </button>
-          <button onclick="openJSONFile();closeDropdowns()"> Import JSON file </button>
-          <button onclick="loadGoogleDrive();closeDropdowns()"> Load from Google Drive </button>
-        </div>
-      </div>
+   </div>
+   <div class="dropdown">
+    <button onclick="toggleDropdown(event)">Import</button>
+    <div class="dropdown-content">
+     <button onclick="openPasteJSON();closeDropdowns()">Paste JSON</button>
+     <button onclick="openJSONFile();closeDropdowns()">Import JSON file</button>
+     <button onclick="loadGoogleDrive();closeDropdowns()">Load from Google Drive</button>
     </div>
-    <input id="jsonFileInput" type="file" accept=".json" style="display:none">
-    <div class="modal" id="jsonModal">
-      <div class="modalBox">
-        <h3>Paste JSON</h3>
-        <textarea id="jsonInput"></textarea>
-        <br>
-        <br>
-        <button onclick="loadJSON()"> Load </button>
-        <button onclick="closeModal()"> Cancel </button>
-      </div>
-    </div>
-    <script>
-      /* GOOGLE DRIVE CONFIG */
-      const GOOGLE_CLIENT_ID = "523208842364-elen13m9plu51b0maahbn48a4vppbpqi.apps.googleusercontent.com";
-      const GOOGLE_API_KEY = "AIzaSyDkoJewiBKHvo7FTgNZ0hUnlLWNzUf3UN0";
-      const GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";
-      let googleTokenClient = null;
-      let googleAccessToken = null;
-      let googlePickerLoaded = false;
-      let googleApiLoaded = false;
-      let data = JSON.parse(localStorage.getItem("favorites")) || {
-        title: "Shortcuts",
-        background: "",
-        theme: "dark",
-        nextZ: 1,
-        widget: {
-          enabled: true,
-          x: null,
-          y: null,
-          z: 1
-        },
-        sections: []
-      };
+   </div>
+  </div>
+  <input id="jsonFileInput" type="file" accept=".json" style="display:none">
+  <div class="modal" id="jsonModal">
+   <div class="modalBox">
+    <h3>Paste JSON</h3>
+    <textarea id="jsonInput"></textarea>
+    <br>
+    <br>
+    <button onclick="loadJSON()">Load</button>
+    <button onclick="closeModal()">Cancel</button>
+   </div>
+  </div>
+  <div class="driveFolderModal" id="driveFolderModal">
+   <div class="driveFolderBox">
+    <h3>Save to Google Drive</h3>
+    <input id="driveFileName" value="shortcuts.json">
+    <button onclick="pickDriveFolder()">Select Folder</button>
+    <button onclick="closeDriveFolderModal()">Cancel</button>
+   </div>
+  </div>
+  <script>
+   const GOOGLE_CLIENT_ID = "523208842364-elen13m9plu51b0maahbn48a4vppbpqi.apps.googleusercontent.com";
+   const GOOGLE_API_KEY = "AIzaSyDkoJewiBKHvo7FTgNZ0hUnlLWNzUf3UN0";
+   const GOOGLE_SCOPES = "https://www.googleapis.com/auth/drive.file";
+   let googleTokenClient = null;
+   let googleAccessToken = null;
+   let googlePickerLoaded = false;
+   let googleApiLoaded = false;
+   let selectedDriveFolder = null;
+   let data = JSON.parse(localStorage.getItem("favorites")) || {
+    title: "Shortcuts",
+    background: "",
+    theme: "dark",
+    nextZ: 1,
+    widget: {
+     enabled: true,
+     x: null,
+     y: null,
+     z: 1
+    },
+    sections: []
+   };
 
-      function normalize() {
-        if (!data.nextZ) data.nextZ = 1;
-        if (!data.theme) data.theme = "dark";
-        if (!data.widget) {
-          data.widget = {
-            enabled: true,
-            x: null,
-            y: null,
-            z: 1
-          };
-        }
-        if (!data.sections) data.sections = [];
-        data.sections.forEach((s, i) => {
-          if (s.x == null) s.x = 60 + i * 30;
-          if (s.y == null) s.y = 100 + i * 30;
-          if (s.z == null) s.z = i + 1;
-          if (s.collapsed == null) s.collapsed = false;
-          if (!s.links) s.links = [];
-        });
-        applyTheme();
-      }
+   function normalize() {
+    if (!data.nextZ) data.nextZ = 1;
+    if (!data.theme) data.theme = "dark";
+    if (!data.widget) data.widget = {
+     enabled: true,
+     x: null,
+     y: null,
+     z: 1
+    };
+    if (!data.sections) data.sections = [];
+    data.sections.forEach((s, i) => {
+     if (s.x == null) s.x = 60 + i * 30;
+     if (s.y == null) s.y = 100 + i * 30;
+     if (s.z == null) s.z = i + 1;
+     if (s.collapsed == null) s.collapsed = false;
+     if (!s.links) s.links = [];
+    });
+    applyTheme();
+   }
 
-      function applyTheme() {
-        document.body.classList.toggle("light", data.theme === "light");
-        document.getElementById("themeButton").innerHTML = data.theme === "dark" ? "☀" : "🌙";
+   function applyTheme() {
+    document.body.classList.toggle("light", data.theme === "light");
+    document.getElementById("themeButton").innerHTML = data.theme === "dark" ? "☀" : "🌙";
+   }
+   normalize();
+
+   function save() {
+    localStorage.setItem("favorites", JSON.stringify(data));
+    applyTheme();
+    render();
+   }
+
+   function toggleTheme() {
+    data.theme = data.theme === "dark" ? "light" : "dark";
+    save();
+   }
+
+   function initGoogleDrive() {
+    if (typeof google === "undefined") return;
+    googleApiLoaded = true;
+    gapi.load("picker", {
+     callback: function() {
+      googlePickerLoaded = true;
+     }
+    });
+    googleTokenClient = google.accounts.oauth2.initTokenClient({
+     client_id: GOOGLE_CLIENT_ID,
+     scope: GOOGLE_SCOPES,
+     callback: function(response) {
+      if (response.access_token) googleAccessToken = response.access_token;
+     }
+    });
+   }
+   window.addEventListener("load", () => {
+    setTimeout(initGoogleDrive, 1000);
+   });
+
+   function requestGoogleAccess(callback) {
+    if (!googleTokenClient) {
+     alert("Google API not loaded yet. Try again.");
+     return;
+    }
+    if (googleAccessToken) {
+     callback();
+     return;
+    }
+    googleTokenClient.callback = function(response) {
+     if (response.access_token) {
+      googleAccessToken = response.access_token;
+      callback();
+     }
+    };
+    googleTokenClient.requestAccessToken();
+   }
+
+   function googleSearch(e) {
+    if (e.key === "Enter") {
+     let text = e.target.value.trim();
+     if (text) window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=14";
+    }
+   }
+   let widgetDrag = {
+    active: false,
+    dragging: false,
+    startX: 0,
+    startY: 0,
+    originX: 0,
+    originY: 0
+   };
+
+   function startWidgetDrag(e) {
+    if (e.target.id === "googleInput") return;
+    widgetDrag.active = true;
+    widgetDrag.dragging = false;
+    widgetDrag.startX = e.clientX;
+    widgetDrag.startY = e.clientY;
+    widgetDrag.originX = data.widget.x == null ? (window.innerWidth / 2 - 170) : data.widget.x;
+    widgetDrag.originY = data.widget.y == null ? 80 : data.widget.y;
+    document.addEventListener("pointermove", moveWidgetDrag);
+    document.addEventListener("pointerup", endWidgetDrag);
+   }
+
+   function moveWidgetDrag(e) {
+    if (!widgetDrag.active) return;
+    let dx = e.clientX - widgetDrag.startX;
+    let dy = e.clientY - widgetDrag.startY;
+    if (!widgetDrag.dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+     widgetDrag.dragging = true;
+    }
+    if (widgetDrag.dragging) {
+     e.preventDefault();
+     let x = Math.max(0, widgetDrag.originX + dx);
+     let y = Math.max(0, widgetDrag.originY + dy);
+     data.widget.x = x;
+     data.widget.y = y;
+     let box = document.querySelector("[data-widget='true']");
+     if (box) {
+      box.style.left = x + "px";
+      box.style.top = y + "px";
+      box.classList.add("dragging");
+     }
+    }
+   }
+
+   function endWidgetDrag() {
+    if (!widgetDrag.active) return;
+    widgetDrag.active = false;
+    let box = document.querySelector("[data-widget='true']");
+    if (box) box.classList.remove("dragging");
+    document.removeEventListener("pointermove", moveWidgetDrag);
+    document.removeEventListener("pointerup", endWidgetDrag);
+    if (widgetDrag.dragging) {
+     data.widget.z = ++data.nextZ;
+     save();
+    }
+   }
+
+   function closeDropdowns() {
+    document.querySelectorAll(".dropdown").forEach(d => {
+     d.classList.remove("active");
+    });
+   }
+
+   function toggleDropdown(e) {
+    e.stopPropagation();
+    let dropdown = e.currentTarget.parentElement;
+    document.querySelectorAll(".dropdown").forEach(d => {
+     if (d !== dropdown) d.classList.remove("active");
+    });
+    dropdown.classList.toggle("active");
+   }
+   document.addEventListener("click", e => {
+    if (!e.target.closest(".dropdown")) closeDropdowns();
+   });
+
+   function saveGoogleDrive() {
+    requestGoogleAccess(() => {
+     document.getElementById("driveFolderModal").style.display = "flex";
+    });
+   }
+
+   function closeDriveFolderModal() {
+    document.getElementById("driveFolderModal").style.display = "none";
+    selectedDriveFolder = null;
+   }
+
+   function pickDriveFolder() {
+    if (!googlePickerLoaded) {
+     alert("Google Picker is still loading.");
+     return;
+    }
+    let picker = new google.picker.PickerBuilder().addView(new google.picker.DocsView().setIncludeFolders(true).setSelectFolderEnabled(true)).setOAuthToken(googleAccessToken).setDeveloperKey(GOOGLE_API_KEY).setCallback(driveFolderCallback).build();
+    picker.setVisible(true);
+   }
+
+   function driveFolderCallback(pickerData) {
+    if (pickerData.action === google.picker.Action.PICKED) {
+     selectedDriveFolder = pickerData.docs[0].id;
+     uploadGoogleDriveFile();
+    }
+   }
+
+   function uploadGoogleDriveFile() {
+    let fileName = document.getElementById("driveFileName").value.trim() || "shortcuts.json";
+    let metadata = {
+     name: fileName,
+     mimeType: "application/json",
+     parents: selectedDriveFolder ? [selectedDriveFolder] : []
+    };
+    let boundary = "-------314159265358979323846";
+    let body = "--" + boundary + "\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" + JSON.stringify(metadata) + "\r\n--" + boundary + "\r\nContent-Type: application/json\r\n\r\n" + JSON.stringify(data, null, 4) + "\r\n--" + boundary + "--";
+    fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
+     method: "POST",
+     headers: {
+      Authorization: "Bearer " + googleAccessToken,
+      "Content-Type": "multipart/related; boundary=" + boundary
+     },
+     body: body
+    }).then(r => r.json()).then(result => {
+     if (result.id) {
+      alert("Saved to Google Drive");
+      closeDriveFolderModal();
+     } else {
+      alert("Google Drive save failed");
+     }
+    });
+   }
+
+   function loadGoogleDrive() {
+    requestGoogleAccess(() => {
+     if (!googlePickerLoaded) {
+      alert("Google Picker is still loading.");
+      return;
+     }
+     let picker = new google.picker.PickerBuilder().addView(new google.picker.DocsView().setMimeTypes("application/json")).setOAuthToken(googleAccessToken).setDeveloperKey(GOOGLE_API_KEY).setCallback(pickerCallback).build();
+     picker.setVisible(true);
+    });
+   }
+
+   function pickerCallback(dataPicker) {
+    if (dataPicker.action === google.picker.Action.PICKED) {
+     let fileId = dataPicker.docs[0].id;
+     fetch("https://www.googleapis.com/drive/v3/files/" + fileId + "?alt=media", {
+      headers: {
+       Authorization: "Bearer " + googleAccessToken
       }
+     }).then(r => r.json()).then(json => {
+      data = json;
       normalize();
+      save();
+      alert("Loaded from Google Drive");
+     });
+    }
+   }
 
-      function save() {
-        localStorage.setItem("favorites", JSON.stringify(data));
-        applyTheme();
-        render();
-      }
-
-      function toggleTheme() {
-        data.theme = data.theme === "dark" ? "light" : "dark";
-        save();
-      }
-      /* GOOGLE DRIVE INITIALIZATION */
-      function initGoogleDrive() {
-        if (typeof google === "undefined") return;
-        googleApiLoaded = true;
-        gapi.load("picker", {
-          callback: function() {
-            googlePickerLoaded = true;
-          }
-        });
-        googleTokenClient = google.accounts.oauth2.initTokenClient({
-          client_id: GOOGLE_CLIENT_ID,
-          scope: GOOGLE_SCOPES,
-          callback: function(response) {
-            if (response.access_token) {
-              googleAccessToken = response.access_token;
-            }
-          }
-        });
-      }
-      window.addEventListener("load",
-        () => {
-          setTimeout(initGoogleDrive, 1000);
-        });
-
-      function requestGoogleAccess(callback) {
-        if (!googleTokenClient) {
-          alert("Google API not loaded yet. Try again.");
-          return;
-        }
-        if (googleAccessToken) {
-          callback();
-          return;
-        }
-        googleTokenClient.callback = function(response) {
-          if (response.access_token) {
-            googleAccessToken = response.access_token;
-            callback();
-          }
-        };
-        googleTokenClient.requestAccessToken();
-      }
-      /* GOOGLE SEARCH */
-      function googleSearch(e) {
-        if (e.key === "Enter") {
-          let text = e.target.value.trim();
-          if (text) {
-            window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=14";
-          }
-        }
-      }
-      /* GOOGLE BOX DRAG */
-      let widgetDrag = {
-        active: false,
-        dragging: false,
-        startX: 0,
-        startY: 0,
-        originX: 0,
-        originY: 0
-      };
-
-      function startWidgetDrag(e) {
-        widgetDrag.active = true;
-        widgetDrag.dragging = false;
-        widgetDrag.startX = e.clientX;
-        widgetDrag.startY = e.clientY;
-        widgetDrag.originX = data.widget.x == null ? (window.innerWidth / 2 - 170) : data.widget.x;
-        widgetDrag.originY = data.widget.y == null ? 80 : data.widget.y;
-        document.addEventListener("pointermove", moveWidgetDrag);
-        document.addEventListener("pointerup", endWidgetDrag);
-      }
-
-      function moveWidgetDrag(e) {
-        if (!widgetDrag.active) return;
-        let dx = e.clientX - widgetDrag.startX;
-        let dy = e.clientY - widgetDrag.startY;
-        if (!widgetDrag.dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
-          widgetDrag.dragging = true;
-        }
-        if (widgetDrag.dragging) {
-          e.preventDefault();
-          let x = Math.max(0, widgetDrag.originX + dx);
-          let y = Math.max(0, widgetDrag.originY + dy);
-          data.widget.x = x;
-          data.widget.y = y;
-          let box = document.querySelector("[data-widget='true']");
-          if (box) {
-            box.style.left = x + "px";
-            box.style.top = y + "px";
-            box.classList.add("dragging");
-          }
-        }
-      }
-
-      function endWidgetDrag() {
-        if (!widgetDrag.active) return;
-        widgetDrag.active = false;
-        let box = document.querySelector("[data-widget='true']");
-        if (box) box.classList.remove("dragging");
-        document.removeEventListener("pointermove", moveWidgetDrag);
-        document.removeEventListener("pointerup", endWidgetDrag);
-        if (widgetDrag.dragging) {
-          data.widget.z =
-            ++data.nextZ;
-          save();
-        }
-        setTimeout(() => {
-          let input = document.getElementById("googleInput");
-          if (input) input.focus();
-        }, 100);
-      }
-      /* DROPDOWNS */
-      function closeDropdowns() {
-        document.querySelectorAll(".dropdown").forEach(d => {
-          d.classList.remove("active");
-        });
-      }
-
-      function toggleDropdown(e) {
-        e.stopPropagation();
-        let dropdown = e.currentTarget.parentElement;
-        document.querySelectorAll(".dropdown").forEach(d => {
-          if (d !== dropdown) d.classList.remove("active");
-        });
-        dropdown.classList.toggle("active");
-      }
-      document.addEventListener("click", e => {
-        if (!e.target.closest(".dropdown")) closeDropdowns();
+   function render() {
+    document.getElementById("pageTitle").innerHTML = data.title;
+    if (data.background) {
+     document.body.classList.add("hasBackground");
+     document.body.style.setProperty("--background-image", `url("${data.background}")`);
+    } else {
+     document.body.classList.remove("hasBackground");
+    }
+    let html = "";
+    let widgetX = data.widget.x;
+    let widgetY = data.widget.y;
+    if (widgetX == null || widgetY == null) {
+     widgetX = (window.innerWidth / 2) - 170;
+     widgetY = 80;
+    }
+    if (data.widget.enabled) {
+     html += `
+									<div class="googleSearch" data-widget="true" style="left:${widgetX}px;top:${widgetY}px;z-index:${data.widget.z};" onpointerdown="startWidgetDrag(event)">
+										<input id="googleInput" class="googleInput" placeholder="Google me" onkeydown="googleSearch(event)">
+										</div>`;
+    }
+    data.sections.forEach((section, s) => {
+     html += `
+										<div class="section" data-index="${s}" style="left:${section.x}px;top:${section.y}px;z-index:${section.z};">
+											<div class="section-header" onpointerdown="startSectionDrag(event,${s})">
+												<div class="sectionName" onclick="toggleSection(${s})" ondblclick="event.stopPropagation();editSectionTitle(${s})">${section.title}</div>
+												<button class="iconButton" onclick="event.stopPropagation();editSectionTitle(${s})">✏</button>
+												<button class="iconButton" onclick="event.stopPropagation();deleteSection(${s})">×</button>
+											</div>`;
+     if (!section.collapsed) {
+      html += `
+											<div class="links">`;
+      section.links.forEach((link, l) => {
+       html += `
+												<div class="link" draggable="true" ondragstart="linkDragStart(event,${s},${l})" ondragover="linkDragOver(event,${s},${l})" ondrop="linkDrop(event)" ondragleave="clearDropLine()">
+													<a href="${link.url}" target="_blank">${link.title}</a>
+													<button class="iconButton" onclick="event.stopPropagation();editLink(${s},${l})">✏</button>
+													<button class="iconButton" onclick="event.stopPropagation();deleteLink(${s},${l})">×</button>
+												</div>`;
       });
-      /* GOOGLE DRIVE SAVE */
-      function saveGoogleDrive() {
-        requestGoogleAccess(
-          () => {
-            let fileContent = JSON.stringify(data, null, 4);
-            let metadata = {
-              name: "shortcuts.json",
-              mimeType: "application/json"
-            };
-            let boundary = "-------314159265358979323846";
-            let body = "--" + boundary + "\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" + JSON.stringify(metadata) + "\r\n--" + boundary + "\r\nContent-Type: application/json\r\n\r\n" + fileContent + "\r\n--" + boundary + "--";
-            fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart", {
-              method: "POST",
-              headers: {
-                Authorization: "Bearer " + googleAccessToken,
-                "Content-Type": "multipart/related; boundary=" + boundary
-              },
-              body: body
-            }).then(r => r.json()).then(result => {
-              if (result.id) {
-                alert("Saved to Google Drive");
-              } else {
-                alert("Google Drive save failed");
-              }
-            });
-          });
-      }
-      /* GOOGLE DRIVE PICKER LOAD */
-      function loadGoogleDrive() {
-        requestGoogleAccess(
-          () => {
-            if (!googlePickerLoaded) {
-              alert("Google Picker is still loading.");
-              return;
-            }
-            let picker = new google.picker.PickerBuilder().addView(new google.picker.DocsView().setMimeTypes("application/json")).setOAuthToken(googleAccessToken).setDeveloperKey(GOOGLE_API_KEY).setCallback(pickerCallback).build();
-            picker.setVisible(true);
-          });
-      }
-
-      function pickerCallback(dataPicker) {
-        if (dataPicker.action === google.picker.Action.PICKED) {
-          let fileId = dataPicker.docs[0].id;
-          fetch("https://www.googleapis.com/drive/v3/files/" + fileId + "?alt=media", {
-            headers: {
-              Authorization: "Bearer " + googleAccessToken
-            }
-          }).then(r => r.json()).then(json => {
-            data = json;
-            normalize();
-            save();
-            alert("Loaded from Google Drive");
-          });
-        }
-      }
-
-      function render() {
-        document.getElementById("pageTitle").innerHTML = data.title;
-        if (data.background) {
-          document.body.classList.add("hasBackground");
-          document.body.style.setProperty("--background-image", `url("${data.background}")`);
-        } else {
-          document.body.classList.remove("hasBackground");
-        }
-        let html = "";
-        let widgetX = data.widget.x;
-        let widgetY = data.widget.y;
-        if (widgetX == null || widgetY == null) {
-          widgetX = (window.innerWidth / 2) - 170;
-          widgetY = 80;
-        }
-        if (data.widget.enabled) {
-          html += `
-
-
-								<div class="googleSearch"
-data-widget="true"
-style="
-left:${widgetX}px;
-top:${widgetY}px;
-z-index:${data.widget.z};
-"
-onpointerdown="startWidgetDrag(event)">
-									<input
-id="googleInput"
-class="googleInput"
-placeholder="Google me"
-onkeydown="googleSearch(event)">
-									</div>
-
-`;
-        }
-        data.sections.forEach((section, s) => {
-          html += `
-
-
-									<div class="section"
-data-index="${s}"
-style="
-left:${section.x}px;
-top:${section.y}px;
-z-index:${section.z};
-">
-										<div class="section-header"
-onpointerdown="startSectionDrag(event,${s})">
-											<div class="sectionName"
-onclick="toggleSection(${s})"
-ondblclick="event.stopPropagation();editSectionTitle(${s})">
-
-${section.title}
-
-</div>
-											<button class="iconButton"
-onclick="event.stopPropagation();editSectionTitle(${s})">
-✏
-</button>
-											<button class="iconButton"
-onclick="event.stopPropagation();deleteSection(${s})">
-×
-</button>
-										</div>
-
-`;
-          if (!section.collapsed) {
-            html += `
-
-
-										<div class="links">
-
-`;
-            section.links.forEach((link, l) => {
-              html += `
-
-
-											<div class="link"
-draggable="true"
-ondragstart="linkDragStart(event,${s},${l})"
-ondragover="linkDragOver(event,${s},${l})"
-ondrop="linkDrop(event)"
-ondragleave="clearDropLine()">
-												<a href="${link.url}" target="_blank">
-${link.title}
-</a>
-												<button class="iconButton"
-onclick="editLink(${s},${l})">
-✏
-</button>
-												<button class="iconButton"
-onclick="deleteLink(${s},${l})">
-×
-</button>
+      html += `
 											</div>
+											<button class="addLinkButton" onclick="addLink(${s})">+ Add Link</button>`;
+     }
+     html += `
+										</div>`;
+    });
+    document.getElementById("desktop").innerHTML = html;
+    let input = document.getElementById("googleInput");
+    if (input) {
+     setTimeout(() => input.focus(), 100);
+    }
+   }
+   document.getElementById("pageTitle").onclick = function() {
+    let input = document.createElement("input");
+    input.value = data.title;
+    this.innerHTML = "";
+    this.appendChild(input);
+    input.focus();
+    input.onkeydown = function(e) {
+     if (e.key === "Enter") {
+      data.title = this.value.trim() || "Shortcuts";
+      save();
+     }
+    };
+    input.onblur = function() {
+     data.title = this.value.trim() || "Shortcuts";
+     save();
+    };
+   };
 
-`;
-            });
-            html += `
+   function toggleSection(i) {
+    data.sections[i].collapsed = !data.sections[i].collapsed;
+    save();
+   }
 
+   function editSectionTitle(i) {
+    let title = prompt("Section name:", data.sections[i].title);
+    if (title !== null) {
+     data.sections[i].title = title.trim() || "Section";
+     save();
+    }
+   }
 
-										</div>
-										<button class="addLinkButton"
-onclick="addLink(${s})">
-+ Add Link
-</button>
+   function addSection() {
+    let title = prompt("Section name:");
+    if (!title) return;
+    data.sections.push({
+     title: title,
+     collapsed: false,
+     x: 60,
+     y: 100,
+     z: ++data.nextZ,
+     links: []
+    });
+    save();
+   }
 
-`;
-          }
-          html += `
+   function deleteSection(i) {
+    if (confirm("Delete section?")) {
+     data.sections.splice(i, 1);
+     save();
+    }
+   }
 
+   function addLink(s) {
+    let url = prompt("Website URL:");
+    if (!url) return;
+    if (!url.startsWith("http")) url = "https://" + url;
+    let title;
+    try {
+     title = new URL(url).hostname.replace("www.", "");
+    } catch {
+     title = url;
+    }
+    let custom = prompt("Link title:", title);
+    if (custom) title = custom;
+    data.sections[s].links.push({
+     title: title,
+     url: url
+    });
+    save();
+   }
 
-									</div>
+   function editLink(s, l) {
+    let link = data.sections[s].links[l];
+    let url = prompt("Website URL:", link.url);
+    if (url === null) return;
+    let title = prompt("Link title:", link.title);
+    if (title === null) return;
+    link.url = url.startsWith("http") ? url : "https://" + url;
+    link.title = title.trim() || link.title;
+    save();
+   }
 
-`;
-        });
-        document.getElementById("desktop").innerHTML = html;
+   function deleteLink(s, l) {
+    data.sections[s].links.splice(l, 1);
+    save();
+   }
+
+   function copyJSON() {
+    navigator.clipboard.writeText(JSON.stringify(data, null, 4));
+    alert("JSON copied");
+   }
+
+   function downloadJSON() {
+    let blob = new Blob([JSON.stringify(data, null, 4)], {
+     type: "application/json"
+    });
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "shortcuts.json";
+    a.click();
+   }
+
+   function openPasteJSON() {
+    document.getElementById("jsonModal").style.display = "flex";
+    setTimeout(() => {
+     document.getElementById("jsonInput").focus();
+    }, 100);
+   }
+
+   function openJSONFile() {
+    let input = document.getElementById("jsonFileInput");
+    input.onchange = function(e) {
+     let reader = new FileReader();
+     reader.onload = function() {
+      try {
+       data = JSON.parse(reader.result);
+       normalize();
+       save();
+      } catch {
+       alert("Invalid JSON");
       }
-      /* TITLE */
-      document.getElementById("pageTitle").onclick = function() {
-        let input = document.createElement("input");
-        input.value = data.title;
-        this.innerHTML = "";
-        this.appendChild(input);
-        input.focus();
-        input.onkeydown = function(e) {
-          if (e.key === "Enter") {
-            data.title = this.value.trim() || "Shortcuts";
-            save();
-          }
-        };
-        input.onblur = function() {
-          data.title = this.value.trim() || "Shortcuts";
-          save();
-        };
-      };
-      /* SECTION FUNCTIONS */
-      function toggleSection(i) {
-        data.sections[i].collapsed = !data.sections[i].collapsed;
-        save();
-      }
+     };
+     reader.readAsText(e.target.files[0]);
+    };
+    input.click();
+   }
 
-      function editSectionTitle(i) {
-        let title = prompt("Section name:", data.sections[i].title);
-        if (title !== null) {
-          data.sections[i].title = title.trim() || "Section";
-          save();
-        }
-      }
+   function loadJSON() {
+    try {
+     data = JSON.parse(document.getElementById("jsonInput").value);
+     normalize();
+     save();
+     closeModal();
+    } catch {
+     alert("Invalid JSON");
+    }
+   }
 
-      function addSection() {
-        let title = prompt("Section name:");
-        if (!title) return;
-        data.sections.push({
-          title: title,
-          collapsed: false,
-          x: 60,
-          y: 100,
-          z: ++data.nextZ,
-          links: []
-        });
-        save();
-      }
+   function closeModal() {
+    document.getElementById("jsonModal").style.display = "none";
+   }
 
-      function deleteSection(i) {
-        if (confirm("Delete section?")) {
-          data.sections.splice(i, 1);
-          save();
-        }
-      }
-      /* LINK FUNCTIONS */
-      function addLink(s) {
-        let url = prompt("Website URL:");
-        if (!url) return;
-        if (!url.startsWith("http")) url = "https://" + url;
-        let title;
-        try {
-          title = new URL(url).hostname.replace("www.", "");
-        } catch {
-          title = url;
-        }
-        let custom = prompt("Link title:", title);
-        if (custom) title = custom;
-        data.sections[s].links.push({
-          title: title,
-          url: url
-        });
-        save();
-      }
+   function changeBackground() {
+    let url = prompt("Background image URL:");
+    if (url) {
+     data.background = url;
+     save();
+    }
+   }
+   let sectionDrag = null;
 
-      function editLink(s, l) {
-        let link = data.sections[s].links[l];
-        let url = prompt("Website URL:", link.url);
-        if (url === null) return;
-        let title = prompt("Link title:", link.title);
-        if (title === null) return;
-        link.url = url.startsWith("http") ? url : "https://" + url;
-        link.title = title.trim() || link.title;
-        save();
-      }
+   function startSectionDrag(e, i) {
+    if (e.target.classList.contains("iconButton")) return;
+    sectionDrag = {
+     index: i,
+     startX: e.clientX,
+     startY: e.clientY,
+     originX: data.sections[i].x,
+     originY: data.sections[i].y,
+     moved: false
+    };
+    document.addEventListener("pointermove", moveSection);
+    document.addEventListener("pointerup", endSection);
+   }
 
-      function deleteLink(s, l) {
-        data.sections[s].links.splice(l, 1);
-        save();
-      }
-      /* FILE IMPORT EXPORT */
-      function copyJSON() {
-        navigator.clipboard.writeText(JSON.stringify(data, null, 4));
-        alert("JSON copied");
-      }
+   function moveSection(e) {
+    if (!sectionDrag) return;
+    let dx = e.clientX - sectionDrag.startX;
+    let dy = e.clientY - sectionDrag.startY;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+     sectionDrag.moved = true;
+     let x = Math.max(0, sectionDrag.originX + dx);
+     let y = Math.max(0, sectionDrag.originY + dy);
+     data.sections[sectionDrag.index].x = x;
+     data.sections[sectionDrag.index].y = y;
+     let el = document.querySelector(`[data-index="${sectionDrag.index}"]`);
+     if (el) {
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+     }
+    }
+   }
 
-      function downloadJSON() {
-        let blob = new Blob(
-          [
-            JSON.stringify(data, null, 4)
-          ], {
-            type: "application/json"
-          });
-        let a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "shortcuts.json";
-        a.click();
-      }
+   function endSection() {
+    if (!sectionDrag) return;
+    if (sectionDrag.moved) {
+     data.sections[sectionDrag.index].z = ++data.nextZ;
+     save();
+    } else {
+     toggleSection(sectionDrag.index);
+    }
+    document.removeEventListener("pointermove", moveSection);
+    document.removeEventListener("pointerup", endSection);
+    sectionDrag = null;
+   }
+   let draggedLink = null;
+   let dropLine = null;
 
-      function openPasteJSON() {
-        document.getElementById("jsonModal").style.display = "flex";
-      }
+   function linkDragStart(e, s, l) {
+    draggedLink = {
+     section: s,
+     index: l
+    };
+   }
 
-      function openJSONFile() {
-        let input = document.getElementById("jsonFileInput");
-        input.onchange = function(e) {
-          let reader = new FileReader();
-          reader.onload = function() {
-            try {
-              data = JSON.parse(reader.result);
-              normalize();
-              save();
-            } catch {
-              alert("Invalid JSON");
-            }
-          };
-          reader.readAsText(e.target.files[0]);
-        };
-        input.click();
-      }
+   function linkDragOver(e, s, l) {
+    e.preventDefault();
+    if (!draggedLink) return;
+    clearDropLine();
+    dropLine = document.createElement("div");
+    dropLine.className = "drop-line";
+    e.currentTarget.parentNode.insertBefore(dropLine, e.currentTarget);
+   }
 
-      function loadJSON() {
-        try {
-          data = JSON.parse(document.getElementById("jsonInput").value);
-          normalize();
-          save();
-          closeModal();
-        } catch {
-          alert("Invalid JSON");
-        }
-      }
+   function linkDrop(e) {
+    e.preventDefault();
+    if (!draggedLink || !dropLine) return;
+    let container = dropLine.parentNode;
+    let newIndex = Array.from(container.children).indexOf(dropLine);
+    let targetSection = parseInt(container.closest(".section").dataset.index);
+    let item = data.sections[draggedLink.section].links.splice(draggedLink.index, 1)[0];
+    if (draggedLink.section === targetSection && draggedLink.index < newIndex) {
+     newIndex--;
+    }
+    data.sections[targetSection].links.splice(newIndex, 0, item);
+    clearDropLine();
+    draggedLink = null;
+    save();
+   }
 
-      function closeModal() {
-        document.getElementById("jsonModal").style.display = "none";
-      }
-
-      function changeBackground() {
-        let url = prompt("Background image URL:");
-        if (url) {
-          data.background = url;
-          save();
-        }
-      }
-      /* SECTION DRAG */
-      let sectionDrag = null;
-
-      function startSectionDrag(e, i) {
-        if (e.target.classList.contains("iconButton")) return;
-        sectionDrag = {
-          index: i,
-          startX: e.clientX,
-          startY: e.clientY,
-          originX: data.sections[i].x,
-          originY: data.sections[i].y,
-          moved: false
-        };
-        document.addEventListener("pointermove", moveSection);
-        document.addEventListener("pointerup", endSection);
-      }
-
-      function moveSection(e) {
-        if (!sectionDrag) return;
-        let dx = e.clientX - sectionDrag.startX;
-        let dy = e.clientY - sectionDrag.startY;
-        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-          sectionDrag.moved = true;
-          let x = Math.max(0, sectionDrag.originX + dx);
-          let y = Math.max(0, sectionDrag.originY + dy);
-          data.sections[sectionDrag.index].x = x;
-          data.sections[sectionDrag.index].y = y;
-          let el = document.querySelector(`[data-index="${sectionDrag.index}"]`);
-          if (el) {
-            el.style.left = x + "px";
-            el.style.top = y + "px";
-          }
-        }
-      }
-
-      function endSection() {
-        if (!sectionDrag) return;
-        if (sectionDrag.moved) {
-          data.sections[sectionDrag.index].z =
-            ++data.nextZ;
-          save();
-        } else {
-          toggleSection(sectionDrag.index);
-        }
-        document.removeEventListener("pointermove", moveSection);
-        document.removeEventListener("pointerup", endSection);
-        sectionDrag = null;
-      }
-      /* LINK DRAG */
-      let draggedLink = null;
-      let dropLine = null;
-
-      function linkDragStart(e, s, l) {
-        draggedLink = {
-          section: s,
-          index: l
-        };
-      }
-
-      function linkDragOver(e, s, l) {
-        e.preventDefault();
-        if (!draggedLink) return;
-        clearDropLine();
-        dropLine = document.createElement("div");
-        dropLine.className = "drop-line";
-        e.currentTarget.parentNode.insertBefore(dropLine, e.currentTarget);
-      }
-
-      function linkDrop(e) {
-        e.preventDefault();
-        if (!draggedLink || !dropLine) return;
-        let container = dropLine.parentNode;
-        let newIndex = Array.from(container.children).indexOf(dropLine);
-        let targetSection = parseInt(container.closest(".section").dataset.index);
-        let item = data.sections[draggedLink.section].links.splice(draggedLink.index, 1)[0];
-        if (draggedLink.section === targetSection && draggedLink.index < newIndex) {
-          newIndex--;
-        }
-        data.sections[targetSection].links.splice(newIndex, 0, item);
-        clearDropLine();
-        draggedLink = null;
-        save();
-      }
-
-      function clearDropLine() {
-        if (dropLine) {
-          dropLine.remove();
-          dropLine = null;
-        }
-      }
-      render();
-    </script>
-  </body>
+   function clearDropLine() {
+    if (dropLine) {
+     dropLine.remove();
+     dropLine = null;
+    }
+   }
+   render();
+  </script>
+ </body>
 </html>
