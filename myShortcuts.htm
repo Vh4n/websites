@@ -742,6 +742,7 @@
      html += `
 
 
+									
 									<div class="googleSearch"
 data-widget="true"
 style="left:${widgetX}px;top:${widgetY}px;z-index:${data.widget.z};"
@@ -753,13 +754,14 @@ onpointerdown="startWidgetDrag(event)">
      html += `
 
 
+										
 										<div class="section"
 data-index="${s}"
 style="left:${section.x}px;top:${section.y}px;z-index:${section.z};">
 											<div class="section-header"
+onclick="toggleSection(${s})"
 onpointerdown="startSectionDrag(event,${s})">
 												<div class="sectionName"
-onclick="toggleSection(${s})"
 ondblclick="event.stopPropagation();editSectionTitle(${s})">
 
 ${section.title}
@@ -778,11 +780,13 @@ onclick="event.stopPropagation();deleteSection(${s})">
       html += `
 
 
+											
 											<div class="links">`;
       section.links.forEach((link, l) => {
        html += `
 
 
+												
 												<div class="link"
 draggable="true"
 ondragstart="linkDragStart(event,${s},${l})"
@@ -805,6 +809,7 @@ onclick="event.stopPropagation();deleteLink(${s},${l})">
       html += `
 
 
+											
 											</div>
 											<button class="addLinkButton"
 onclick="addLink(${s})">
@@ -814,6 +819,7 @@ onclick="addLink(${s})">
      html += `
 
 
+										
 										</div>`;
     });
     document.getElementById("desktop").innerHTML = html;
@@ -1010,15 +1016,15 @@ onclick="addLink(${s})">
 
    function endSection() {
     if (!sectionDrag) return;
-    if (sectionDrag.moved) {
-     data.sections[sectionDrag.index].z = ++data.nextZ;
-     save();
-    } else {
-     toggleSection(sectionDrag.index);
-    }
+    let index = sectionDrag.index;
+    let moved = sectionDrag.moved;
     document.removeEventListener("pointermove", moveSection);
     document.removeEventListener("pointerup", endSection);
     sectionDrag = null;
+    if (moved) {
+     data.sections[index].z = ++data.nextZ;
+     save();
+    }
    }
    let draggedLink = null;
    let dropLine = null;
