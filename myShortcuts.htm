@@ -386,22 +386,28 @@
     }
 
     .desktop {
-     padding-top: 0;
+     padding-top: 80px;
      min-height: 100vh;
-    }
-
-    .section,
-    .googleSearch {
-     width: 92vw;
-     max-width: none;
+     display: flex;
+     flex-direction: column;
+     gap: 15px;
     }
 
     .section {
-     left: 4vw !important;
+     position: relative;
+     width: 92vw;
+     max-width: none;
+     left: auto !important;
+     top: auto !important;
+     margin: 0 auto;
     }
 
     .googleSearch {
-     left: 4vw !important;
+     position: relative;
+     width: 92vw;
+     left: auto !important;
+     top: auto !important;
+     margin: 0 auto 15px;
     }
 
     .exportBox {
