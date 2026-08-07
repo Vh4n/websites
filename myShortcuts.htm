@@ -1100,43 +1100,53 @@ onclick="addLink(${s})">
 	}
 
 	function mobileSectionMove(e) {
-		if(!mobileSort.active) return;
-		mobileSort.currentY = e.clientY;
-		if(!mobileSort.dragging) return;
+		if(!mobileSort.active || !mobileSort.dragging) return;
 		e.preventDefault();
-		let dy = e.clientY - mobileSort.startY;
-		if(Math.abs(dy) > 5) mobileSort.moved = true;
 		let current = document.querySelector(`[data-index="${mobileSort.index}"]`);
 		if(!current) return;
+		let dy = e.clientY - mobileSort.startY;
+		if(Math.abs(dy) > 5) mobileSort.moved = true;
 		current.style.transform = "translateY(" + dy + "px)";
 		let sections = [...document.querySelectorAll(".section")];
+		let currentIndex = mobileSort.index;
 		let currentRect = current.getBoundingClientRect();
-		sections.forEach(el => {
-			if(el === current) return;
-			let rect = el.getBoundingClientRect();
-			let midpoint = rect.top + rect.height / 2;
-			if((dy > 0 && e.clientY > midpoint) || (dy < 0 && e.clientY < midpoint)) {
-				let target = parseInt(el.dataset.index);
-				if(target !== mobileSort.index) {
-					let item = data.sections.splice(mobileSort.index, 1)[0];
-					data.sections.splice(target, 0, item);
-					mobileSort.index = target;
-					current.style.transform = "";
-					current = document.querySelector(`[data-index="${mobileSort.index}"]`);
-					mobileSort.startY = e.clientY;
-					if(current) {
-						current.classList.add("dragging");
-						current.style.transform = "translateY(0px)";
-					}
+		let currentCenter = currentRect.top + currentRect.height / 2;
+		let targetIndex = null;
+		if(dy > 0) {
+			for(let i = currentIndex + 1; i < sections.length; i++) {
+				let el = sections[i];
+				let rect = el.getBoundingClientRect();
+				if(currentCenter > rect.top + rect.height / 2) {
+					targetIndex = i;
 				}
 			}
-		});
+		} else if(dy < 0) {
+			for(let i = currentIndex - 1; i >= 0; i--) {
+				let el = sections[i];
+				let rect = el.getBoundingClientRect();
+				if(currentCenter < rect.top + rect.height / 2) {
+					targetIndex = i;
+				}
+			}
+		}
+		if(targetIndex !== null && targetIndex !== currentIndex) {
+			let item = data.sections.splice(currentIndex, 1)[0];
+			data.sections.splice(targetIndex, 0, item);
+			mobileSort.index = targetIndex;
+			current.style.transform = "";
+			document.querySelectorAll(".section").forEach(el => el.classList.remove("dragging"));
+			mobileSort.startY = e.clientY;
+			let newCurrent = document.querySelector(`[data-index="${targetIndex}"]`);
+			if(newCurrent) {
+				newCurrent.classList.add("dragging");
+			}
+		}
 	}
 
 	function mobileSectionEnd() {
 		if(!mobileSort.active) return;
 		clearTimeout(mobileSort.timer);
-		let index = mobileSort.index;
+		let index = mobileSorat.index;
 		let dragging = mobileSort.dragging;
 		let moved = mobileSort.moved;
 		let current = document.querySelector(`[data-index="${index}"]`);
