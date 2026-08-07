@@ -633,12 +633,19 @@
 	}
 
 	function googleSearch(e) {
-		if(e.key === "Enter") {
-			let text = e.target.value.trim();
-			if(text) {
-				window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=14";
+		if(e.key !== "Enter") return;
+		let text = e.target.value.trim();
+		if(!text) return;
+		let url = text;
+		if(!/^https?:\/\//i.test(url)) url = "https://" + url;
+		try {
+			let parsed = new URL(url);
+			if(parsed.hostname.includes(".")) {
+				window.location.href = url;
+				return;
 			}
-		}
+		} catch {}
+		window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(text) + "&udm=14";
 	}
 	let widgetDrag = {
 		active: false,
@@ -990,17 +997,23 @@ onclick="addLink(${s})">
 	function startSectionDrag(e, i) {
 		if(e.target.classList.contains("iconButton")) return;
 		if(window.innerWidth <= 700) {
+			e.preventDefault();
+			clearTimeout(mobileSort.timer);
 			mobileSort.active = true;
 			mobileSort.dragging = false;
 			mobileSort.index = i;
 			mobileSort.startY = e.clientY;
 			mobileSort.currentY = e.clientY;
 			mobileSort.moved = false;
+			let section = document.querySelector(`[data-index="${i}"]`);
 			mobileSort.timer = setTimeout(() => {
+				if(!mobileSort.active) return;
 				mobileSort.dragging = true;
+				if(section) section.classList.add("dragging");
 			}, 300);
 			document.addEventListener("pointermove", mobileSectionMove);
 			document.addEventListener("pointerup", mobileSectionEnd);
+			document.addEventListener("pointercancel", mobileSectionEnd);
 			return;
 		}
 		sectionDrag = {
@@ -1088,20 +1101,19 @@ onclick="addLink(${s})">
 	}
 
 	function mobileSectionMove(e) {
-		if(!mobileSort.active) return;
-		mobileSort.currentY = e.clientY;
-		if(!mobileSort.dragging) return;
+		if(!mobileSort.active || !mobileSort.dragging) return;
+		e.preventDefault();
 		let dy = e.clientY - mobileSort.startY;
-		if(Math.abs(dy) > 10) mobileSort.moved = true;
-		if(!mobileSort.moved) return;
-		let sections = [...document.querySelectorAll(".section")];
+		if(Math.abs(dy) > 5) mobileSort.moved = true;
 		let current = document.querySelector(`[data-index="${mobileSort.index}"]`);
 		if(!current) return;
 		current.style.transform = "translateY(" + dy + "px)";
+		let sections = [...document.querySelectorAll(".section")];
 		sections.forEach(el => {
 			if(el === current) return;
 			let rect = el.getBoundingClientRect();
-			if(e.clientY > rect.top && e.clientY < rect.bottom) {
+			let midpoint = rect.top + rect.height / 2;
+			if((dy > 0 && e.clientY > midpoint) || (dy < 0 && e.clientY < midpoint)) {
 				let target = parseInt(el.dataset.index);
 				if(target !== mobileSort.index) {
 					let item = data.sections.splice(mobileSort.index, 1)[0];
@@ -1118,17 +1130,20 @@ onclick="addLink(${s})">
 		if(!mobileSort.active) return;
 		clearTimeout(mobileSort.timer);
 		let current = document.querySelector(`[data-index="${mobileSort.index}"]`);
-		if(current) current.style.transform = "";
+		if(current) {
+			current.style.transform = "";
+			current.classList.remove("dragging");
+		}
 		document.removeEventListener("pointermove", mobileSectionMove);
 		document.removeEventListener("pointerup", mobileSectionEnd);
-		if(!mobileSort.dragging) {
-			toggleSection(mobileSort.index);
-		} else {
-			save();
-		}
+		document.removeEventListener("pointercancel", mobileSectionEnd);
+		if(!mobileSort.dragging) toggleSection(mobileSort.index);
+		else if(mobileSort.moved) save();
 		mobileSort.active = false;
 		mobileSort.dragging = false;
 		mobileSort.index = null;
+		mobileSort.moved = false;
+		mobileSort.timer = null;
 	}
 	render();
 	</script>
