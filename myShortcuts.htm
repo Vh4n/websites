@@ -762,7 +762,7 @@ onpointerdown="startWidgetDrag(event)">
 data-index="${s}"
 style="left:${section.x}px;top:${section.y}px;z-index:${section.z};">
 											<div class="section-header"
-onclick="toggleSection(${s})"
+onclick="if(window.innerWidth>700)toggleSection(${s})"
 onpointerdown="startSectionDrag(event,${s})">
 												<div class="sectionName"
 ondblclick="event.stopPropagation();editSectionTitle(${s})">
@@ -1110,6 +1110,7 @@ onclick="addLink(${s})">
 		if(!current) return;
 		current.style.transform = "translateY(" + dy + "px)";
 		let sections = [...document.querySelectorAll(".section")];
+		let currentRect = current.getBoundingClientRect();
 		sections.forEach(el => {
 			if(el === current) return;
 			let rect = el.getBoundingClientRect();
@@ -1120,8 +1121,13 @@ onclick="addLink(${s})">
 					let item = data.sections.splice(mobileSort.index, 1)[0];
 					data.sections.splice(target, 0, item);
 					mobileSort.index = target;
-					render();
+					current.style.transform = "";
+					current = document.querySelector(`[data-index="${mobileSort.index}"]`);
 					mobileSort.startY = e.clientY;
+					if(current) {
+						current.classList.add("dragging");
+						current.style.transform = "translateY(0px)";
+					}
 				}
 			}
 		});
@@ -1146,8 +1152,14 @@ onclick="addLink(${s})">
 		mobileSort.index = null;
 		mobileSort.moved = false;
 		mobileSort.timer = null;
-		if(!dragging && !moved) toggleSection(index);
-		else if(dragging && moved) save();
+		if(dragging && moved) {
+			data.sections.forEach((section, i) => {
+				section.z = i + 1;
+			});
+			save();
+		} else if(!dragging && !moved) {
+			toggleSection(index);
+		}
 	}
 	render();
 	</script>
