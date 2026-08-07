@@ -764,11 +764,8 @@ style="left:${section.x}px;top:${section.y}px;z-index:${section.z};">
 											<div class="section-header"
 onclick="if(window.innerWidth>700)toggleSection(${s})"
 onpointerdown="startSectionDrag(event,${s})">
-												<div class="sectionName"
-ondblclick="event.stopPropagation();editSectionTitle(${s})">
-
+												<div class="sectionName">
 ${section.title}
-
 </div>
 												<button class="iconButton"
 onclick="event.stopPropagation();editSectionTitle(${s})">
@@ -997,6 +994,8 @@ onclick="addLink(${s})">
 	function startSectionDrag(e, i) {
 		if(e.target.classList.contains("iconButton")) return;
 		if(window.innerWidth <= 700) {
+			e.preventDefault();
+			if(e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
 			clearTimeout(mobileSort.timer);
 			mobileSort.active = true;
 			mobileSort.dragging = false;
@@ -1146,26 +1145,22 @@ onclick="addLink(${s})">
 	function mobileSectionEnd() {
 		if(!mobileSort.active) return;
 		clearTimeout(mobileSort.timer);
-		let index = mobileSorat.index;
+		let index = mobileSort.index;
 		let dragging = mobileSort.dragging;
 		let moved = mobileSort.moved;
-		let current = document.querySelector(`[data-index="${index}"]`);
-		if(current) {
-			current.style.transform = "";
-			current.classList.remove("dragging");
-		}
 		document.removeEventListener("pointermove", mobileSectionMove);
 		document.removeEventListener("pointerup", mobileSectionEnd);
 		document.removeEventListener("pointercancel", mobileSectionEnd);
+		document.querySelectorAll(".section").forEach(el => {
+			el.classList.remove("dragging");
+			el.style.transform = "";
+		});
 		mobileSort.active = false;
 		mobileSort.dragging = false;
 		mobileSort.index = null;
 		mobileSort.moved = false;
 		mobileSort.timer = null;
 		if(dragging && moved) {
-			data.sections.forEach((section, i) => {
-				section.z = i + 1;
-			});
 			save();
 		} else if(!dragging && !moved) {
 			toggleSection(index);
