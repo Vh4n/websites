@@ -409,7 +409,7 @@
 			margin: 0 auto 15px
 		}
 		.section-header {
-			cursor: grab
+			cursor: pointer
 		}
 		.exportBox {
 			right: 10px;
@@ -997,7 +997,6 @@ onclick="addLink(${s})">
 	function startSectionDrag(e, i) {
 		if(e.target.classList.contains("iconButton")) return;
 		if(window.innerWidth <= 700) {
-			e.preventDefault();
 			clearTimeout(mobileSort.timer);
 			mobileSort.active = true;
 			mobileSort.dragging = false;
@@ -1101,7 +1100,9 @@ onclick="addLink(${s})">
 	}
 
 	function mobileSectionMove(e) {
-		if(!mobileSort.active || !mobileSort.dragging) return;
+		if(!mobileSort.active) return;
+		mobileSort.currentY = e.clientY;
+		if(!mobileSort.dragging) return;
 		e.preventDefault();
 		let dy = e.clientY - mobileSort.startY;
 		if(Math.abs(dy) > 5) mobileSort.moved = true;
@@ -1129,7 +1130,10 @@ onclick="addLink(${s})">
 	function mobileSectionEnd() {
 		if(!mobileSort.active) return;
 		clearTimeout(mobileSort.timer);
-		let current = document.querySelector(`[data-index="${mobileSort.index}"]`);
+		let index = mobileSort.index;
+		let dragging = mobileSort.dragging;
+		let moved = mobileSort.moved;
+		let current = document.querySelector(`[data-index="${index}"]`);
 		if(current) {
 			current.style.transform = "";
 			current.classList.remove("dragging");
@@ -1137,13 +1141,13 @@ onclick="addLink(${s})">
 		document.removeEventListener("pointermove", mobileSectionMove);
 		document.removeEventListener("pointerup", mobileSectionEnd);
 		document.removeEventListener("pointercancel", mobileSectionEnd);
-		if(!mobileSort.dragging) toggleSection(mobileSort.index);
-		else if(mobileSort.moved) save();
 		mobileSort.active = false;
 		mobileSort.dragging = false;
 		mobileSort.index = null;
 		mobileSort.moved = false;
 		mobileSort.timer = null;
+		if(!dragging && !moved) toggleSection(index);
+		else if(dragging && moved) save();
 	}
 	render();
 	</script>
