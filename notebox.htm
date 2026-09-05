@@ -192,8 +192,8 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 </div>
 <script src="https://accounts.google.com/gsi/client"></script>
 <script>
-const GGLCLNT="NzcyODg0NDAyNTM3LW0xZDkwNzlyZWRjNnBqaGtxZmdidWQ1Zzk5cmZub3FvLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t";
-const GGLAPKY="QUl6YVN5QjRZWGY0Ml9scUNCYm8zbWs4LWxEb0MydU5lbnJ1c0k=";
+const GGLCLNT="MzcyODg0NDAyNTM3LW0xZDkwNzlyZWRjNnBqaGtxZmdidWQ1Zzk5cmZub3FvLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t";
+const GGLAPKY="QUl6YVNCNFlWZjQyX2xxQ0JibzNtazgtbERvQzJVbmVucnVzSQ==";
 const GGLSCPS="https://www.googleapis.com/auth/drive.file";
 const DATABASE_FILENAME="noteboxdatabase.json";
 const LOCAL_STORAGE_KEY="notebox_data_v1";
@@ -221,7 +221,7 @@ function noteCategory(n){return n?.MAINSTRCT?.CATEGORY||"Inbox";}
 function noteDate(n){return n?.MAINSTRCT?.DATEMODIFIED||n?.MAINSTRCT?.DATECREATE||"";}
 function renderCategories(){const el=document.getElementById("categories");const cats=getCategories();el.innerHTML="";cats.forEach(c=>{const div=document.createElement("div");div.className="category"+(c===currentCategory?" active":"")+(c==="Inbox"?" inbox":"");div.textContent="."+c;div.title=c;div.onclick=()=>selectCategory(c);el.appendChild(div);});}
 function selectCategory(category){currentCategory=category;renderCategories();renderNotes();}
-function renderNotes(){const filter=(document.getElementById("searchInput")?.value||"").toLowerCase().trim();const notes=data.POSTSDATA.filter(n=>noteCategory(n)===currentCategory&&(!filter||(noteTitle(n)+" "+noteBody(n)).toLowerCase().includes(filter)));const a=document.getElementById("column1");const b=document.getElementById("column2");a.innerHTML="";b.innerHTML="";notes.forEach((n,i)=>{const originalIndex=data.POSTSDATA.indexOf(n);const card=buildNote(n,originalIndex);if(i%2===0)a.appendChild(card);else b.appendChild(card);});if(!notes.length)a.innerHTML='<div class="empty">No notes in <b>'+escapeHTML(currentCategory)+'</b>.<br><br>Use <b>Add note</b> to create one.</div>;}
+function renderNotes(){const filter=(document.getElementById("searchInput")?.value||"").toLowerCase().trim();const notes=data.POSTSDATA.filter(n=>noteCategory(n)===currentCategory&&(!filter||(noteTitle(n)+" "+noteBody(n)).toLowerCase().includes(filter)));const a=document.getElementById("column1");const b=document.getElementById("column2");a.innerHTML="";b.innerHTML="";notes.forEach((n,i)=>{const originalIndex=data.POSTSDATA.indexOf(n);const card=buildNote(n,originalIndex);if(i%2===0)a.appendChild(card);else b.appendChild(card);});if(!notes.length)a.innerHTML='<div class="empty">No notes in <b>'+escapeHTML(currentCategory)+'</b>.<br><br>Use <b>Add note</b> to create one.</div>';}
 function buildNote(n,index){const card=document.createElement("article");card.className="note";card.dataset.index=index;card.innerHTML='<div class="note-head"><div class="note-title">'+escapeHTML(noteTitle(n))+'</div><div class="note-actions"><span class="modify">modify</span><span class="share">share</span><span class="delete">×</span></div></div><div class="note-body">'+formatBody(noteBody(n))+'</div><div class="note-footer"><span>on .'+escapeHTML(noteCategory(n))+'</span><span>'+escapeHTML(formatDate(noteDate(n)))+' by '+escapeHTML(n?.MAINSTRCT?.AUTOR||"you")+'</span></div>';card.querySelector(".note-head").onclick=e=>{if(e.target.closest(".note-actions"))return;card.classList.toggle("collapsed");};card.querySelector(".modify").onclick=()=>openNote(index);card.querySelector(".delete").onclick=()=>deleteNote(index);card.querySelector(".share").onclick=()=>shareNote(index);return card;}
 function formatBody(body){let s=escapeHTML(body).replace(/\n/g,"<br>");s=s.replace(/&amp;#91;url ([^&]+)&amp;#93;(.+?)&amp;#91;\/url&amp;#93;/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');s=s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');return s;}
 function formatDate(v){if(!v)return "";const p=String(v).split("/");if(p.length>=3)return p[1]+"/"+p[2]+"/"+p[0];return v;}
@@ -255,7 +255,13 @@ client_id:atob(GGLCLNT),
 scope:GGLSCPS,
 callback:async function(response){
 googleLoginInProgress=false;
-if(response.error){console.error("Google OAuth error:",response);googleAccessToken=null;updateStorageStatus("Google login failed","error");alert("Google login failed:\n\n"+(response.error_description||response.error||"Unknown Google OAuth error."));return;}
+if(response.error){
+console.error("Google OAuth error:",response);
+googleAccessToken=null;
+updateStorageStatus("Google login failed","error");
+alert("Google login failed: "+(response.error_description||response.error||"Unknown Google OAuth error."));
+return;
+}
 if(response.access_token){
 googleAccessToken=response.access_token;
 try{
@@ -269,7 +275,7 @@ googleUser=null;
 googleDatabaseFile=null;
 updateGoogleUI();
 updateStorageStatus("Google Drive error","error");
-alert("Google Drive could not be loaded:\n\n"+(error.message||error));
+alert("Google Drive could not be loaded: "+(error.message||error));
 }
 }
 }
