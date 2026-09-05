@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -71,6 +70,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .storage-status.error{color:#c33}
 .google-user{display:flex;align-items:center;gap:7px;padding:0 10px;font-size:11px}
 .google-user img{width:23px;height:23px;border-radius:50%}
+.google-user .google-login{width:70px;height:29px}
 @media(max-width:800px){
 .app{grid-template-columns:150px minmax(0,1fr)}
 .brand{width:150px}
@@ -110,15 +110,11 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 </div>
 </div>
 </header>
-
 <input id="jsonFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)">
-
 <div class="search" id="searchBox">
 <input id="searchInput" placeholder="Search notes..." oninput="renderNotes()">
 </div>
-
 <div id="storageStatus" class="storage-status">Local storage</div>
-
 <main class="app">
 <aside class="sidebar">
 <div class="categories" id="categories"></div>
@@ -133,7 +129,6 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <div class="note-column" id="column2"></div>
 </section>
 </main>
-
 <div class="modal-backdrop" id="noteModal">
 <div class="modal">
 <div class="modal-head" id="noteModalTitle">Add note</div>
@@ -148,7 +143,6 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 </div>
 </div>
 </div>
-
 <div class="modal-backdrop" id="categoryModal">
 <div class="modal">
 <div class="modal-head">Categories</div>
@@ -159,7 +153,6 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <div class="modal-foot"><button class="btn" onclick="closeModal('categoryModal')">Close</button></div>
 </div>
 </div>
-
 <div class="modal-backdrop" id="categoryEditModal">
 <div class="modal">
 <div class="modal-head" id="categoryEditTitle">Add category</div>
@@ -172,7 +165,6 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 </div>
 </div>
 </div>
-
 <div class="modal-backdrop" id="settingsModal">
 <div class="modal">
 <div class="modal-head">NoteBox settings</div>
@@ -197,9 +189,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 </div>
 </div>
 </div>
-
 <script src="https://accounts.google.com/gsi/client"></script>
-
 <script>
 const GGLCLNT="372884402537-m1d9079vedc6pjhkqfgbud5g99rfnoqo.apps.googleusercontent.com";
 const GGLAPKY="AIzaSyB4YVf42_lqCBbo3mk8-lDoC2uNzenrusI";
@@ -207,7 +197,7 @@ const GGLSCPS="openid email profile https://www.googleapis.com/auth/drive";
 const DATABASE_FILENAME="noteboxdatabase.json";
 const LOCAL_STORAGE_KEY="notebox_data_v1";
 const LOCAL_WALLPAPER_KEY="notebox_wallpaper_v1";
-
+const GOOGLE_SESSION_KEY="notebox_google_session_v1";
 let currentCategory="Inbox";
 let editingNoteIndex=null;
 let editingCategoryIndex=null;
@@ -217,6 +207,7 @@ let googleAccessToken=null;
 let googleUser=null;
 let googleDatabaseFile=null;
 let googleLoginInProgress=false;
+let googleSilentLoginInProgress=false;
 
 function defaultData(){
 return{
@@ -232,7 +223,6 @@ WALLPAPER:""
 POSTSDATA:[]
 };
 }
-
 function normalizeData(raw){
 let d=raw||defaultData();
 if(!d.USERDATA)d.USERDATA=defaultData().USERDATA;
@@ -248,7 +238,6 @@ else d.POSTSDATA=[];
 }
 return d;
 }
-
 function loadLocalData(){
 try{
 const saved=localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -258,12 +247,10 @@ console.error("Local data error:",e);
 return defaultData();
 }
 }
-
 function saveLocalData(){
 if(googleAccessToken)return;
 localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify(data));
 }
-
 function saveData(){
 if(googleAccessToken){
 saveToGoogleDrive();
@@ -272,11 +259,9 @@ saveLocalData();
 updateStorageStatus("Local storage");
 }
 }
-
 function getCategories(){
 return data.USERDATA.OPDATA.PSTCATEGORIES.map(c=>String(c.NAME)).filter(Boolean);
 }
-
 function escapeHTML(v){
 return String(v??"").replace(/[&<>"']/g,m=>({
 "&":"&amp;",
@@ -286,23 +271,18 @@ return String(v??"").replace(/[&<>"']/g,m=>({
 "'":"&#39;"
 }[m]));
 }
-
 function noteTitle(n){
 return n?.MAINSTRCT?.TITLE||"Untitled";
 }
-
 function noteBody(n){
 return n?.MAINSTRCT?.BODY||"";
 }
-
 function noteCategory(n){
 return n?.MAINSTRCT?.CATEGORY||"Inbox";
 }
-
 function noteDate(n){
 return n?.MAINSTRCT?.DATEMODIFIED||n?.MAINSTRCT?.DATECREATE||"";
 }
-
 function renderCategories(){
 const el=document.getElementById("categories");
 const cats=getCategories();
@@ -316,13 +296,11 @@ div.onclick=()=>selectCategory(c);
 el.appendChild(div);
 });
 }
-
 function selectCategory(category){
 currentCategory=category;
 renderCategories();
 renderNotes();
 }
-
 function renderNotes(){
 const filter=(document.getElementById("searchInput")?.value||"").toLowerCase().trim();
 const notes=data.POSTSDATA.filter(n=>{
@@ -342,7 +320,6 @@ if(!notes.length){
 a.innerHTML='<div class="empty">No notes in <b>'+escapeHTML(currentCategory)+'</b>.<br><br>Use <b>Add note</b> to create one.</div>';
 }
 }
-
 function buildNote(n,index){
 const card=document.createElement("article");
 card.className="note";
@@ -361,47 +338,38 @@ card.innerHTML=
 '<span>on .'+escapeHTML(noteCategory(n))+'</span>'+
 '<span>'+escapeHTML(formatDate(noteDate(n)))+' by '+escapeHTML(n?.MAINSTRCT?.AUTOR||"you")+'</span>'+
 '</div>';
-
 card.querySelector(".note-head").onclick=e=>{
 if(e.target.closest(".note-actions"))return;
 card.classList.toggle("collapsed");
 };
-
 card.querySelector(".modify").onclick=()=>openNote(index);
 card.querySelector(".delete").onclick=()=>deleteNote(index);
 card.querySelector(".share").onclick=()=>shareNote(index);
-
 return card;
 }
-
 function formatBody(body){
 let s=escapeHTML(body).replace(/\n/g,"<br>");
 s=s.replace(/&amp;#91;url ([^&]+)&amp;#93;(.+?)&amp;#91;\/url&amp;#93;/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
 s=s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
 return s;
 }
-
 function formatDate(v){
 if(!v)return "";
 const p=String(v).split("/");
 if(p.length>=3)return p[1]+"/"+p[2]+"/"+p[0];
 return v;
 }
-
 function stripHTML(s){
 return String(s).replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"");
 }
-
 function openNote(index=null){
 editingNoteIndex=index;
 document.getElementById("noteModalTitle").textContent=index===null?"Add note":"Modify note";
-
 const cats=getCategories();
 const select=document.getElementById("noteCategory");
 select.innerHTML=cats.map(c=>{
 return '<option value="'+escapeHTML(c)+'">'+escapeHTML(c)+'</option>';
 }).join("");
-
 if(index===null){
 document.getElementById("noteTitle").value="";
 document.getElementById("noteBody").value="";
@@ -412,10 +380,8 @@ document.getElementById("noteTitle").value=noteTitle(n);
 document.getElementById("noteBody").value=stripHTML(n?.MAINSTRCT?.BODY||"");
 select.value=noteCategory(n);
 }
-
 showModal("noteModal");
 }
-
 function createDateString(){
 const now=new Date();
 return now.getFullYear()+"/"+
@@ -425,20 +391,17 @@ String(now.getHours()).padStart(2,"0")+"/"+
 String(now.getMinutes()).padStart(2,"0")+"/"+
 String(now.getSeconds()).padStart(2,"0");
 }
-
 function createObjectId(){
 if(typeof crypto!=="undefined"&&typeof crypto.randomUUID==="function"){
 return crypto.randomUUID().replaceAll("-","").slice(0,24);
 }
 return Date.now().toString(16).padStart(24,"0").slice(-24);
 }
-
 function saveNote(){
 const title=document.getElementById("noteTitle").value.trim()||"Untitled";
 const body=document.getElementById("noteBody").value;
 const category=document.getElementById("noteCategory").value;
 const date=createDateString();
-
 if(editingNoteIndex===null){
 data.POSTSDATA.unshift({
 _id:{$oid:createObjectId()},
@@ -471,14 +434,12 @@ n.MAINSTRCT.BODY=body;
 n.MAINSTRCT.CATEGORY=category;
 n.MAINSTRCT.DATEMODIFIED=date;
 }
-
 saveData();
 closeModal("noteModal");
 currentCategory=category;
 renderCategories();
 renderNotes();
 }
-
 function deleteNote(index){
 const n=data.POSTSDATA[index];
 if(!confirm('Delete "'+noteTitle(n)+'"?'))return;
@@ -486,7 +447,6 @@ data.POSTSDATA.splice(index,1);
 saveData();
 renderNotes();
 }
-
 async function shareNote(index){
 const n=data.POSTSDATA[index];
 const text=noteTitle(n)+"\n\n"+stripHTML(noteBody(n));
@@ -497,32 +457,26 @@ alert("Note copied to clipboard.");
 prompt("Copy note:",text);
 }
 }
-
 function addCategory(){
 editingCategoryIndex=null;
 document.getElementById("categoryEditTitle").textContent="Add category";
 document.getElementById("categoryName").value="";
 showModal("categoryEditModal");
 }
-
 function editCategory(index){
 editingCategoryIndex=index;
 document.getElementById("categoryEditTitle").textContent="Edit category";
 document.getElementById("categoryName").value=getCategories()[index];
 showModal("categoryEditModal");
 }
-
 function saveCategory(){
 const name=document.getElementById("categoryName").value.trim();
 if(!name)return;
-
 const cats=getCategories();
-
 if(cats.some((c,i)=>c.toLowerCase()===name.toLowerCase()&&i!==editingCategoryIndex)){
 alert("That category already exists.");
 return;
 }
-
 if(editingCategoryIndex===null){
 data.USERDATA.OPDATA.PSTCATEGORIES.push({NAME:name});
 }else{
@@ -533,47 +487,36 @@ if(noteCategory(n)===old)n.MAINSTRCT.CATEGORY=name;
 });
 if(currentCategory===old)currentCategory=name;
 }
-
 saveData();
 closeModal("categoryEditModal");
 renderCategories();
 renderNotes();
-
 if(document.getElementById("categoryModal").classList.contains("show")){
 renderCategoryManager();
 }
 }
-
 function removeCategory(index){
 const cats=getCategories();
 const name=cats[index];
-
 if(name==="Inbox"){
 alert("Inbox cannot be deleted.");
 return;
 }
-
 if(!confirm('Delete category "'+name+'"? Notes will be moved to Inbox.'))return;
-
 data.POSTSDATA.forEach(n=>{
 if(noteCategory(n)===name)n.MAINSTRCT.CATEGORY="Inbox";
 });
-
 data.USERDATA.OPDATA.PSTCATEGORIES.splice(index,1);
-
 if(currentCategory===name)currentCategory="Inbox";
-
 saveData();
 renderCategories();
 renderNotes();
 renderCategoryManager();
 }
-
 function openCategories(){
 renderCategoryManager();
 showModal("categoryModal");
 }
-
 function renderCategoryManager(){
 document.getElementById("categoryList").innerHTML=getCategories().map((c,i)=>{
 return '<div class="category-row">'+
@@ -583,58 +526,46 @@ return '<div class="category-row">'+
 '</div>';
 }).join("");
 }
-
 function openSettings(){
 document.getElementById("wallpaperUrl").value=data.USERDATA.OPDATA.WALLPAPER||localStorage.getItem(LOCAL_WALLPAPER_KEY)||"";
 showModal("settingsModal");
 }
-
 function saveSettings(){
 const url=document.getElementById("wallpaperUrl").value.trim();
 data.USERDATA.OPDATA.WALLPAPER=url;
-
 if(url){
 document.body.style.backgroundImage='url("'+url.replace(/"/g,'\\"')+'")';
 localStorage.setItem(LOCAL_WALLPAPER_KEY,url);
 }else{
 resetWallpaper(false);
 }
-
 saveData();
 closeModal("settingsModal");
 }
-
 function setWallpaperFile(event){
 const file=event.target.files[0];
 if(!file)return;
-
 const reader=new FileReader();
-
 reader.onload=()=>{
 localStorage.setItem(LOCAL_WALLPAPER_KEY,reader.result);
 document.body.style.backgroundImage='url("'+reader.result+'")';
 document.getElementById("wallpaperUrl").value="";
 };
-
 reader.readAsDataURL(file);
 }
-
 function resetWallpaper(close=true){
 localStorage.removeItem(LOCAL_WALLPAPER_KEY);
 data.USERDATA.OPDATA.WALLPAPER="";
 document.body.style.backgroundImage="none";
 saveData();
-
 if(close)closeModal("settingsModal");
 }
-
 function applyWallpaper(){
 const w=localStorage.getItem(LOCAL_WALLPAPER_KEY)||data.USERDATA.OPDATA.WALLPAPER;
 if(w){
 document.body.style.backgroundImage='url("'+w.replace(/"/g,'\\"')+'")';
 }
 }
-
 function exportJSON(){
 const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
 const a=document.createElement("a");
@@ -643,137 +574,138 @@ a.download=DATABASE_FILENAME;
 a.click();
 setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
-
 function importJSON(event){
 const file=event.target.files[0];
 if(!file)return;
-
 const reader=new FileReader();
-
 reader.onload=()=>{
 try{
 data=normalizeData(JSON.parse(reader.result));
 currentCategory=getCategories()[0]||"Inbox";
-
 if(!googleAccessToken){
 saveLocalData();
 }
-
 renderCategories();
 renderNotes();
 applyWallpaper();
-
 if(googleAccessToken){
 saveToGoogleDrive();
 }
-
 alert("JSON loaded successfully.");
 }catch(e){
 console.error(e);
 alert("Invalid JSON file.");
 }
-
 event.target.value="";
 };
-
 reader.readAsText(file);
 }
-
 function loginGoogle(){
-if(googleLoginInProgress)return;
-
+requestGoogleAccessToken(false);
+}
+function requestGoogleAccessToken(silent){
+if(googleLoginInProgress||googleSilentLoginInProgress)return;
 if(typeof google==="undefined"||!google.accounts||!google.accounts.oauth2){
-alert("Google authentication could not be loaded.");
+if(!silent)alert("Google authentication could not be loaded.");
 return;
 }
-
+if(silent){
+googleSilentLoginInProgress=true;
+}else{
 googleLoginInProgress=true;
-updateStorageStatus("Connecting to Google...");
-
+}
+updateStorageStatus(silent?"Restoring Google session...":"Connecting to Google...");
 googleTokenClient=google.accounts.oauth2.initTokenClient({
 client_id:GGLCLNT,
 scope:GGLSCPS,
 callback:async function(response){
 googleLoginInProgress=false;
-
+googleSilentLoginInProgress=false;
 if(response.error){
 console.error("Google OAuth error:",response);
 googleAccessToken=null;
+if(!silent){
 updateStorageStatus("Google login failed","error");
 alert("Google login failed: "+(response.error_description||response.error||"Unknown Google OAuth error."));
+}else{
+updateStorageStatus("Local storage");
+}
 return;
 }
-
 if(response.access_token){
 googleAccessToken=response.access_token;
-
 try{
 await loadGoogleUser();
 await loadDatabaseFromGoogle();
+localStorage.setItem(GOOGLE_SESSION_KEY,"true");
 updateGoogleUI();
 }catch(error){
 console.error("Google Drive error:",error);
 googleAccessToken=null;
 googleUser=null;
 googleDatabaseFile=null;
+localStorage.removeItem(GOOGLE_SESSION_KEY);
 updateGoogleUI();
 updateStorageStatus("Google Drive error","error");
+if(!silent){
 alert("Google Drive could not be loaded: "+(error.message||error));
 }
 }
 }
-});
-
-googleTokenClient.requestAccessToken();
 }
-
+});
+try{
+googleTokenClient.requestAccessToken({
+prompt:silent?"none":"select_account"
+});
+}catch(error){
+googleLoginInProgress=false;
+googleSilentLoginInProgress=false;
+console.error("Google token request error:",error);
+if(!silent){
+updateStorageStatus("Google login failed","error");
+alert("Google login failed: "+(error.message||error));
+}else{
+updateStorageStatus("Local storage");
+}
+}
+}
 async function loadGoogleUser(){
 const response=await fetch("https://www.googleapis.com/oauth2/v3/userinfo",{
 headers:{
 Authorization:"Bearer "+googleAccessToken
 }
 });
-
 if(!response.ok){
-throw new Error("Unable to retrieve Google account information.");
+const text=await response.text();
+throw new Error("Unable to retrieve Google account information. HTTP "+response.status+(text?" - "+text:""));
 }
-
 googleUser=await response.json();
 }
-
 async function findGoogleDatabase(){
 const q="name='"+DATABASE_FILENAME.replace(/'/g,"\\'")+"' and trashed=false";
-
 const url="https://www.googleapis.com/drive/v3/files?q="+
 encodeURIComponent(q)+
 "&spaces=drive&fields=files(id,name,mimeType,parents,modifiedTime)";
-
 const response=await fetch(url,{
 headers:{
 Authorization:"Bearer "+googleAccessToken,
 "x-goog-api-key":GGLAPKY
 }
 });
-
 if(!response.ok){
 const text=await response.text();
 throw new Error("Unable to search Google Drive. HTTP "+response.status+(text?" - "+text:""));
 }
-
 const result=await response.json();
-
 if(result.files&&result.files.length){
 return result.files[0];
 }
-
 return null;
 }
-
 async function loadDatabaseFromGoogle(){
 updateStorageStatus("Loading Google Drive...");
-
 googleDatabaseFile=await findGoogleDatabase();
-
 if(!googleDatabaseFile){
 data=normalizeData(data);
 await createGoogleDatabase();
@@ -786,36 +718,28 @@ Authorization:"Bearer "+googleAccessToken
 }
 }
 );
-
 if(!response.ok){
 throw new Error("Unable to download "+DATABASE_FILENAME+". HTTP "+response.status);
 }
-
 const text=await response.text();
-
 try{
 data=normalizeData(JSON.parse(text));
 }catch(e){
 throw new Error(DATABASE_FILENAME+" does not contain valid JSON.");
 }
 }
-
 currentCategory=getCategories().includes(currentCategory)?currentCategory:(getCategories()[0]||"Inbox");
-
 renderCategories();
 renderNotes();
 applyWallpaper();
 updateStorageStatus("Google Drive");
 }
-
 async function createGoogleDatabase(){
 const metadata={
 name:DATABASE_FILENAME,
 mimeType:"application/json"
 };
-
 const boundary="-------NoteBoxBoundary"+Date.now();
-
 const body=
 "--"+boundary+"\r\n"+
 "Content-Type: application/json; charset=UTF-8\r\n\r\n"+
@@ -824,7 +748,6 @@ JSON.stringify(metadata)+"\r\n"+
 "Content-Type: application/json\r\n\r\n"+
 JSON.stringify(data)+"\r\n"+
 "--"+boundary+"--";
-
 const response=await fetch(
 "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
 {
@@ -836,21 +759,17 @@ Authorization:"Bearer "+googleAccessToken,
 body:body
 }
 );
-
 if(!response.ok){
 const text=await response.text();
 throw new Error("Unable to create "+DATABASE_FILENAME+". HTTP "+response.status+(text?" - "+text:""));
 }
-
 googleDatabaseFile=await response.json();
 }
-
 async function saveToGoogleDrive(){
 if(!googleAccessToken){
 saveLocalData();
 return;
 }
-
 if(!googleDatabaseFile){
 try{
 googleDatabaseFile=await findGoogleDatabase();
@@ -860,7 +779,6 @@ updateStorageStatus("Google Drive error","error");
 return;
 }
 }
-
 if(!googleDatabaseFile){
 try{
 await createGoogleDatabase();
@@ -871,11 +789,8 @@ updateStorageStatus("Google Drive error","error");
 }
 return;
 }
-
 updateStorageStatus("Saving...");
-
 const body=JSON.stringify(data);
-
 const response=await fetch(
 "https://www.googleapis.com/upload/drive/v3/files/"+encodeURIComponent(googleDatabaseFile.id)+"?uploadType=media",
 {
@@ -887,17 +802,14 @@ Authorization:"Bearer "+googleAccessToken,
 body:body
 }
 );
-
 if(!response.ok){
 const text=await response.text();
 console.error("Google Drive save failed:",response.status,text);
 updateStorageStatus("Google Drive error","error");
 return;
 }
-
 updateStorageStatus("Saved to Google Drive");
 }
-
 function logoutGoogle(){
 if(googleAccessToken){
 try{
@@ -911,32 +823,40 @@ finishGoogleLogout();
 finishGoogleLogout();
 }
 }
-
 function finishGoogleLogout(){
 googleAccessToken=null;
 googleTokenClient=null;
 googleUser=null;
 googleDatabaseFile=null;
-
+googleLoginInProgress=false;
+googleSilentLoginInProgress=false;
+localStorage.removeItem(GOOGLE_SESSION_KEY);
 data=loadLocalData();
-
 currentCategory=getCategories().includes(currentCategory)?currentCategory:(getCategories()[0]||"Inbox");
-
 renderCategories();
 renderNotes();
 applyWallpaper();
 updateGoogleUI();
 updateStorageStatus("Local storage");
 }
-
+function restoreGoogleSession(){
+if(localStorage.getItem(GOOGLE_SESSION_KEY)!=="true"){
+updateGoogleUI();
+updateStorageStatus("Local storage");
+return;
+}
+if(typeof google==="undefined"||!google.accounts||!google.accounts.oauth2){
+setTimeout(restoreGoogleSession,250);
+return;
+}
+requestGoogleAccessToken(true);
+}
 function updateGoogleUI(){
 const area=document.getElementById("googleArea");
-
 if(googleAccessToken&&googleUser){
 const image=googleUser.picture?
 '<img src="'+escapeHTML(googleUser.picture)+'">':
 "";
-
 area.innerHTML=
 '<div class="google-user">'+
 image+
@@ -947,12 +867,9 @@ image+
 area.innerHTML='<button class="google-login" onclick="loginGoogle()">Login with Google</button>';
 }
 }
-
 function updateStorageStatus(text,type=""){
 const el=document.getElementById("storageStatus");
-
 el.textContent=text;
-
 el.className=
 "storage-status"+
 (type?" "+type:"")+
@@ -963,54 +880,44 @@ text.toLowerCase().includes("saving")
 ?" google":""
 );
 }
-
 function toggleSearch(){
 const s=document.getElementById("searchBox");
-
 s.style.display=s.style.display==="block"?"none":"block";
-
 if(s.style.display==="block"){
 document.getElementById("searchInput").focus();
 }
 }
-
 function clearSearch(){
 document.getElementById("searchBox").style.display="none";
 document.getElementById("searchInput").value="";
 renderNotes();
 }
-
 function showModal(id){
 document.getElementById(id).classList.add("show");
 }
-
 function closeModal(id){
 document.getElementById(id).classList.remove("show");
 }
-
 document.addEventListener("keydown",e=>{
 if(e.key==="Escape"){
 document.querySelectorAll(".modal-backdrop.show").forEach(x=>x.classList.remove("show"));
 }
-
 if(e.ctrlKey&&e.key.toLowerCase()==="f"){
 e.preventDefault();
 toggleSearch();
 }
 });
-
 document.querySelectorAll(".modal-backdrop").forEach(m=>{
 m.addEventListener("click",e=>{
 if(e.target===m)m.classList.remove("show");
 });
 });
-
 applyWallpaper();
 renderCategories();
 renderNotes();
 updateGoogleUI();
 updateStorageStatus("Local storage");
+setTimeout(restoreGoogleSession,100);
 </script>
-
 </body>
 </html>
