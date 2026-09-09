@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,8 +31,8 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .google-user img{width:21px;height:21px;border-radius:50%;flex:none}
 .google-user span{display:none}
 .google-user .google-login{width:55px;height:27px;font-size:9px}
-.app{display:grid;grid-template-columns:195px minmax(0,1fr) 195px;max-width:1280px;margin:0 auto;padding-top:25px;height:100vh;min-height:0}
-.sidebar{padding:7px 7px 20px 0;height:100%;min-height:0;position:sticky;top:0;overflow:auto}
+.app{display:grid;grid-template-columns:195px minmax(0,1fr) 195px;max-width:1280px;margin:0 auto;padding-top:35px;height:100vh;min-height:0}
+.sidebar{padding:7px 7px 20px 0;height:100%;min-height:0;position:sticky;top:35px;height:calc(100vh - 35px);overflow:auto;align-self:start}
 .categories{border-right:1px solid #d1d1d1;padding-right:7px;min-height:480px}
 .category{height:21px;border-bottom:1px solid #d4d4d4;padding:3px 7px;color:#167096;font-weight:bold;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .category:hover,.category.active{background:rgba(255,255,255,.55);color:#0088a8}
@@ -39,7 +40,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .cat-tools{display:flex;justify-content:flex-end;gap:5px;padding:9px 5px}
 .cat-tools button{width:27px;height:22px;border:0;border-radius:3px;background:#ddd;cursor:pointer;box-shadow:0 1px 2px #aaa}
 .cat-tools button:hover{background:#ccc}
-.content{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 6px 20px 6px;align-content:start;min-width:0;height:100%;overflow-y:auto;overflow-x:hidden}
+.content{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 6px 20px;align-content:start;min-width:0;height:100%;overflow-y:auto;overflow-x:hidden}
 .note-column{min-width:0}
 .note{border:1px solid #d4d7d9;border-radius:6px;background:linear-gradient(110deg,#fff,#f5f6f7);box-shadow:0 1px 2px rgba(0,0,0,.08);margin-bottom:6px;overflow:hidden}
 .note-head{height:28px;display:flex;align-items:center;padding:0 7px;border-bottom:1px solid #e3e3e3;background:linear-gradient(#fff,#f2f3f4);cursor:pointer}
@@ -54,7 +55,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .note-footer .event-footer{color:#0088a8;font-weight:bold;font-style:normal}
 .note.collapsed .note-head{border-bottom:0}
 .empty{border:1px dashed #ccd0d3;border-radius:6px;padding:30px 10px;text-align:center;color:#999;background:rgba(255,255,255,.35)}
-.right-panel{padding:7px 0 20px 6px;min-width:0;height:100%;position:sticky;top:0;overflow:auto}
+.right-panel{padding:7px 0 20px 6px;min-width:0;position:sticky;top:35px;height:calc(100vh - 35px);overflow:auto;align-self:start}
 .search-area{width:100%;display:flex;flex-direction:row;align-items:center;gap:4px}
 .content-search{width:28px;height:28px;flex:none;border:0;background:transparent;color:#555;font-size:21px;cursor:pointer;padding:0}
 .content-search:hover{color:#0088a8}
@@ -105,7 +106,6 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .storage-status{position:fixed;bottom:8px;right:10px;padding:4px 8px;background:rgba(255,255,255,.85);border:1px solid #ccc;border-radius:4px;color:#777;font-size:10px;z-index:1100}
 .storage-status.google{color:#0088a8}
 .storage-status.error{color:#c33}
-.calendar-note-date{font-weight:bold}
 @media(max-width:1100px){
 .topbar-inner{grid-template-columns:160px minmax(0,1fr) 195px}
 .app{grid-template-columns:160px minmax(0,1fr) 195px}
@@ -123,7 +123,8 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 @media(max-width:560px){
 .topbar{height:auto;min-height:35px}
 .topbar-inner{height:35px;grid-template-columns:110px 1fr 110px}
-.app{grid-template-columns:1fr;padding-top:25px;height:100vh}
+.app{grid-template-columns:1fr;padding-top:35px;height:100vh}
+.sidebar,.right-panel{position:static;height:auto;overflow:visible}
 .topbar-col.options{grid-template-columns:1fr 1fr}
 .brand{font-size:17px}
 .brand small{font-size:6px}
@@ -396,3 +397,4 @@ setTimeout(restoreGoogleSession,100);
 </script>
 </body>
 </html>
+
