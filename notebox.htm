@@ -67,7 +67,12 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .category-row:last-child{border-bottom:0}
 .category-row span{flex:1}
 .category-row button{margin-left:5px}
-.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.settings-section{border:1px solid #d1d3d5;border-radius:5px;background:#fff;margin-bottom:12px;overflow:hidden}
+.settings-section:last-child{margin-bottom:0}
+.settings-section-title{padding:7px 9px;background:linear-gradient(#eee,#ddd);border-bottom:1px solid #ccc;font-weight:bold;color:#555}
+.settings-section-body{padding:11px}
+.settings-actions{display:flex;gap:7px}
+.settings-actions .btn{flex:1}
 .file-note{font-size:10px;color:#777;margin-top:4px}
 .storage-status{position:fixed;bottom:8px;right:10px;padding:4px 8px;background:rgba(255,255,255,.85);border:1px solid #ccc;border-radius:4px;color:#777;font-size:10px;z-index:1100}
 .storage-status.google{color:#0088a8}
@@ -178,26 +183,34 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <div class="modal-head">NoteBox settings</div>
 <div class="modal-body">
 
+<div class="settings-section">
+<div class="settings-section-title">Wallpaper</div>
+<div class="settings-section-body">
 <div class="field">
 <label>Wallpaper URL</label>
 <input id="wallpaperUrl" placeholder="https://example.com/wallpaper.jpg">
-<div class="file-note">You can also choose a local image below.</div>
+<div class="file-note">Enter an image URL to use as the NoteBox background.</div>
+</div>
+<div class="settings-actions">
+<button class="btn primary" onclick="saveWallpaper()">Save wallpaper</button>
+<button class="btn" onclick="resetWallpaper()">Reset wallpaper</button>
+</div>
+</div>
 </div>
 
-<div class="field">
-<label>Wallpaper file</label>
-<input id="wallpaperFile" type="file" accept="image/*" onchange="setWallpaperFile(event)">
-</div>
-
-<div class="settings-grid">
+<div class="settings-section">
+<div class="settings-section-title">Data management</div>
+<div class="settings-section-body">
+<div class="settings-actions">
 <button class="btn" onclick="document.getElementById('jsonFile').click()">Import JSON</button>
 <button class="btn" onclick="exportJSON()">Export current data</button>
+</div>
+</div>
 </div>
 
 </div>
 <div class="modal-foot">
 <button class="btn" onclick="closeModal('settingsModal')">Close</button>
-<button class="btn primary" onclick="saveSettings()">Save</button>
 </div>
 </div>
 </div>
@@ -516,50 +529,34 @@ document.getElementById("wallpaperUrl").value=data.USERDATA.OPDATA.WALLPAPER||lo
 showModal("settingsModal");
 }
 
-function saveSettings(){
+function saveWallpaper(){
 const url=document.getElementById("wallpaperUrl").value.trim();
 
 data.USERDATA.OPDATA.WALLPAPER=url;
 
 if(url){
-document.body.style.backgroundImage='url("'+url.replace(/"/g,'\\"')+'")';
 localStorage.setItem(LOCAL_WALLPAPER_KEY,url);
+document.body.style.backgroundImage='url("'+url.replace(/"/g,'\\"')+'")';
 }else{
-resetWallpaper(false);
+localStorage.removeItem(LOCAL_WALLPAPER_KEY);
+document.body.style.backgroundImage="none";
 }
 
 saveData();
-closeModal("settingsModal");
 }
 
-function setWallpaperFile(event){
-const file=event.target.files[0];
-if(!file)return;
-
-const reader=new FileReader();
-
-reader.onload=()=>{
-localStorage.setItem(LOCAL_WALLPAPER_KEY,reader.result);
-document.body.style.backgroundImage='url("'+reader.result+'")';
-document.getElementById("wallpaperUrl").value="";
-};
-
-reader.readAsDataURL(file);
-}
-
-function resetWallpaper(close=true){
-localStorage.removeItem(LOCAL_WALLPAPER_KEY);
+function resetWallpaper(){
 data.USERDATA.OPDATA.WALLPAPER="";
+localStorage.removeItem(LOCAL_WALLPAPER_KEY);
+document.getElementById("wallpaperUrl").value="";
 document.body.style.backgroundImage="none";
 saveData();
-
-if(close)closeModal("settingsModal");
 }
 
 function applyWallpaper(){
 const w=localStorage.getItem(LOCAL_WALLPAPER_KEY)||data.USERDATA.OPDATA.WALLPAPER;
-
 if(w)document.body.style.backgroundImage='url("'+w.replace(/"/g,'\\"')+'")';
+else document.body.style.backgroundImage="none";
 }
 
 function exportJSON(){
