@@ -9,26 +9,25 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444}
 body{background:#eef0f2 center top/cover fixed no-repeat}
-.topbar{position:fixed;top:0;left:0;right:0;height:35px;z-index:1000;background:linear-gradient(#696969,#333);border-bottom:3px solid #0088a8;box-shadow:0 1px 3px #555;display:grid;grid-template-columns:195px minmax(0,1fr) 1fr;color:#fff}
-.topbar-cell{height:32px;display:flex;align-items:center}
-.logo-cell{justify-content:center;border-right:1px solid #555}
+.topbar{position:fixed;top:0;left:0;right:0;height:35px;z-index:1000;background:linear-gradient(#696969,#333);border-bottom:3px solid #0088a8;box-shadow:0 1px 3px #555;display:grid;grid-template-columns:195px minmax(500px,1fr) 195px;color:#fff}
+.topbar-col{height:32px;display:flex;align-items:center}
+.topbar-col.logo{justify-content:center;border-right:1px solid #555}
+.topbar-col.options{padding-left:7px;border-right:1px solid #555}
+.topbar-col.actions{padding-left:7px;position:relative}
 .brand{font:bold 25px Arial;text-shadow:1px 1px 2px #222;line-height:29px}
 .brand small{font-size:8px;vertical-align:top}
-.nav-cell{padding-left:7px}
 .nav{display:flex;gap:7px;height:100%;align-items:center}
 .nav button{width:34px;height:29px;border:0;background:transparent;color:#ddd;font-size:21px;cursor:pointer;opacity:.75}
 .nav button:hover{opacity:1}
-.add-cell{justify-content:flex-start;padding-left:7px}
 .add-button{width:145px;height:32px;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;font-weight:bold;cursor:pointer}
 .add-button:hover{background:linear-gradient(#777,#494949)}
-.google-cell{position:absolute;right:0;top:0;height:32px;display:flex;align-items:center}
-#googleArea{height:100%;display:flex;align-items:center}
+.google-area{position:absolute;right:0;top:0;height:32px;display:flex;align-items:center}
 .google-login{width:170px;height:32px;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;font-weight:bold;cursor:pointer}
 .google-login:hover{background:linear-gradient(#777,#494949)}
 .google-user{display:flex;align-items:center;gap:7px;height:100%;padding:0 8px;font-size:11px}
 .google-user img{width:23px;height:23px;border-radius:50%}
 .google-user .google-login{width:70px;height:29px;font-size:11px}
-.app{display:grid;grid-template-columns:195px minmax(500px,1fr);max-width:1280px;margin:0 auto;padding-top:42px;min-height:100vh}
+.app{display:grid;grid-template-columns:195px minmax(500px,1fr) 195px;max-width:1280px;margin:0 auto;padding-top:42px;min-height:100vh}
 .sidebar{padding:7px 7px 20px 0}
 .categories{border-right:1px solid #d1d1d1;padding-right:7px;min-height:480px}
 .category{height:21px;border-bottom:1px solid #d4d4d4;padding:3px 7px;color:#167096;font-weight:bold;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -37,7 +36,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .cat-tools{display:flex;justify-content:flex-end;gap:5px;padding:9px 5px}
 .cat-tools button{width:27px;height:22px;border:0;border-radius:3px;background:#ddd;cursor:pointer;box-shadow:0 1px 2px #aaa}
 .cat-tools button:hover{background:#ccc}
-.content{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 0 20px 6px;align-content:start}
+.content{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 0 20px 6px;align-content:start;min-width:0}
 .note-column{min-width:0}
 .note{border:1px solid #d4d7d9;border-radius:6px;background:linear-gradient(110deg,#fff,#f5f6f7);box-shadow:0 1px 2px rgba(0,0,0,.08);margin-bottom:6px;overflow:hidden}
 .note-head{height:28px;display:flex;align-items:center;padding:0 7px;border-bottom:1px solid #e3e3e3;background:linear-gradient(#fff,#f2f3f4);cursor:pointer}
@@ -54,7 +53,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .empty{border:1px dashed #ccd0d3;border-radius:6px;padding:30px 10px;text-align:center;color:#999;background:rgba(255,255,255,.35)}
 .search{position:fixed;right:20px;top:42px;width:230px;display:none;z-index:900}
 .search input{width:100%;padding:7px;border:1px solid #bbb;border-radius:4px;box-shadow:0 1px 3px #aaa}
-.content-search{position:absolute;right:5px;top:-1px;width:28px;height:28px;border:0;background:transparent;color:#555;font-size:21px;cursor:pointer;z-index:10}
+.content-search{position:absolute;right:0;top:0;width:28px;height:28px;border:0;background:transparent;color:#555;font-size:21px;cursor:pointer;z-index:10}
 .content-search:hover{color:#0088a8}
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:2000;align-items:center;justify-content:center}
 .modal-backdrop.show{display:flex}
@@ -85,23 +84,30 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .storage-status{position:fixed;bottom:8px;right:10px;padding:4px 8px;background:rgba(255,255,255,.85);border:1px solid #ccc;border-radius:4px;color:#777;font-size:10px;z-index:1100}
 .storage-status.google{color:#0088a8}
 .storage-status.error{color:#c33}
-@media(max-width:800px){
-.app{grid-template-columns:150px minmax(0,1fr)}
-.topbar{grid-template-columns:150px minmax(0,1fr) 1fr}
+@media(max-width:1100px){
+.topbar{grid-template-columns:160px minmax(400px,1fr) 160px}
+.app{grid-template-columns:160px minmax(400px,1fr) 160px}
 .brand{font-size:21px}
 .add-button{width:110px}
+.google-login{width:150px}
+}
+@media(max-width:800px){
+.topbar{grid-template-columns:150px minmax(0,1fr) 130px}
+.app{grid-template-columns:150px minmax(0,1fr)}
+.topbar-col.actions{border-right:0}
+.add-button{width:100px}
 }
 @media(max-width:560px){
-.topbar{height:auto;min-height:35px;grid-template-columns:130px 1fr}
-.logo-cell{border-right:1px solid #555}
-.nav-cell{padding-left:3px}
-.add-cell{display:none}
-.google-cell{position:static;display:none}
+.topbar{height:auto;min-height:35px;display:flex;flex-wrap:wrap}
+.topbar-col.logo{width:130px}
+.topbar-col.options{width:auto;flex:1}
+.topbar-col.actions{display:none}
+.google-area{display:none}
 .app{grid-template-columns:1fr;padding-top:42px}
 .sidebar{padding:5px}
 .categories{min-height:0;border-right:0}
 .content{padding:5px;grid-template-columns:1fr}
-.content-search{right:5px;top:-2px}
+.content-search{right:5px;top:0}
 .storage-status{bottom:5px;right:5px}
 }
 </style>
@@ -109,21 +115,21 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <body>
 
 <header class="topbar">
-<div class="topbar-cell logo-cell">
+<div class="topbar-col logo">
 <div class="brand">NoteBox<small>Beta</small></div>
 </div>
-<div class="topbar-cell nav-cell">
+<div class="topbar-col options">
 <nav class="nav">
 <button title="Home" onclick="selectCategory(currentCategory)">⌂</button>
 <button title="Settings" onclick="openSettings()">⚙</button>
 </nav>
 </div>
-<div class="topbar-cell add-cell">
+<div class="topbar-col actions">
 <button class="add-button" onclick="openNote()">Add note</button>
-</div>
-<div class="google-cell">
+<div class="google-area">
 <div id="googleArea">
 <button class="google-login" onclick="loginGoogle()">Login with Google</button>
+</div>
 </div>
 </div>
 </header>
@@ -145,9 +151,9 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 </aside>
 
 <section class="content" id="content">
-<button class="content-search" title="Search" onclick="toggleSearch()">⌕</button>
 <div class="note-column" id="column1"></div>
 <div class="note-column" id="column2"></div>
+<button class="content-search" title="Search" onclick="toggleSearch()">⌕</button>
 </section>
 </main>
 
@@ -375,7 +381,6 @@ document.getElementById("noteModalTitle").textContent=index===null?"Add note":"M
 const cats=getCategories();
 const select=document.getElementById("noteCategory");
 select.innerHTML=cats.map(c=>'<option value="'+escapeHTML(c)+'">'+escapeHTML(c)+'</option>').join("");
-
 if(index===null){
 document.getElementById("noteTitle").value="";
 document.getElementById("noteBody").value="";
@@ -404,27 +409,8 @@ const title=document.getElementById("noteTitle").value.trim()||"Untitled";
 const body=document.getElementById("noteBody").value;
 const category=document.getElementById("noteCategory").value;
 const date=createDateString();
-
 if(editingNoteIndex===null){
-data.POSTSDATA.unshift({
-_id:{$oid:createObjectId()},
-MAINSTRCT:{
-AUTOR:data.USERDATA.ODATA.LOGIN||"you",
-OWNER:"",
-TITLE:title,
-BODY:body,
-DATECREATE:date,
-DATEMODIFIED:date,
-CATEGORY:category
-},
-CFGSTRCT:{
-MAINPAGE:"false",
-PUBLIC:"false",
-COLLAPSED:"false",
-REMINDDATE:"false",
-DATEREMIND:{DATE:"",CONFIRMED:"false",REMIND:"false"}
-}
-});
+data.POSTSDATA.unshift({_id:{$oid:createObjectId()},MAINSTRCT:{AUTOR:data.USERDATA.ODATA.LOGIN||"you",OWNER:"",TITLE:title,BODY:body,DATECREATE:date,DATEMODIFIED:date,CATEGORY:category},CFGSTRCT:{MAINPAGE:"false",PUBLIC:"false",COLLAPSED:"false",REMINDDATE:"false",DATEREMIND:{DATE:"",CONFIRMED:"false",REMIND:"false"}}});
 }else{
 const n=data.POSTSDATA[editingNoteIndex];
 n.MAINSTRCT=n.MAINSTRCT||{};
@@ -433,7 +419,6 @@ n.MAINSTRCT.BODY=body;
 n.MAINSTRCT.CATEGORY=category;
 n.MAINSTRCT.DATEMODIFIED=date;
 }
-
 saveData();
 closeModal("noteModal");
 currentCategory=category;
@@ -477,14 +462,11 @@ showModal("categoryEditModal");
 function saveCategory(){
 const name=document.getElementById("categoryName").value.trim();
 if(!name)return;
-
 const cats=getCategories();
-
 if(cats.some((c,i)=>c.toLowerCase()===name.toLowerCase()&&i!==editingCategoryIndex)){
 alert("That category already exists.");
 return;
 }
-
 if(editingCategoryIndex===null){
 data.USERDATA.OPDATA.PSTCATEGORIES.push({NAME:name});
 }else{
@@ -495,34 +477,26 @@ if(noteCategory(n)===old)n.MAINSTRCT.CATEGORY=name;
 });
 if(currentCategory===old)currentCategory=name;
 }
-
 saveData();
 closeModal("categoryEditModal");
 renderCategories();
 renderNotes();
-
 if(document.getElementById("categoryModal").classList.contains("show"))renderCategoryManager();
 }
 
 function removeCategory(index){
 const cats=getCategories();
 const name=cats[index];
-
 if(name==="Inbox"){
 alert("Inbox cannot be deleted.");
 return;
 }
-
 if(!confirm('Delete category "'+name+'"? Notes will be moved to Inbox.'))return;
-
 data.POSTSDATA.forEach(n=>{
 if(noteCategory(n)===name)n.MAINSTRCT.CATEGORY="Inbox";
 });
-
 data.USERDATA.OPDATA.PSTCATEGORIES.splice(index,1);
-
 if(currentCategory===name)currentCategory="Inbox";
-
 saveData();
 renderCategories();
 renderNotes();
@@ -545,9 +519,7 @@ showModal("settingsModal");
 
 function saveWallpaper(){
 const url=document.getElementById("wallpaperUrl").value.trim();
-
 data.USERDATA.OPDATA.WALLPAPER=url;
-
 if(url){
 localStorage.setItem(LOCAL_WALLPAPER_KEY,url);
 document.body.style.backgroundImage='url("'+url.replace(/"/g,'\\"')+'")';
@@ -555,7 +527,6 @@ document.body.style.backgroundImage='url("'+url.replace(/"/g,'\\"')+'")';
 localStorage.removeItem(LOCAL_WALLPAPER_KEY);
 document.body.style.backgroundImage="none";
 }
-
 saveData();
 }
 
@@ -585,37 +556,28 @@ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 function importJSON(event){
 const file=event.target.files[0];
 if(!file)return;
-
 const reader=new FileReader();
-
 reader.onload=()=>{
 try{
 data=normalizeData(JSON.parse(reader.result));
 currentCategory=getCategories().includes(currentCategory)?currentCategory:(getCategories()[0]||"Inbox");
-
 if(!googleAccessToken)saveLocalData();
-
 renderCategories();
 renderNotes();
 applyWallpaper();
-
 if(googleAccessToken)saveToGoogleDrive();
-
 alert("JSON loaded successfully.");
 }catch(e){
 console.error(e);
 alert("Invalid JSON file.");
 }
-
 event.target.value="";
 };
-
 reader.readAsText(file);
 }
 
 function toggleSearch(){
 const s=document.getElementById("searchBox");
-
 if(s.style.display==="block"){
 s.style.display="none";
 document.getElementById("searchInput").value="";
@@ -644,32 +606,24 @@ localStorage.removeItem(GOOGLE_SESSION_KEY);
 
 function requestGoogleAccessToken(silent){
 if(googleLoginInProgress||googleSilentLoginInProgress)return;
-
 if(typeof google==="undefined"||!google.accounts||!google.accounts.oauth2){
 if(!silent)alert("Google authentication could not be loaded.");
 return;
 }
-
 if(silent)googleSilentLoginInProgress=true;
 else googleLoginInProgress=true;
-
 updateStorageStatus(silent?"Restoring Google session...":"Connecting to Google...");
-
 googleTokenClient=google.accounts.oauth2.initTokenClient({
 client_id:GGLCLNT,
 scope:GGLSCPS,
 callback:async function(response){
-
 googleLoginInProgress=false;
 googleSilentLoginInProgress=false;
-
 if(response.error){
 console.log("Google authentication failed:",response);
-
 googleAccessToken=null;
 googleUser=null;
 googleDatabaseFile=null;
-
 if(silent){
 clearGoogleSession();
 updateGoogleUI();
@@ -678,27 +632,20 @@ updateStorageStatus("Local storage");
 updateStorageStatus("Google login failed","error");
 alert("Google login failed: "+(response.error_description||response.error||"Unknown Google OAuth error."));
 }
-
 return;
 }
-
 if(response.access_token){
 googleAccessToken=response.access_token;
-
 try{
 await loadGoogleUser();
 await loadDatabaseFromGoogle();
-
 refreshGoogleSession();
 updateGoogleUI();
-
 }catch(error){
 console.error("Google Drive error:",error);
-
 googleAccessToken=null;
 googleUser=null;
 googleDatabaseFile=null;
-
 if(silent){
 clearGoogleSession();
 updateGoogleUI();
@@ -712,17 +659,12 @@ alert("Google Drive could not be loaded: "+(error.message||error));
 }
 }
 });
-
 try{
-googleTokenClient.requestAccessToken({
-prompt:silent?"none":"select_account"
-});
+googleTokenClient.requestAccessToken({prompt:silent?"none":"select_account"});
 }catch(error){
 googleLoginInProgress=false;
 googleSilentLoginInProgress=false;
-
 console.error("Google token request error:",error);
-
 if(silent){
 clearGoogleSession();
 updateGoogleUI();
@@ -735,74 +677,44 @@ alert("Google login failed: "+(error.message||error));
 }
 
 async function loadGoogleUser(){
-const response=await fetch("https://www.googleapis.com/oauth2/v3/userinfo",{
-headers:{Authorization:"Bearer "+googleAccessToken}
-});
-
+const response=await fetch("https://www.googleapis.com/oauth2/v3/userinfo",{headers:{Authorization:"Bearer "+googleAccessToken}});
 if(!response.ok){
 const text=await response.text();
 throw new Error("Unable to retrieve Google account information. HTTP "+response.status+(text?" - "+text:""));
 }
-
 googleUser=await response.json();
 }
 
 async function findGoogleDatabase(){
 const q="name='"+DATABASE_FILENAME.replace(/'/g,"\\'")+"' and trashed=false";
-
 const url="https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&spaces=drive&fields=files(id,name,mimeType,parents,modifiedTime)";
-
-const response=await fetch(url,{
-headers:{
-Authorization:"Bearer "+googleAccessToken,
-"x-goog-api-key":GGLAPKY
-}
-});
-
+const response=await fetch(url,{headers:{Authorization:"Bearer "+googleAccessToken,"x-goog-api-key":GGLAPKY}});
 if(!response.ok){
 const text=await response.text();
 throw new Error("Unable to search Google Drive. HTTP "+response.status+(text?" - "+text:""));
 }
-
 const result=await response.json();
-
 if(result.files&&result.files.length)return result.files[0];
-
 return null;
 }
 
 async function loadDatabaseFromGoogle(){
 updateStorageStatus("Loading Google Drive...");
-
 googleDatabaseFile=await findGoogleDatabase();
-
 if(!googleDatabaseFile){
 data=normalizeData(data);
 await createGoogleDatabase();
 }else{
-
-const response=await fetch(
-"https://www.googleapis.com/drive/v3/files/"+encodeURIComponent(googleDatabaseFile.id)+"?alt=media",
-{
-headers:{Authorization:"Bearer "+googleAccessToken}
-}
-);
-
-if(!response.ok){
-throw new Error("Unable to download "+DATABASE_FILENAME+". HTTP "+response.status);
-}
-
+const response=await fetch("https://www.googleapis.com/drive/v3/files/"+encodeURIComponent(googleDatabaseFile.id)+"?alt=media",{headers:{Authorization:"Bearer "+googleAccessToken}});
+if(!response.ok)throw new Error("Unable to download "+DATABASE_FILENAME+". HTTP "+response.status);
 const text=await response.text();
-
 try{
 data=normalizeData(JSON.parse(text));
 }catch(e){
 throw new Error(DATABASE_FILENAME+" does not contain valid JSON.");
 }
 }
-
 currentCategory=getCategories().includes(currentCategory)?currentCategory:(getCategories()[0]||"Inbox");
-
 renderCategories();
 renderNotes();
 applyWallpaper();
@@ -810,39 +722,14 @@ updateStorageStatus("Google Drive");
 }
 
 async function createGoogleDatabase(){
-const metadata={
-name:DATABASE_FILENAME,
-mimeType:"application/json"
-};
-
+const metadata={name:DATABASE_FILENAME,mimeType:"application/json"};
 const boundary="-------NoteBoxBoundary"+Date.now();
-
-const body=
-"--"+boundary+"\r\n"+
-"Content-Type: application/json; charset=UTF-8\r\n\r\n"+
-JSON.stringify(metadata)+"\r\n"+
-"--"+boundary+"\r\n"+
-"Content-Type: application/json\r\n\r\n"+
-JSON.stringify(data)+"\r\n"+
-"--"+boundary+"--";
-
-const response=await fetch(
-"https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
-{
-method:"POST",
-headers:{
-Authorization:"Bearer "+googleAccessToken,
-"Content-Type":"multipart/related; boundary="+boundary
-},
-body:body
-}
-);
-
+const body="--"+boundary+"\r\n"+"Content-Type: application/json; charset=UTF-8\r\n\r\n"+JSON.stringify(metadata)+"\r\n"+"--"+boundary+"\r\n"+"Content-Type: application/json\r\n\r\n"+JSON.stringify(data)+"\r\n"+"--"+boundary+"--";
+const response=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",headers:{Authorization:"Bearer "+googleAccessToken,"Content-Type":"multipart/related; boundary="+boundary},body:body});
 if(!response.ok){
 const text=await response.text();
 throw new Error("Unable to create "+DATABASE_FILENAME+". HTTP "+response.status+(text?" - "+text:""));
 }
-
 googleDatabaseFile=await response.json();
 }
 
@@ -851,7 +738,6 @@ if(!googleAccessToken){
 saveLocalData();
 return;
 }
-
 if(!googleDatabaseFile){
 try{
 googleDatabaseFile=await findGoogleDatabase();
@@ -861,7 +747,6 @@ updateStorageStatus("Google Drive error","error");
 return;
 }
 }
-
 if(!googleDatabaseFile){
 try{
 await createGoogleDatabase();
@@ -872,30 +757,15 @@ updateStorageStatus("Google Drive error","error");
 }
 return;
 }
-
 updateStorageStatus("Saving...");
-
 const body=JSON.stringify(data);
-
-const response=await fetch(
-"https://www.googleapis.com/upload/drive/v3/files/"+encodeURIComponent(googleDatabaseFile.id)+"?uploadType=media",
-{
-method:"PATCH",
-headers:{
-Authorization:"Bearer "+googleAccessToken,
-"Content-Type":"application/json"
-},
-body:body
-}
-);
-
+const response=await fetch("https://www.googleapis.com/upload/drive/v3/files/"+encodeURIComponent(googleDatabaseFile.id)+"?uploadType=media",{method:"PATCH",headers:{Authorization:"Bearer "+googleAccessToken,"Content-Type":"application/json"},body:body});
 if(!response.ok){
 const text=await response.text();
 console.error("Google Drive save failed:",response.status,text);
 updateStorageStatus("Google Drive error","error");
 return;
 }
-
 updateStorageStatus("Saved to Google Drive");
 }
 
@@ -920,13 +790,9 @@ googleUser=null;
 googleDatabaseFile=null;
 googleLoginInProgress=false;
 googleSilentLoginInProgress=false;
-
 clearGoogleSession();
-
 data=loadLocalData();
-
 currentCategory=getCategories().includes(currentCategory)?currentCategory:(getCategories()[0]||"Inbox");
-
 renderCategories();
 renderNotes();
 applyWallpaper();
@@ -940,54 +806,27 @@ updateGoogleUI();
 updateStorageStatus("Local storage");
 return;
 }
-
 if(typeof google==="undefined"||!google.accounts||!google.accounts.oauth2){
 setTimeout(restoreGoogleSession,250);
 return;
 }
-
 requestGoogleAccessToken(true);
 }
 
 function updateGoogleUI(){
 const area=document.getElementById("googleArea");
-
 if(googleAccessToken&&googleUser){
-
-const image=googleUser.picture?
-'<img src="'+escapeHTML(googleUser.picture)+'">':
-"";
-
-area.innerHTML=
-'<div class="google-user">'+
-image+
-'<span>'+escapeHTML(googleUser.name||googleUser.email||"Google")+'</span>'+
-'<button class="google-login" onclick="logoutGoogle()">Log Out</button>'+
-'</div>';
-
+const image=googleUser.picture?'<img src="'+escapeHTML(googleUser.picture)+'">':"";
+area.innerHTML='<div class="google-user">'+image+'<span>'+escapeHTML(googleUser.name||googleUser.email||"Google")+'</span><button class="google-login" onclick="logoutGoogle()">Log Out</button></div>';
 }else{
-
-area.innerHTML=
-'<button class="google-login" onclick="loginGoogle()">Login with Google</button>';
-
+area.innerHTML='<button class="google-login" onclick="loginGoogle()">Login with Google</button>';
 }
 }
 
 function updateStorageStatus(text,type=""){
 const el=document.getElementById("storageStatus");
-
 el.textContent=text;
-
-el.className=
-"storage-status"+
-(type?" "+type:"")+
-(
-text.toLowerCase().includes("google")||
-text.toLowerCase().includes("saved")||
-text.toLowerCase().includes("saving")||
-text.toLowerCase().includes("restoring")
-?" google":""
-);
+el.className="storage-status"+(type?" "+type:"")+(text.toLowerCase().includes("google")||text.toLowerCase().includes("saved")||text.toLowerCase().includes("saving")||text.toLowerCase().includes("restoring")?" google":"");
 }
 
 function showModal(id){
@@ -1002,7 +841,6 @@ document.addEventListener("keydown",e=>{
 if(e.key==="Escape"){
 document.querySelectorAll(".modal-backdrop.show").forEach(x=>x.classList.remove("show"));
 }
-
 if(e.ctrlKey&&e.key.toLowerCase()==="f"){
 e.preventDefault();
 toggleSearch();
@@ -1020,7 +858,6 @@ renderCategories();
 renderNotes();
 updateGoogleUI();
 updateStorageStatus("Local storage");
-
 setTimeout(restoreGoogleSession,100);
 </script>
 
