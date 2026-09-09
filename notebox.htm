@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,20 +9,25 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444}
 body{background:#eef0f2 center top/cover fixed no-repeat}
-.topbar{position:fixed;top:0;left:0;right:0;height:35px;z-index:1000;background:linear-gradient(#696969,#333);border-bottom:3px solid #0088a8;box-shadow:0 1px 3px #555;display:flex;align-items:center;color:#fff}
-.brand{width:294px;text-align:center;font:bold 25px Arial;text-shadow:1px 1px 2px #222;line-height:29px}
+.topbar{position:fixed;top:0;left:0;right:0;height:35px;z-index:1000;background:linear-gradient(#696969,#333);border-bottom:3px solid #0088a8;box-shadow:0 1px 3px #555;display:grid;grid-template-columns:195px minmax(0,1fr) 1fr;color:#fff}
+.topbar-cell{height:32px;display:flex;align-items:center}
+.logo-cell{justify-content:center;border-right:1px solid #555}
+.brand{font:bold 25px Arial;text-shadow:1px 1px 2px #222;line-height:29px}
 .brand small{font-size:8px;vertical-align:top}
+.nav-cell{padding-left:7px}
 .nav{display:flex;gap:7px;height:100%;align-items:center}
 .nav button{width:34px;height:29px;border:0;background:transparent;color:#ddd;font-size:21px;cursor:pointer;opacity:.75}
 .nav button:hover{opacity:1}
-.top-actions{margin-left:auto;display:flex;height:100%}
-.top-actions>button{width:145px;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;font-weight:bold;cursor:pointer}
-.top-actions>button:hover{background:linear-gradient(#777,#494949)}
-.top-actions .google-login{width:170px;font-size:12px}
+.add-cell{justify-content:flex-start;padding-left:7px}
+.add-button{width:145px;height:32px;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;font-weight:bold;cursor:pointer}
+.add-button:hover{background:linear-gradient(#777,#494949)}
+.google-cell{position:absolute;right:0;top:0;height:32px;display:flex;align-items:center}
 #googleArea{height:100%;display:flex;align-items:center}
+.google-login{width:170px;height:32px;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;font-weight:bold;cursor:pointer}
+.google-login:hover{background:linear-gradient(#777,#494949)}
 .google-user{display:flex;align-items:center;gap:7px;height:100%;padding:0 8px;font-size:11px}
 .google-user img{width:23px;height:23px;border-radius:50%}
-.google-user .google-login{width:70px;height:29px;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;cursor:pointer}
+.google-user .google-login{width:70px;height:29px;font-size:11px}
 .app{display:grid;grid-template-columns:195px minmax(500px,1fr);max-width:1280px;margin:0 auto;padding-top:42px;min-height:100vh}
 .sidebar{padding:7px 7px 20px 0}
 .categories{border-right:1px solid #d1d1d1;padding-right:7px;min-height:480px}
@@ -31,7 +37,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .cat-tools{display:flex;justify-content:flex-end;gap:5px;padding:9px 5px}
 .cat-tools button{width:27px;height:22px;border:0;border-radius:3px;background:#ddd;cursor:pointer;box-shadow:0 1px 2px #aaa}
 .cat-tools button:hover{background:#ccc}
-.content{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 0 20px 6px;align-content:start}
+.content{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 0 20px 6px;align-content:start}
 .note-column{min-width:0}
 .note{border:1px solid #d4d7d9;border-radius:6px;background:linear-gradient(110deg,#fff,#f5f6f7);box-shadow:0 1px 2px rgba(0,0,0,.08);margin-bottom:6px;overflow:hidden}
 .note-head{height:28px;display:flex;align-items:center;padding:0 7px;border-bottom:1px solid #e3e3e3;background:linear-gradient(#fff,#f2f3f4);cursor:pointer}
@@ -48,6 +54,8 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .empty{border:1px dashed #ccd0d3;border-radius:6px;padding:30px 10px;text-align:center;color:#999;background:rgba(255,255,255,.35)}
 .search{position:fixed;right:20px;top:42px;width:230px;display:none;z-index:900}
 .search input{width:100%;padding:7px;border:1px solid #bbb;border-radius:4px;box-shadow:0 1px 3px #aaa}
+.content-search{position:absolute;right:5px;top:-1px;width:28px;height:28px;border:0;background:transparent;color:#555;font-size:21px;cursor:pointer;z-index:10}
+.content-search:hover{color:#0088a8}
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:2000;align-items:center;justify-content:center}
 .modal-backdrop.show{display:flex}
 .modal{width:540px;max-width:calc(100vw - 30px);background:#f5f6f7;border-radius:7px;box-shadow:0 8px 35px rgba(0,0,0,.45);overflow:hidden}
@@ -79,20 +87,21 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .storage-status.error{color:#c33}
 @media(max-width:800px){
 .app{grid-template-columns:150px minmax(0,1fr)}
-.brand{width:150px}
-.top-actions>button{width:105px}
-.content{grid-template-columns:1fr}
+.topbar{grid-template-columns:150px minmax(0,1fr) 1fr}
+.brand{font-size:21px}
+.add-button{width:110px}
 }
 @media(max-width:560px){
-.topbar{height:auto;min-height:35px;flex-wrap:wrap}
-.brand{width:130px}
-.nav{display:none}
-.top-actions{margin-left:auto}
-.top-actions>button{width:90px}
+.topbar{height:auto;min-height:35px;grid-template-columns:130px 1fr}
+.logo-cell{border-right:1px solid #555}
+.nav-cell{padding-left:3px}
+.add-cell{display:none}
+.google-cell{position:static;display:none}
 .app{grid-template-columns:1fr;padding-top:42px}
 .sidebar{padding:5px}
 .categories{min-height:0;border-right:0}
 .content{padding:5px;grid-template-columns:1fr}
+.content-search{right:5px;top:-2px}
 .storage-status{bottom:5px;right:5px}
 }
 </style>
@@ -100,15 +109,19 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <body>
 
 <header class="topbar">
+<div class="topbar-cell logo-cell">
 <div class="brand">NoteBox<small>Beta</small></div>
+</div>
+<div class="topbar-cell nav-cell">
 <nav class="nav">
 <button title="Home" onclick="selectCategory(currentCategory)">⌂</button>
-<button title="Search" onclick="toggleSearch()">⌕</button>
 <button title="Settings" onclick="openSettings()">⚙</button>
 </nav>
-<div class="top-actions">
-<button onclick="openNote()">Send note</button>
-<button onclick="openNote()">Add note</button>
+</div>
+<div class="topbar-cell add-cell">
+<button class="add-button" onclick="openNote()">Add note</button>
+</div>
+<div class="google-cell">
 <div id="googleArea">
 <button class="google-login" onclick="loginGoogle()">Login with Google</button>
 </div>
@@ -132,6 +145,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 </aside>
 
 <section class="content" id="content">
+<button class="content-search" title="Search" onclick="toggleSearch()">⌕</button>
 <div class="note-column" id="column1"></div>
 <div class="note-column" id="column2"></div>
 </section>
@@ -1009,5 +1023,6 @@ updateStorageStatus("Local storage");
 
 setTimeout(restoreGoogleSession,100);
 </script>
+
 </body>
 </html>
