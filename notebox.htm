@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -97,9 +98,6 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <nav class="nav">
 <button title="Home" onclick="selectCategory(currentCategory)">⌂</button>
 <button title="Search" onclick="toggleSearch()">⌕</button>
-<button title="Import JSON" onclick="document.getElementById('jsonFile').click()">✎</button>
-<button title="Categories" onclick="openCategories()">▦</button>
-<button title="Export JSON" onclick="exportJSON()">◔</button>
 <button title="Settings" onclick="openSettings()">⚙</button>
 </nav>
 <div class="top-actions">
@@ -119,9 +117,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <aside class="sidebar">
 <div class="categories" id="categories"></div>
 <div class="cat-tools">
-<button title="Add category" onclick="addCategory()">➕</button>
 <button title="Edit categories" onclick="openCategories()">✂</button>
-<button title="Change wallpaper" onclick="openSettings()">▣</button>
 </div>
 </aside>
 <section class="content" id="content">
@@ -179,7 +175,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <input id="wallpaperFile" type="file" accept="image/*" onchange="setWallpaperFile(event)">
 </div>
 <div class="settings-grid">
-<button class="btn" onclick="resetWallpaper()">Reset wallpaper</button>
+<button class="btn" onclick="document.getElementById('jsonFile').click()">Import JSON</button>
 <button class="btn" onclick="exportJSON()">Export current data</button>
 </div>
 </div>
@@ -216,7 +212,7 @@ function loadLocalData(){try{const saved=localStorage.getItem(LOCAL_STORAGE_KEY)
 function saveLocalData(){if(googleAccessToken)return;localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify(data));}
 function saveData(){if(googleAccessToken){saveToGoogleDrive();}else{saveLocalData();updateStorageStatus("Local storage");}}
 function getCategories(){return data.USERDATA.OPDATA.PSTCATEGORIES.map(c=>String(c.NAME)).filter(Boolean);}
-function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[m]));}
 function noteTitle(n){return n?.MAINSTRCT?.TITLE||"Untitled";}
 function noteBody(n){return n?.MAINSTRCT?.BODY||"";}
 function noteCategory(n){return n?.MAINSTRCT?.CATEGORY||"Inbox";}
@@ -225,9 +221,9 @@ function renderCategories(){const el=document.getElementById("categories");const
 function selectCategory(category){currentCategory=category;renderCategories();renderNotes();}
 function renderNotes(){const filter=(document.getElementById("searchInput")?.value||"").toLowerCase().trim();const notes=data.POSTSDATA.filter(n=>noteCategory(n)===currentCategory&&(!filter||(noteTitle(n)+" "+noteBody(n)).toLowerCase().includes(filter)));const a=document.getElementById("column1");const b=document.getElementById("column2");a.innerHTML="";b.innerHTML="";notes.forEach((n,i)=>{const originalIndex=data.POSTSDATA.indexOf(n);const card=buildNote(n,originalIndex);if(i%2===0)a.appendChild(card);else b.appendChild(card);});if(!notes.length)a.innerHTML='<div class="empty">No notes in <b>'+escapeHTML(currentCategory)+'</b>.<br><br>Use <b>Add note</b> to create one.</div>';}
 function buildNote(n,index){const card=document.createElement("article");card.className="note";card.dataset.index=index;card.innerHTML='<div class="note-head"><div class="note-title">'+escapeHTML(noteTitle(n))+'</div><div class="note-actions"><span class="modify">modify</span><span class="share">share</span><span class="delete">×</span></div></div><div class="note-body">'+formatBody(noteBody(n))+'</div><div class="note-footer"><span>on .'+escapeHTML(noteCategory(n))+'</span><span>'+escapeHTML(formatDate(noteDate(n)))+' by '+escapeHTML(n?.MAINSTRCT?.AUTOR||"you")+'</span></div>';card.querySelector(".note-head").onclick=e=>{if(e.target.closest(".note-actions"))return;card.classList.toggle("collapsed");};card.querySelector(".modify").onclick=()=>openNote(index);card.querySelector(".delete").onclick=()=>deleteNote(index);card.querySelector(".share").onclick=()=>shareNote(index);return card;}
-function formatBody(body){let s=escapeHTML(body).replace(/\n/g,"<br>");s=s.replace(/&amp;#91;url ([^&]+)&amp;#93;(.+?)&amp;#91;\/url&amp;#93;/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');s=s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');return s;}
+function formatBody(body){let s=escapeHTML(body).replace(/\n/g,"<br>");s=s.replace(/&#91;url ([^&]+)&#93;(.+?)&#91;/url&#93;/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');s=s.replace(/(https?://[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');return s;}
 function formatDate(v){if(!v)return "";const p=String(v).split("/");if(p.length>=3)return p[1]+"/"+p[2]+"/"+p[0];return v;}
-function stripHTML(s){return String(s).replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"");}
+function stripHTML(s){return String(s).replace(/<br\s*/?>/gi,"\n").replace(/<[^>]+>/g,"");}
 function openNote(index=null){editingNoteIndex=index;document.getElementById("noteModalTitle").textContent=index===null?"Add note":"Modify note";const cats=getCategories();const select=document.getElementById("noteCategory");select.innerHTML=cats.map(c=>'<option value="'+escapeHTML(c)+'">'+escapeHTML(c)+'</option>').join("");if(index===null){document.getElementById("noteTitle").value="";document.getElementById("noteBody").value="";select.value=currentCategory;}else{const n=data.POSTSDATA[index];document.getElementById("noteTitle").value=noteTitle(n);document.getElementById("noteBody").value=stripHTML(n?.MAINSTRCT?.BODY||"");select.value=noteCategory(n);}showModal("noteModal");}
 function createDateString(){const now=new Date();return now.getFullYear()+"/"+String(now.getMonth()+1).padStart(2,"0")+"/"+String(now.getDate()).padStart(2,"0")+"/"+String(now.getHours()).padStart(2,"0")+"/"+String(now.getMinutes()).padStart(2,"0")+"/"+String(now.getSeconds()).padStart(2,"0");}
 function createObjectId(){if(typeof crypto!=="undefined"&&typeof crypto.randomUUID==="function")return crypto.randomUUID().replaceAll("-","").slice(0,24);return Date.now().toString(16).padStart(24,"0").slice(-24);}
@@ -241,10 +237,10 @@ function removeCategory(index){const cats=getCategories();const name=cats[index]
 function openCategories(){renderCategoryManager();showModal("categoryModal");}
 function renderCategoryManager(){document.getElementById("categoryList").innerHTML=getCategories().map((c,i)=>'<div class="category-row"><span>'+escapeHTML(c)+'</span><button class="btn" onclick="editCategory('+i+')">Edit</button><button class="btn danger" onclick="removeCategory('+i+')">Delete</button></div>').join("");}
 function openSettings(){document.getElementById("wallpaperUrl").value=data.USERDATA.OPDATA.WALLPAPER||localStorage.getItem(LOCAL_WALLPAPER_KEY)||"";showModal("settingsModal");}
-function saveSettings(){const url=document.getElementById("wallpaperUrl").value.trim();data.USERDATA.OPDATA.WALLPAPER=url;if(url){document.body.style.backgroundImage='url("'+url.replace(/"/g,'\\"')+'")';localStorage.setItem(LOCAL_WALLPAPER_KEY,url);}else resetWallpaper(false);saveData();closeModal("settingsModal");}
+function saveSettings(){const url=document.getElementById("wallpaperUrl").value.trim();data.USERDATA.OPDATA.WALLPAPER=url;if(url){document.body.style.backgroundImage='url("'+url.replace(/"/g,'\"')+'")';localStorage.setItem(LOCAL_WALLPAPER_KEY,url);}else resetWallpaper(false);saveData();closeModal("settingsModal");}
 function setWallpaperFile(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{localStorage.setItem(LOCAL_WALLPAPER_KEY,reader.result);document.body.style.backgroundImage='url("'+reader.result+'")';document.getElementById("wallpaperUrl").value="";};reader.readAsDataURL(file);}
 function resetWallpaper(close=true){localStorage.removeItem(LOCAL_WALLPAPER_KEY);data.USERDATA.OPDATA.WALLPAPER="";document.body.style.backgroundImage="none";saveData();if(close)closeModal("settingsModal");}
-function applyWallpaper(){const w=localStorage.getItem(LOCAL_WALLPAPER_KEY)||data.USERDATA.OPDATA.WALLPAPER;if(w)document.body.style.backgroundImage='url("'+w.replace(/"/g,'\\"')+'")';}
+function applyWallpaper(){const w=localStorage.getItem(LOCAL_WALLPAPER_KEY)||data.USERDATA.OPDATA.WALLPAPER;if(w)document.body.style.backgroundImage='url("'+w.replace(/"/g,'\"')+'")';}
 function exportJSON(){const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=DATABASE_FILENAME;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 function importJSON(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{data=normalizeData(JSON.parse(reader.result));currentCategory=getCategories()[0]||"Inbox";if(!googleAccessToken)saveLocalData();renderCategories();renderNotes();applyWallpaper();if(googleAccessToken)saveToGoogleDrive();alert("JSON loaded successfully.");}catch(e){console.error(e);alert("Invalid JSON file.");}event.target.value="";};reader.readAsText(file);}
 function loginGoogle(){requestGoogleAccessToken(false);}
@@ -253,7 +249,7 @@ function refreshGoogleSession(){localStorage.setItem(GOOGLE_SESSION_KEY,JSON.str
 function clearGoogleSession(){localStorage.removeItem(GOOGLE_SESSION_KEY);}
 function requestGoogleAccessToken(silent){if(googleLoginInProgress||googleSilentLoginInProgress)return;if(typeof google==="undefined"||!google.accounts||!google.accounts.oauth2){if(!silent)alert("Google authentication could not be loaded.");return;}if(silent)googleSilentLoginInProgress=true;else googleLoginInProgress=true;updateStorageStatus(silent?"Restoring Google session...":"Connecting to Google...");googleTokenClient=google.accounts.oauth2.initTokenClient({client_id:GGLCLNT,scope:GGLSCPS,callback:async function(response){googleLoginInProgress=false;googleSilentLoginInProgress=false;if(response.error){console.log("Google authentication failed:",response);googleAccessToken=null;googleUser=null;googleDatabaseFile=null;if(silent){clearGoogleSession();updateGoogleUI();updateStorageStatus("Local storage");}else{updateStorageStatus("Google login failed","error");alert("Google login failed: "+(response.error_description||response.error||"Unknown Google OAuth error."));}return;}if(response.access_token){googleAccessToken=response.access_token;try{await loadGoogleUser();await loadDatabaseFromGoogle();refreshGoogleSession();updateGoogleUI();}catch(error){console.error("Google Drive error:",error);googleAccessToken=null;googleUser=null;googleDatabaseFile=null;if(silent){clearGoogleSession();updateGoogleUI();updateStorageStatus("Local storage");}else{updateGoogleUI();updateStorageStatus("Google Drive error","error");alert("Google Drive could not be loaded: "+(error.message||error));}}}}});try{googleTokenClient.requestAccessToken({prompt:silent?"none":"select_account"});}catch(error){googleLoginInProgress=false;googleSilentLoginInProgress=false;console.error("Google token request error:",error);if(silent){clearGoogleSession();updateGoogleUI();updateStorageStatus("Local storage");}else{updateStorageStatus("Google login failed","error");alert("Google login failed: "+(error.message||error));}}}
 async function loadGoogleUser(){const response=await fetch("https://www.googleapis.com/oauth2/v3/userinfo",{headers:{Authorization:"Bearer "+googleAccessToken}});if(!response.ok){const text=await response.text();throw new Error("Unable to retrieve Google account information. HTTP "+response.status+(text?" - "+text:""));}googleUser=await response.json();}
-async function findGoogleDatabase(){const q="name='"+DATABASE_FILENAME.replace(/'/g,"\\'")+"' and trashed=false";const url="https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&spaces=drive&fields=files(id,name,mimeType,parents,modifiedTime)";const response=await fetch(url,{headers:{Authorization:"Bearer "+googleAccessToken,"x-goog-api-key":GGLAPKY}});if(!response.ok){const text=await response.text();throw new Error("Unable to search Google Drive. HTTP "+response.status+(text?" - "+text:""));}const result=await response.json();if(result.files&&result.files.length)return result.files[0];return null;}
+async function findGoogleDatabase(){const q="name='"+DATABASE_FILENAME.replace(/'/g,"\'")+"' and trashed=false";const url="https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&spaces=drive&fields=files(id,name,mimeType,parents,modifiedTime)";const response=await fetch(url,{headers:{Authorization:"Bearer "+googleAccessToken,"x-goog-api-key":GGLAPKY}});if(!response.ok){const text=await response.text();throw new Error("Unable to search Google Drive. HTTP "+response.status+(text?" - "+text:""));}const result=await response.json();if(result.files&&result.files.length)return result.files[0];return null;}
 async function loadDatabaseFromGoogle(){updateStorageStatus("Loading Google Drive...");googleDatabaseFile=await findGoogleDatabase();if(!googleDatabaseFile){data=normalizeData(data);await createGoogleDatabase();}else{const response=await fetch("https://www.googleapis.com/drive/v3/files/"+encodeURIComponent(googleDatabaseFile.id)+"?alt=media",{headers:{Authorization:"Bearer "+googleAccessToken}});if(!response.ok)throw new Error("Unable to download "+DATABASE_FILENAME+". HTTP "+response.status);const text=await response.text();try{data=normalizeData(JSON.parse(text));}catch(e){throw new Error(DATABASE_FILENAME+" does not contain valid JSON.");}}currentCategory=getCategories().includes(currentCategory)?currentCategory:(getCategories()[0]||"Inbox");renderCategories();renderNotes();applyWallpaper();updateStorageStatus("Google Drive");}
 async function createGoogleDatabase(){const metadata={name:DATABASE_FILENAME,mimeType:"application/json"};const boundary="-------NoteBoxBoundary"+Date.now();const body="--"+boundary+"\r\n"+"Content-Type: application/json; charset=UTF-8\r\n\r\n"+JSON.stringify(metadata)+"\r\n"+"--"+boundary+"\r\n"+"Content-Type: application/json\r\n\r\n"+JSON.stringify(data)+"\r\n"+"--"+boundary+"--";const response=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",headers:{Authorization:"Bearer "+googleAccessToken,"Content-Type":"multipart/related; boundary="+boundary},body:body});if(!response.ok){const text=await response.text();throw new Error("Unable to create "+DATABASE_FILENAME+". HTTP "+response.status+(text?" - "+text:""));}googleDatabaseFile=await response.json();}
 async function saveToGoogleDrive(){if(!googleAccessToken){saveLocalData();return;}if(!googleDatabaseFile){try{googleDatabaseFile=await findGoogleDatabase();}catch(error){console.error(error);updateStorageStatus("Google Drive error","error");return;}}if(!googleDatabaseFile){try{await createGoogleDatabase();updateStorageStatus("Saved to Google Drive");}catch(error){console.error(error);updateStorageStatus("Google Drive error","error");}return;}updateStorageStatus("Saving...");const body=JSON.stringify(data);const response=await fetch("https://www.googleapis.com/upload/drive/v3/files/"+encodeURIComponent(googleDatabaseFile.id)+"?uploadType=media",{method:"PATCH",headers:{Authorization:"Bearer "+googleAccessToken,"Content-Type":"application/json"},body:body});if(!response.ok){const text=await response.text();console.error("Google Drive save failed:",response.status,text);updateStorageStatus("Google Drive error","error");return;}updateStorageStatus("Saved to Google Drive");}
@@ -273,7 +269,7 @@ renderCategories();
 renderNotes();
 updateGoogleUI();
 updateStorageStatus("Local storage");
-setTimeout(restoreGoogleSession,100);
-</script>
+setTimeout(restoreGoogleSession,100); </script>
+
 </body>
 </html>
