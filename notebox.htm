@@ -9,25 +9,25 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#444}
 body{background:#eef0f2 center top/cover fixed no-repeat}
-.topbar{position:fixed;top:0;left:0;right:0;height:35px;z-index:1000;background:linear-gradient(#696969,#333);border-bottom:3px solid #0088a8;box-shadow:0 1px 3px #555;display:grid;grid-template-columns:195px minmax(500px,1fr) 195px;color:#fff}
+.topbar{position:fixed;top:0;left:0;right:0;height:35px;z-index:1000;background:linear-gradient(#696969,#333);border-bottom:3px solid #0088a8;box-shadow:0 1px 3px #555;display:grid;grid-template-columns:195px minmax(500px,1fr) 330px;color:#fff}
 .topbar-col{height:32px;display:flex;align-items:center}
 .topbar-col.logo{justify-content:center;border-right:1px solid #555}
 .topbar-col.options{padding-left:7px;border-right:1px solid #555}
-.topbar-col.actions{padding-left:7px;position:relative}
+.topbar-col.actions{position:relative;display:flex;align-items:center;padding:0}
 .brand{font:bold 25px Arial;text-shadow:1px 1px 2px #222;line-height:29px}
 .brand small{font-size:8px;vertical-align:top}
 .nav{display:flex;gap:7px;height:100%;align-items:center}
 .nav button{width:34px;height:29px;border:0;background:transparent;color:#ddd;font-size:21px;cursor:pointer;opacity:.75}
 .nav button:hover{opacity:1}
-.add-button{width:145px;height:32px;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;font-weight:bold;cursor:pointer}
+.add-button{width:145px;height:32px;flex:none;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;font-weight:bold;cursor:pointer}
 .add-button:hover{background:linear-gradient(#777,#494949)}
-.google-area{position:absolute;right:0;top:0;height:32px;display:flex;align-items:center}
+.google-area{height:32px;display:flex;align-items:center;margin-left:auto;flex:none}
 .google-login{width:170px;height:32px;border:0;border-left:1px solid #666;background:linear-gradient(#6c6c6c,#3e3e3e);color:#fff;font-weight:bold;cursor:pointer}
 .google-login:hover{background:linear-gradient(#777,#494949)}
 .google-user{display:flex;align-items:center;gap:7px;height:100%;padding:0 8px;font-size:11px}
 .google-user img{width:23px;height:23px;border-radius:50%}
 .google-user .google-login{width:70px;height:29px;font-size:11px}
-.app{display:grid;grid-template-columns:195px minmax(500px,1fr) 195px;max-width:1280px;margin:0 auto;padding-top:42px;min-height:100vh}
+.app{display:grid;grid-template-columns:195px minmax(500px,1fr) 330px;max-width:1280px;margin:0 auto;padding-top:42px;min-height:100vh}
 .sidebar{padding:7px 7px 20px 0}
 .categories{border-right:1px solid #d1d1d1;padding-right:7px;min-height:480px}
 .category{height:21px;border-bottom:1px solid #d4d4d4;padding:3px 7px;color:#167096;font-weight:bold;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -36,7 +36,7 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .cat-tools{display:flex;justify-content:flex-end;gap:5px;padding:9px 5px}
 .cat-tools button{width:27px;height:22px;border:0;border-radius:3px;background:#ddd;cursor:pointer;box-shadow:0 1px 2px #aaa}
 .cat-tools button:hover{background:#ccc}
-.content{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 0 20px 6px;align-content:start;min-width:0}
+.content{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px 6px 20px 6px;align-content:start;min-width:0}
 .note-column{min-width:0}
 .note{border:1px solid #d4d7d9;border-radius:6px;background:linear-gradient(110deg,#fff,#f5f6f7);box-shadow:0 1px 2px rgba(0,0,0,.08);margin-bottom:6px;overflow:hidden}
 .note-head{height:28px;display:flex;align-items:center;padding:0 7px;border-bottom:1px solid #e3e3e3;background:linear-gradient(#fff,#f2f3f4);cursor:pointer}
@@ -48,13 +48,14 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .note-body{min-height:65px;padding:10px 12px 12px;text-align:center;color:#008da9;font-size:12px;white-space:pre-wrap;word-break:break-word}
 .note-body a{color:#008da9}
 .note-footer{padding:0 8px 6px;color:#9aa0a4;font:italic 9px Georgia,serif;display:flex;justify-content:space-between}
-.note.collapsed .note-body,.note.collapsed .note-footer{display:none}
 .note.collapsed .note-head{border-bottom:0}
 .empty{border:1px dashed #ccd0d3;border-radius:6px;padding:30px 10px;text-align:center;color:#999;background:rgba(255,255,255,.35)}
-.search{position:fixed;right:20px;top:42px;width:230px;display:none;z-index:900}
-.search input{width:100%;padding:7px;border:1px solid #bbb;border-radius:4px;box-shadow:0 1px 3px #aaa}
-.content-search{position:absolute;right:0;top:0;width:28px;height:28px;border:0;background:transparent;color:#555;font-size:21px;cursor:pointer;z-index:10}
+.right-panel{padding:7px 0 20px 6px;min-width:0}
+.search-area{width:100%;display:flex;flex-direction:column;align-items:flex-start}
+.content-search{width:28px;height:28px;border:0;background:transparent;color:#555;font-size:21px;cursor:pointer;z-index:10;padding:0}
 .content-search:hover{color:#0088a8}
+.search{display:none;width:100%;margin-top:4px}
+.search input{width:100%;padding:7px;border:1px solid #bbb;border-radius:4px;box-shadow:0 1px 3px #aaa}
 .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:2000;align-items:center;justify-content:center}
 .modal-backdrop.show{display:flex}
 .modal{width:540px;max-width:calc(100vw - 30px);background:#f5f6f7;border-radius:7px;box-shadow:0 8px 35px rgba(0,0,0,.45);overflow:hidden}
@@ -85,17 +86,19 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .storage-status.google{color:#0088a8}
 .storage-status.error{color:#c33}
 @media(max-width:1100px){
-.topbar{grid-template-columns:160px minmax(400px,1fr) 160px}
-.app{grid-template-columns:160px minmax(400px,1fr) 160px}
+.topbar{grid-template-columns:160px minmax(400px,1fr) 315px}
+.app{grid-template-columns:160px minmax(400px,1fr) 315px}
 .brand{font-size:21px}
-.add-button{width:110px}
-.google-login{width:150px}
+.add-button{width:140px}
+.google-login{width:165px}
 }
 @media(max-width:800px){
-.topbar{grid-template-columns:150px minmax(0,1fr) 130px}
-.app{grid-template-columns:150px minmax(0,1fr)}
+.topbar{grid-template-columns:150px minmax(0,1fr) 285px}
+.app{grid-template-columns:150px minmax(0,1fr) 285px}
 .topbar-col.actions{border-right:0}
-.add-button{width:100px}
+.add-button{width:125px}
+.google-login{width:160px}
+.content{grid-template-columns:1fr 1fr}
 }
 @media(max-width:560px){
 .topbar{height:auto;min-height:35px;display:flex;flex-wrap:wrap}
@@ -107,7 +110,9 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 .sidebar{padding:5px}
 .categories{min-height:0;border-right:0}
 .content{padding:5px;grid-template-columns:1fr}
-.content-search{right:5px;top:0}
+.right-panel{padding:0 5px 20px}
+.search-area{align-items:flex-end}
+.content-search{margin-left:auto}
 .storage-status{bottom:5px;right:5px}
 }
 </style>
@@ -136,10 +141,6 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 
 <input id="jsonFile" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)">
 
-<div class="search" id="searchBox">
-<input id="searchInput" placeholder="Search notes..." oninput="renderNotes()">
-</div>
-
 <div id="storageStatus" class="storage-status">Local storage</div>
 
 <main class="app">
@@ -153,8 +154,16 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 <section class="content" id="content">
 <div class="note-column" id="column1"></div>
 <div class="note-column" id="column2"></div>
-<button class="content-search" title="Search" onclick="toggleSearch()">⌕</button>
 </section>
+
+<aside class="right-panel">
+<div class="search-area">
+<button class="content-search" title="Search" onclick="toggleSearch()">⌕</button>
+<div class="search" id="searchBox">
+<input id="searchInput" placeholder="Search notes..." oninput="renderNotes()">
+</div>
+</div>
+</aside>
 </main>
 
 <div class="modal-backdrop" id="noteModal">
@@ -235,6 +244,8 @@ body{background:#eef0f2 center top/cover fixed no-repeat}
 </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+
 <script src="https://accounts.google.com/gsi/client"></script>
 
 <script>
@@ -294,7 +305,7 @@ updateStorageStatus("Local storage");
 }
 
 function getCategories(){
-return data.USERDATA.OPDATA.PSTCATEGORIES.map(c=>String(c.NAME)).filter(Boolean);
+return data.USERDATA.OPDATA.PSTCATEGORIES.map(c=>String(c.NAME)).filter(Boolean).sort((a,b)=>a.localeCompare(b,undefined,{sensitivity:"base"}));
 }
 
 function escapeHTML(v){
@@ -313,7 +324,7 @@ el.innerHTML="";
 cats.forEach(c=>{
 const div=document.createElement("div");
 div.className="category"+(c===currentCategory?" active":"")+(c==="Inbox"?" inbox":"");
-div.textContent="."+c;
+div.textContent=c;
 div.title=c;
 div.onclick=()=>selectCategory(c);
 el.appendChild(div);
@@ -346,14 +357,38 @@ function buildNote(n,index){
 const card=document.createElement("article");
 card.className="note";
 card.dataset.index=index;
-card.innerHTML='<div class="note-head"><div class="note-title">'+escapeHTML(noteTitle(n))+'</div><div class="note-actions"><span class="modify">modify</span><span class="share">share</span><span class="delete">×</span></div></div><div class="note-body">'+formatBody(noteBody(n))+'</div><div class="note-footer"><span>on .'+escapeHTML(noteCategory(n))+'</span><span>'+escapeHTML(formatDate(noteDate(n)))+' by '+escapeHTML(n?.MAINSTRCT?.AUTOR||"you")+'</span></div>';
+card.innerHTML='<div class="note-head"><div class="note-title">'+escapeHTML(noteTitle(n))+'</div><div class="note-actions"><span class="modify">modify</span><span class="share">share</span><span class="delete">×</span></div></div><div class="note-body">'+formatBody(noteBody(n))+'</div><div class="note-footer"><span>on '+escapeHTML(noteCategory(n))+'</span><span>'+escapeHTML(formatDate(noteDate(n)))+' by '+escapeHTML(n?.MAINSTRCT?.AUTOR||"you")+'</span></div>';
+
 card.querySelector(".note-head").onclick=e=>{
 if(e.target.closest(".note-actions"))return;
-card.classList.toggle("collapsed");
+const body=$(card).find(".note-body");
+const footer=$(card).find(".note-footer");
+if(card.classList.contains("collapsed")){
+card.classList.remove("collapsed");
+body.stop(true,true).slideDown(140);
+footer.stop(true,true).slideDown(140);
+}else{
+card.classList.add("collapsed");
+body.stop(true,true).slideUp(140);
+footer.stop(true,true).slideUp(140);
+}
 };
-card.querySelector(".modify").onclick=()=>openNote(index);
-card.querySelector(".delete").onclick=()=>deleteNote(index);
-card.querySelector(".share").onclick=()=>shareNote(index);
+
+card.querySelector(".modify").onclick=e=>{
+e.stopPropagation();
+openNote(index);
+};
+
+card.querySelector(".delete").onclick=e=>{
+e.stopPropagation();
+deleteNote(index);
+};
+
+card.querySelector(".share").onclick=e=>{
+e.stopPropagation();
+shareNote(index);
+};
+
 return card;
 }
 
@@ -453,9 +488,11 @@ showModal("categoryEditModal");
 }
 
 function editCategory(index){
-editingCategoryIndex=index;
+const cats=getCategories();
+const name=cats[index];
+editingCategoryIndex=data.USERDATA.OPDATA.PSTCATEGORIES.findIndex(c=>String(c.NAME)===name);
 document.getElementById("categoryEditTitle").textContent="Edit category";
-document.getElementById("categoryName").value=getCategories()[index];
+document.getElementById("categoryName").value=name;
 showModal("categoryEditModal");
 }
 
@@ -470,7 +507,7 @@ return;
 if(editingCategoryIndex===null){
 data.USERDATA.OPDATA.PSTCATEGORIES.push({NAME:name});
 }else{
-const old=cats[editingCategoryIndex];
+const old=data.USERDATA.OPDATA.PSTCATEGORIES[editingCategoryIndex].NAME;
 data.USERDATA.OPDATA.PSTCATEGORIES[editingCategoryIndex].NAME=name;
 data.POSTSDATA.forEach(n=>{
 if(noteCategory(n)===old)n.MAINSTRCT.CATEGORY=name;
@@ -487,6 +524,7 @@ if(document.getElementById("categoryModal").classList.contains("show"))renderCat
 function removeCategory(index){
 const cats=getCategories();
 const name=cats[index];
+const realIndex=data.USERDATA.OPDATA.PSTCATEGORIES.findIndex(c=>String(c.NAME)===name);
 if(name==="Inbox"){
 alert("Inbox cannot be deleted.");
 return;
@@ -495,7 +533,7 @@ if(!confirm('Delete category "'+name+'"? Notes will be moved to Inbox.'))return;
 data.POSTSDATA.forEach(n=>{
 if(noteCategory(n)===name)n.MAINSTRCT.CATEGORY="Inbox";
 });
-data.USERDATA.OPDATA.PSTCATEGORIES.splice(index,1);
+data.USERDATA.OPDATA.PSTCATEGORIES.splice(realIndex,1);
 if(currentCategory===name)currentCategory="Inbox";
 saveData();
 renderCategories();
@@ -577,14 +615,16 @@ reader.readAsText(file);
 }
 
 function toggleSearch(){
-const s=document.getElementById("searchBox");
-if(s.style.display==="block"){
-s.style.display="none";
-document.getElementById("searchInput").value="";
+const s=$("#searchBox");
+if(s.is(":visible")){
+s.stop(true,true).slideUp(120,function(){
+$("#searchInput").val("");
 renderNotes();
+});
 }else{
-s.style.display="block";
-document.getElementById("searchInput").focus();
+s.stop(true,true).slideDown(120,function(){
+$("#searchInput").trigger("focus");
+});
 }
 }
 
