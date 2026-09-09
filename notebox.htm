@@ -622,13 +622,17 @@ callback:async function(response){
 googleLoginInProgress=false;
 googleSilentLoginInProgress=false;
 if(response.error){
-console.error("Google OAuth error:",response);
+console.log("Silent Google session restoration unavailable:",response);
 googleAccessToken=null;
-if(!silent){
+googleUser=null;
+googleDatabaseFile=null;
+if(silent){
+localStorage.removeItem(GOOGLE_SESSION_KEY);
+updateGoogleUI();
+updateStorageStatus("Local storage");
+}else{
 updateStorageStatus("Google login failed","error");
 alert("Google login failed: "+(response.error_description||response.error||"Unknown Google OAuth error."));
-}else{
-updateStorageStatus("Local storage");
 }
 return;
 }
@@ -644,10 +648,13 @@ console.error("Google Drive error:",error);
 googleAccessToken=null;
 googleUser=null;
 googleDatabaseFile=null;
+if(silent){
 localStorage.removeItem(GOOGLE_SESSION_KEY);
 updateGoogleUI();
+updateStorageStatus("Local storage");
+}else{
+updateGoogleUI();
 updateStorageStatus("Google Drive error","error");
-if(!silent){
 alert("Google Drive could not be loaded: "+(error.message||error));
 }
 }
@@ -662,11 +669,13 @@ prompt:silent?"none":"select_account"
 googleLoginInProgress=false;
 googleSilentLoginInProgress=false;
 console.error("Google token request error:",error);
-if(!silent){
+if(silent){
+localStorage.removeItem(GOOGLE_SESSION_KEY);
+updateGoogleUI();
+updateStorageStatus("Local storage");
+}else{
 updateStorageStatus("Google login failed","error");
 alert("Google login failed: "+(error.message||error));
-}else{
-updateStorageStatus("Local storage");
 }
 }
 }
